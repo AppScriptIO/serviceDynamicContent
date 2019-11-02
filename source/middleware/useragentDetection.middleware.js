@@ -1,66 +1,67 @@
-import path from 'path'
-const useragentParser = require('useragent') // https://www.npmjs.com/package/useragent
-require('useragent/features')
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _path = _interopRequireDefault(require("path"));
+const useragentParser = require('useragent');
+require('useragent/features');
 
 function isES5(agent) {
   switch (
-    agent.family // Polymer serve https://github.com/Polymer/tools/blob/707ae99d2c0fd6e3edd7894d98a45ce574b39e6d/packages/browser-capabilities/src/browser-capabilities.ts
-  ) {
+  agent.family) {
+
     case 'Chrome':
     case 'Chromium':
     case 'Chrome Headless':
-      return agent.satisfies('<49.0.0') ? true : false
+      return agent.satisfies('<49.0.0') ? true : false;
     case 'Opera':
     case 'OPR':
-      return agent.satisfies('<36.0.0') ? true : false
+      return agent.satisfies('<36.0.0') ? true : false;
     case 'Vivaldi':
-      return agent.satisfies('<1') ? true : false
+      return agent.satisfies('<1') ? true : false;
     case 'Safari':
     case 'Mobile Safari':
-      return agent.satisfies('<10.0.0') ? true : false
+      return agent.satisfies('<10.0.0') ? true : false;
     case 'Firefox':
-      return agent.satisfies('<51.0.0') ? true : false
+      return agent.satisfies('<51.0.0') ? true : false;
     case 'Edge':
-      return agent.satisfies('<15.0.63') ? true : false
+      return agent.satisfies('<15.0.63') ? true : false;
     case 'Other':
     default:
-      return agent.source.toLowerCase().includes('postman') ? false : false // default for native version rather than previous choice of polyfill as defalult
-      break
-  }
-}
-// USAGE: localhost/?distribution="<clientSide folder name"
-// This module defines context.instance.config.clientBasePath to be later used in template composition.
-export default async (context, next) => {
-  let clientBasePath, clientSideFolderName
-  let agent = useragentParser.lookup(context.request.headers['user-agent'])
+      return agent.source.toLowerCase().includes('postman') ? false : false;
+      break;}
 
-  context.instance.distribution = isES5(agent) ? 'polyfill' : 'native'
+}var _default =
+
+
+async (context, next) => {
+  let clientBasePath, clientSideFolderName;
+  let agent = useragentParser.lookup(context.request.headers['user-agent']);
+
+  context.instance.distribution = isES5(agent) ? 'polyfill' : 'native';
   switch (context.instance.distribution) {
     case 'polyfill':
-      clientSideFolderName = Application.config.distribution.clientSide.polyfill.prefix
-      break
+      clientSideFolderName = Application.config.distribution.clientSide.polyfill.prefix;
+      break;
     case 'native':
-      clientSideFolderName = Application.config.distribution.clientSide.native.prefix
-      break
-  }
+      clientSideFolderName = Application.config.distribution.clientSide.native.prefix;
+      break;}
+
 
   if (Application.config.DEPLOYMENT == 'production') {
-    clientBasePath = Application.config.distributionPath
+    clientBasePath = Application.config.distributionPath;
   } else if (Application.config.DEPLOYMENT == 'development') {
     if (Application.config.DISTRIBUTION) {
-      clientBasePath = Application.config.distributionPath
+      clientBasePath = Application.config.distributionPath;
     } else {
-      clientBasePath = Application.config.sourceCodePath
-      clientSideFolderName = Application.config.directory.clientSide.folderName
+      clientBasePath = Application.config.sourceCodePath;
+      clientSideFolderName = Application.config.directory.clientSide.folderName;
     }
   }
 
   if (context.request.query.distribution) {
-    clientBasePath = Application.config.distributionPath
-    clientSideFolderName = context.request.query.distribution
+    clientBasePath = Application.config.distributionPath;
+    clientSideFolderName = context.request.query.distribution;
   }
 
-  // set resolved clientSide directory path.
-  context.instance.config.clientSidePath = path.join(clientBasePath, clientSideFolderName)
-  await next()
-}
+
+  context.instance.config.clientSidePath = _path.default.join(clientBasePath, clientSideFolderName);
+  await next();
+};exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL3VzZXJhZ2VudERldGVjdGlvbi5taWRkbGV3YXJlLmpzIl0sIm5hbWVzIjpbInVzZXJhZ2VudFBhcnNlciIsInJlcXVpcmUiLCJpc0VTNSIsImFnZW50IiwiZmFtaWx5Iiwic2F0aXNmaWVzIiwic291cmNlIiwidG9Mb3dlckNhc2UiLCJpbmNsdWRlcyIsImNvbnRleHQiLCJuZXh0IiwiY2xpZW50QmFzZVBhdGgiLCJjbGllbnRTaWRlRm9sZGVyTmFtZSIsImxvb2t1cCIsInJlcXVlc3QiLCJoZWFkZXJzIiwiaW5zdGFuY2UiLCJkaXN0cmlidXRpb24iLCJBcHBsaWNhdGlvbiIsImNvbmZpZyIsImNsaWVudFNpZGUiLCJwb2x5ZmlsbCIsInByZWZpeCIsIm5hdGl2ZSIsIkRFUExPWU1FTlQiLCJkaXN0cmlidXRpb25QYXRoIiwiRElTVFJJQlVUSU9OIiwic291cmNlQ29kZVBhdGgiLCJkaXJlY3RvcnkiLCJmb2xkZXJOYW1lIiwicXVlcnkiLCJjbGllbnRTaWRlUGF0aCIsInBhdGgiLCJqb2luIl0sIm1hcHBpbmdzIjoieUxBQUE7QUFDQSxNQUFNQSxlQUFlLEdBQUdDLE9BQU8sQ0FBQyxXQUFELENBQS9CO0FBQ0FBLE9BQU8sQ0FBQyxvQkFBRCxDQUFQOztBQUVBLFNBQVNDLEtBQVQsQ0FBZUMsS0FBZixFQUFzQjtBQUNwQjtBQUNFQSxFQUFBQSxLQUFLLENBQUNDLE1BRFI7O0FBR0UsU0FBSyxRQUFMO0FBQ0EsU0FBSyxVQUFMO0FBQ0EsU0FBSyxpQkFBTDtBQUNFLGFBQU9ELEtBQUssQ0FBQ0UsU0FBTixDQUFnQixTQUFoQixJQUE2QixJQUE3QixHQUFvQyxLQUEzQztBQUNGLFNBQUssT0FBTDtBQUNBLFNBQUssS0FBTDtBQUNFLGFBQU9GLEtBQUssQ0FBQ0UsU0FBTixDQUFnQixTQUFoQixJQUE2QixJQUE3QixHQUFvQyxLQUEzQztBQUNGLFNBQUssU0FBTDtBQUNFLGFBQU9GLEtBQUssQ0FBQ0UsU0FBTixDQUFnQixJQUFoQixJQUF3QixJQUF4QixHQUErQixLQUF0QztBQUNGLFNBQUssUUFBTDtBQUNBLFNBQUssZUFBTDtBQUNFLGFBQU9GLEtBQUssQ0FBQ0UsU0FBTixDQUFnQixTQUFoQixJQUE2QixJQUE3QixHQUFvQyxLQUEzQztBQUNGLFNBQUssU0FBTDtBQUNFLGFBQU9GLEtBQUssQ0FBQ0UsU0FBTixDQUFnQixTQUFoQixJQUE2QixJQUE3QixHQUFvQyxLQUEzQztBQUNGLFNBQUssTUFBTDtBQUNFLGFBQU9GLEtBQUssQ0FBQ0UsU0FBTixDQUFnQixVQUFoQixJQUE4QixJQUE5QixHQUFxQyxLQUE1QztBQUNGLFNBQUssT0FBTDtBQUNBO0FBQ0UsYUFBT0YsS0FBSyxDQUFDRyxNQUFOLENBQWFDLFdBQWIsR0FBMkJDLFFBQTNCLENBQW9DLFNBQXBDLElBQWlELEtBQWpELEdBQXlELEtBQWhFO0FBQ0EsWUF0Qko7O0FBd0JELEM7OztBQUdjLE9BQU9DLE9BQVAsRUFBZ0JDLElBQWhCLEtBQXlCO0FBQ3RDLE1BQUlDLGNBQUosRUFBb0JDLG9CQUFwQjtBQUNBLE1BQUlULEtBQUssR0FBR0gsZUFBZSxDQUFDYSxNQUFoQixDQUF1QkosT0FBTyxDQUFDSyxPQUFSLENBQWdCQyxPQUFoQixDQUF3QixZQUF4QixDQUF2QixDQUFaOztBQUVBTixFQUFBQSxPQUFPLENBQUNPLFFBQVIsQ0FBaUJDLFlBQWpCLEdBQWdDZixLQUFLLENBQUNDLEtBQUQsQ0FBTCxHQUFlLFVBQWYsR0FBNEIsUUFBNUQ7QUFDQSxVQUFRTSxPQUFPLENBQUNPLFFBQVIsQ0FBaUJDLFlBQXpCO0FBQ0UsU0FBSyxVQUFMO0FBQ0VMLE1BQUFBLG9CQUFvQixHQUFHTSxXQUFXLENBQUNDLE1BQVosQ0FBbUJGLFlBQW5CLENBQWdDRyxVQUFoQyxDQUEyQ0MsUUFBM0MsQ0FBb0RDLE1BQTNFO0FBQ0E7QUFDRixTQUFLLFFBQUw7QUFDRVYsTUFBQUEsb0JBQW9CLEdBQUdNLFdBQVcsQ0FBQ0MsTUFBWixDQUFtQkYsWUFBbkIsQ0FBZ0NHLFVBQWhDLENBQTJDRyxNQUEzQyxDQUFrREQsTUFBekU7QUFDQSxZQU5KOzs7QUFTQSxNQUFJSixXQUFXLENBQUNDLE1BQVosQ0FBbUJLLFVBQW5CLElBQWlDLFlBQXJDLEVBQW1EO0FBQ2pEYixJQUFBQSxjQUFjLEdBQUdPLFdBQVcsQ0FBQ0MsTUFBWixDQUFtQk0sZ0JBQXBDO0FBQ0QsR0FGRCxNQUVPLElBQUlQLFdBQVcsQ0FBQ0MsTUFBWixDQUFtQkssVUFBbkIsSUFBaUMsYUFBckMsRUFBb0Q7QUFDekQsUUFBSU4sV0FBVyxDQUFDQyxNQUFaLENBQW1CTyxZQUF2QixFQUFxQztBQUNuQ2YsTUFBQUEsY0FBYyxHQUFHTyxXQUFXLENBQUNDLE1BQVosQ0FBbUJNLGdCQUFwQztBQUNELEtBRkQsTUFFTztBQUNMZCxNQUFBQSxjQUFjLEdBQUdPLFdBQVcsQ0FBQ0MsTUFBWixDQUFtQlEsY0FBcEM7QUFDQWYsTUFBQUEsb0JBQW9CLEdBQUdNLFdBQVcsQ0FBQ0MsTUFBWixDQUFtQlMsU0FBbkIsQ0FBNkJSLFVBQTdCLENBQXdDUyxVQUEvRDtBQUNEO0FBQ0Y7O0FBRUQsTUFBSXBCLE9BQU8sQ0FBQ0ssT0FBUixDQUFnQmdCLEtBQWhCLENBQXNCYixZQUExQixFQUF3QztBQUN0Q04sSUFBQUEsY0FBYyxHQUFHTyxXQUFXLENBQUNDLE1BQVosQ0FBbUJNLGdCQUFwQztBQUNBYixJQUFBQSxvQkFBb0IsR0FBR0gsT0FBTyxDQUFDSyxPQUFSLENBQWdCZ0IsS0FBaEIsQ0FBc0JiLFlBQTdDO0FBQ0Q7OztBQUdEUixFQUFBQSxPQUFPLENBQUNPLFFBQVIsQ0FBaUJHLE1BQWpCLENBQXdCWSxjQUF4QixHQUF5Q0MsY0FBS0MsSUFBTCxDQUFVdEIsY0FBVixFQUEwQkMsb0JBQTFCLENBQXpDO0FBQ0EsUUFBTUYsSUFBSSxFQUFWO0FBQ0QsQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwYXRoIGZyb20gJ3BhdGgnXG5jb25zdCB1c2VyYWdlbnRQYXJzZXIgPSByZXF1aXJlKCd1c2VyYWdlbnQnKSAvLyBodHRwczovL3d3dy5ucG1qcy5jb20vcGFja2FnZS91c2VyYWdlbnRcbnJlcXVpcmUoJ3VzZXJhZ2VudC9mZWF0dXJlcycpXG5cbmZ1bmN0aW9uIGlzRVM1KGFnZW50KSB7XG4gIHN3aXRjaCAoXG4gICAgYWdlbnQuZmFtaWx5IC8vIFBvbHltZXIgc2VydmUgaHR0cHM6Ly9naXRodWIuY29tL1BvbHltZXIvdG9vbHMvYmxvYi83MDdhZTk5ZDJjMGZkNmUzZWRkNzg5NGQ5OGE0NWNlNTc0YjM5ZTZkL3BhY2thZ2VzL2Jyb3dzZXItY2FwYWJpbGl0aWVzL3NyYy9icm93c2VyLWNhcGFiaWxpdGllcy50c1xuICApIHtcbiAgICBjYXNlICdDaHJvbWUnOlxuICAgIGNhc2UgJ0Nocm9taXVtJzpcbiAgICBjYXNlICdDaHJvbWUgSGVhZGxlc3MnOlxuICAgICAgcmV0dXJuIGFnZW50LnNhdGlzZmllcygnPDQ5LjAuMCcpID8gdHJ1ZSA6IGZhbHNlXG4gICAgY2FzZSAnT3BlcmEnOlxuICAgIGNhc2UgJ09QUic6XG4gICAgICByZXR1cm4gYWdlbnQuc2F0aXNmaWVzKCc8MzYuMC4wJykgPyB0cnVlIDogZmFsc2VcbiAgICBjYXNlICdWaXZhbGRpJzpcbiAgICAgIHJldHVybiBhZ2VudC5zYXRpc2ZpZXMoJzwxJykgPyB0cnVlIDogZmFsc2VcbiAgICBjYXNlICdTYWZhcmknOlxuICAgIGNhc2UgJ01vYmlsZSBTYWZhcmknOlxuICAgICAgcmV0dXJuIGFnZW50LnNhdGlzZmllcygnPDEwLjAuMCcpID8gdHJ1ZSA6IGZhbHNlXG4gICAgY2FzZSAnRmlyZWZveCc6XG4gICAgICByZXR1cm4gYWdlbnQuc2F0aXNmaWVzKCc8NTEuMC4wJykgPyB0cnVlIDogZmFsc2VcbiAgICBjYXNlICdFZGdlJzpcbiAgICAgIHJldHVybiBhZ2VudC5zYXRpc2ZpZXMoJzwxNS4wLjYzJykgPyB0cnVlIDogZmFsc2VcbiAgICBjYXNlICdPdGhlcic6XG4gICAgZGVmYXVsdDpcbiAgICAgIHJldHVybiBhZ2VudC5zb3VyY2UudG9Mb3dlckNhc2UoKS5pbmNsdWRlcygncG9zdG1hbicpID8gZmFsc2UgOiBmYWxzZSAvLyBkZWZhdWx0IGZvciBuYXRpdmUgdmVyc2lvbiByYXRoZXIgdGhhbiBwcmV2aW91cyBjaG9pY2Ugb2YgcG9seWZpbGwgYXMgZGVmYWx1bHRcbiAgICAgIGJyZWFrXG4gIH1cbn1cbi8vIFVTQUdFOiBsb2NhbGhvc3QvP2Rpc3RyaWJ1dGlvbj1cIjxjbGllbnRTaWRlIGZvbGRlciBuYW1lXCJcbi8vIFRoaXMgbW9kdWxlIGRlZmluZXMgY29udGV4dC5pbnN0YW5jZS5jb25maWcuY2xpZW50QmFzZVBhdGggdG8gYmUgbGF0ZXIgdXNlZCBpbiB0ZW1wbGF0ZSBjb21wb3NpdGlvbi5cbmV4cG9ydCBkZWZhdWx0IGFzeW5jIChjb250ZXh0LCBuZXh0KSA9PiB7XG4gIGxldCBjbGllbnRCYXNlUGF0aCwgY2xpZW50U2lkZUZvbGRlck5hbWVcbiAgbGV0IGFnZW50ID0gdXNlcmFnZW50UGFyc2VyLmxvb2t1cChjb250ZXh0LnJlcXVlc3QuaGVhZGVyc1sndXNlci1hZ2VudCddKVxuXG4gIGNvbnRleHQuaW5zdGFuY2UuZGlzdHJpYnV0aW9uID0gaXNFUzUoYWdlbnQpID8gJ3BvbHlmaWxsJyA6ICduYXRpdmUnXG4gIHN3aXRjaCAoY29udGV4dC5pbnN0YW5jZS5kaXN0cmlidXRpb24pIHtcbiAgICBjYXNlICdwb2x5ZmlsbCc6XG4gICAgICBjbGllbnRTaWRlRm9sZGVyTmFtZSA9IEFwcGxpY2F0aW9uLmNvbmZpZy5kaXN0cmlidXRpb24uY2xpZW50U2lkZS5wb2x5ZmlsbC5wcmVmaXhcbiAgICAgIGJyZWFrXG4gICAgY2FzZSAnbmF0aXZlJzpcbiAgICAgIGNsaWVudFNpZGVGb2xkZXJOYW1lID0gQXBwbGljYXRpb24uY29uZmlnLmRpc3RyaWJ1dGlvbi5jbGllbnRTaWRlLm5hdGl2ZS5wcmVmaXhcbiAgICAgIGJyZWFrXG4gIH1cblxuICBpZiAoQXBwbGljYXRpb24uY29uZmlnLkRFUExPWU1FTlQgPT0gJ3Byb2R1Y3Rpb24nKSB7XG4gICAgY2xpZW50QmFzZVBhdGggPSBBcHBsaWNhdGlvbi5jb25maWcuZGlzdHJpYnV0aW9uUGF0aFxuICB9IGVsc2UgaWYgKEFwcGxpY2F0aW9uLmNvbmZpZy5ERVBMT1lNRU5UID09ICdkZXZlbG9wbWVudCcpIHtcbiAgICBpZiAoQXBwbGljYXRpb24uY29uZmlnLkRJU1RSSUJVVElPTikge1xuICAgICAgY2xpZW50QmFzZVBhdGggPSBBcHBsaWNhdGlvbi5jb25maWcuZGlzdHJpYnV0aW9uUGF0aFxuICAgIH0gZWxzZSB7XG4gICAgICBjbGllbnRCYXNlUGF0aCA9IEFwcGxpY2F0aW9uLmNvbmZpZy5zb3VyY2VDb2RlUGF0aFxuICAgICAgY2xpZW50U2lkZUZvbGRlck5hbWUgPSBBcHBsaWNhdGlvbi5jb25maWcuZGlyZWN0b3J5LmNsaWVudFNpZGUuZm9sZGVyTmFtZVxuICAgIH1cbiAgfVxuXG4gIGlmIChjb250ZXh0LnJlcXVlc3QucXVlcnkuZGlzdHJpYnV0aW9uKSB7XG4gICAgY2xpZW50QmFzZVBhdGggPSBBcHBsaWNhdGlvbi5jb25maWcuZGlzdHJpYnV0aW9uUGF0aFxuICAgIGNsaWVudFNpZGVGb2xkZXJOYW1lID0gY29udGV4dC5yZXF1ZXN0LnF1ZXJ5LmRpc3RyaWJ1dGlvblxuICB9XG5cbiAgLy8gc2V0IHJlc29sdmVkIGNsaWVudFNpZGUgZGlyZWN0b3J5IHBhdGguXG4gIGNvbnRleHQuaW5zdGFuY2UuY29uZmlnLmNsaWVudFNpZGVQYXRoID0gcGF0aC5qb2luKGNsaWVudEJhc2VQYXRoLCBjbGllbnRTaWRlRm9sZGVyTmFtZSlcbiAgYXdhaXQgbmV4dCgpXG59XG4iXX0=

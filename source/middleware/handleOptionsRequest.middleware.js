@@ -1,5 +1,6 @@
-export const handleOptionsRequest = async (context, next) => {
-  context.set('Access-Control-Allow-Methods', '*' /* 'POST, GET, OPTIONS, DELETE' */)
-  context.set('Access-Control-Allow-Headers', '*' /* 'Content-Type' */) // used as a response to preflight, indicating which headers can be used in the request.
-  context.body = 'OK' // previous middlewares should have already defined cross origin all *.
-}
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.handleOptionsRequest = void 0;const handleOptionsRequest = async (context, next) => {
+  context.set('Access-Control-Allow-Methods', '*');
+  context.set('Access-Control-Allow-Headers', '*');
+  context.body = 'OK';
+};exports.handleOptionsRequest = handleOptionsRequest;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL2hhbmRsZU9wdGlvbnNSZXF1ZXN0Lm1pZGRsZXdhcmUuanMiXSwibmFtZXMiOlsiaGFuZGxlT3B0aW9uc1JlcXVlc3QiLCJjb250ZXh0IiwibmV4dCIsInNldCIsImJvZHkiXSwibWFwcGluZ3MiOiJpSEFBTyxNQUFNQSxvQkFBb0IsR0FBRyxPQUFPQyxPQUFQLEVBQWdCQyxJQUFoQixLQUF5QjtBQUMzREQsRUFBQUEsT0FBTyxDQUFDRSxHQUFSLENBQVksOEJBQVosRUFBNEMsR0FBNUM7QUFDQUYsRUFBQUEsT0FBTyxDQUFDRSxHQUFSLENBQVksOEJBQVosRUFBNEMsR0FBNUM7QUFDQUYsRUFBQUEsT0FBTyxDQUFDRyxJQUFSLEdBQWUsSUFBZjtBQUNELENBSk0sQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBjb25zdCBoYW5kbGVPcHRpb25zUmVxdWVzdCA9IGFzeW5jIChjb250ZXh0LCBuZXh0KSA9PiB7XG4gIGNvbnRleHQuc2V0KCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1NZXRob2RzJywgJyonIC8qICdQT1NULCBHRVQsIE9QVElPTlMsIERFTEVURScgKi8pXG4gIGNvbnRleHQuc2V0KCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1IZWFkZXJzJywgJyonIC8qICdDb250ZW50LVR5cGUnICovKSAvLyB1c2VkIGFzIGEgcmVzcG9uc2UgdG8gcHJlZmxpZ2h0LCBpbmRpY2F0aW5nIHdoaWNoIGhlYWRlcnMgY2FuIGJlIHVzZWQgaW4gdGhlIHJlcXVlc3QuXG4gIGNvbnRleHQuYm9keSA9ICdPSycgLy8gcHJldmlvdXMgbWlkZGxld2FyZXMgc2hvdWxkIGhhdmUgYWxyZWFkeSBkZWZpbmVkIGNyb3NzIG9yaWdpbiBhbGwgKi5cbn1cbiJdfQ==

@@ -1,35 +1,36 @@
-import compose from 'koa-compose'
-import responseTime from 'koa-response-time'
-import logger from 'koa-logger'
-// import compress from 'koa-compress'
-import bodyParser from 'koa-bodyparser'
-// import cors from 'kcors'
-// import helmet from 'koa-helmet'
-import error from 'koa-json-error'
-// import enforceHTTPS from 'koa-sslify'
-import koaCompress from 'koa-compress'
-import zlib from 'zlib'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _koaCompose = _interopRequireDefault(require("koa-compose"));
+var _koaResponseTime = _interopRequireDefault(require("koa-response-time"));
+var _koaLogger = _interopRequireDefault(require("koa-logger"));
 
-// Database
-import { handleConnection, createDatabase, createTable } from './commonDatabaseFunctionality.js'
+
+
+
+var _koaJsonError = _interopRequireDefault(require("koa-json-error"));
+
+var _koaCompress = _interopRequireDefault(require("koa-compress"));
+var _zlib = _interopRequireDefault(require("zlib"));
+
+
+
 
 let middlewareArray = [
-  responseTime(), // Response time x-response-time
-  logger(), // Console logger
-  // bodyParser(),
-  // cors(), // Cross-Origin Resource Sharing(CORS)
-  error(), // Error handler for pure-JSON Koa apps
-  // handleConnection(), // Open connection on middleware downstream, Close connection on upstream.
-  // createDatabase(),
-  // createTable(),
-  koaCompress({
-    flush: zlib.Z_SYNC_FLUSH,
-  }),
-]
-if (!serverConfig.ssl) {
-  // middleware.push(compress())  // Compress responses
-  // middleware.push(enforceHTTPS())
-  // middleware.push(helmet()) // Security header middleware collection
-}
+(0, _koaResponseTime.default)(),
+(0, _koaLogger.default)(),
 
-export default () => compose(middlewareArray)
+
+(0, _koaJsonError.default)(),
+
+
+
+(0, _koaCompress.default)({
+  flush: _zlib.default.Z_SYNC_FLUSH })];
+
+
+if (!serverConfig.ssl) {
+
+
+
+}var _default =
+
+() => (0, _koaCompose.default)(middlewareArray);exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL3NlcnZlckNvbW1vbkZ1bmN0aW9uYWxpdHkubWlkZGxld2FyZS5qcyJdLCJuYW1lcyI6WyJtaWRkbGV3YXJlQXJyYXkiLCJmbHVzaCIsInpsaWIiLCJaX1NZTkNfRkxVU0giLCJzZXJ2ZXJDb25maWciLCJzc2wiXSwibWFwcGluZ3MiOiJ5TEFBQTtBQUNBO0FBQ0E7Ozs7O0FBS0E7O0FBRUE7QUFDQTs7Ozs7QUFLQSxJQUFJQSxlQUFlLEdBQUc7QUFDcEIsK0JBRG9CO0FBRXBCLHlCQUZvQjs7O0FBS3BCLDRCQUxvQjs7OztBQVNwQiwwQkFBWTtBQUNWQyxFQUFBQSxLQUFLLEVBQUVDLGNBQUtDLFlBREYsRUFBWixDQVRvQixDQUF0Qjs7O0FBYUEsSUFBSSxDQUFDQyxZQUFZLENBQUNDLEdBQWxCLEVBQXVCOzs7O0FBSXRCLEM7O0FBRWMsTUFBTSx5QkFBUUwsZUFBUixDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGNvbXBvc2UgZnJvbSAna29hLWNvbXBvc2UnXG5pbXBvcnQgcmVzcG9uc2VUaW1lIGZyb20gJ2tvYS1yZXNwb25zZS10aW1lJ1xuaW1wb3J0IGxvZ2dlciBmcm9tICdrb2EtbG9nZ2VyJ1xuLy8gaW1wb3J0IGNvbXByZXNzIGZyb20gJ2tvYS1jb21wcmVzcydcbmltcG9ydCBib2R5UGFyc2VyIGZyb20gJ2tvYS1ib2R5cGFyc2VyJ1xuLy8gaW1wb3J0IGNvcnMgZnJvbSAna2NvcnMnXG4vLyBpbXBvcnQgaGVsbWV0IGZyb20gJ2tvYS1oZWxtZXQnXG5pbXBvcnQgZXJyb3IgZnJvbSAna29hLWpzb24tZXJyb3InXG4vLyBpbXBvcnQgZW5mb3JjZUhUVFBTIGZyb20gJ2tvYS1zc2xpZnknXG5pbXBvcnQga29hQ29tcHJlc3MgZnJvbSAna29hLWNvbXByZXNzJ1xuaW1wb3J0IHpsaWIgZnJvbSAnemxpYidcblxuLy8gRGF0YWJhc2VcbmltcG9ydCB7IGhhbmRsZUNvbm5lY3Rpb24sIGNyZWF0ZURhdGFiYXNlLCBjcmVhdGVUYWJsZSB9IGZyb20gJy4vY29tbW9uRGF0YWJhc2VGdW5jdGlvbmFsaXR5LmpzJ1xuXG5sZXQgbWlkZGxld2FyZUFycmF5ID0gW1xuICByZXNwb25zZVRpbWUoKSwgLy8gUmVzcG9uc2UgdGltZSB4LXJlc3BvbnNlLXRpbWVcbiAgbG9nZ2VyKCksIC8vIENvbnNvbGUgbG9nZ2VyXG4gIC8vIGJvZHlQYXJzZXIoKSxcbiAgLy8gY29ycygpLCAvLyBDcm9zcy1PcmlnaW4gUmVzb3VyY2UgU2hhcmluZyhDT1JTKVxuICBlcnJvcigpLCAvLyBFcnJvciBoYW5kbGVyIGZvciBwdXJlLUpTT04gS29hIGFwcHNcbiAgLy8gaGFuZGxlQ29ubmVjdGlvbigpLCAvLyBPcGVuIGNvbm5lY3Rpb24gb24gbWlkZGxld2FyZSBkb3duc3RyZWFtLCBDbG9zZSBjb25uZWN0aW9uIG9uIHVwc3RyZWFtLlxuICAvLyBjcmVhdGVEYXRhYmFzZSgpLFxuICAvLyBjcmVhdGVUYWJsZSgpLFxuICBrb2FDb21wcmVzcyh7XG4gICAgZmx1c2g6IHpsaWIuWl9TWU5DX0ZMVVNILFxuICB9KSxcbl1cbmlmICghc2VydmVyQ29uZmlnLnNzbCkge1xuICAvLyBtaWRkbGV3YXJlLnB1c2goY29tcHJlc3MoKSkgIC8vIENvbXByZXNzIHJlc3BvbnNlc1xuICAvLyBtaWRkbGV3YXJlLnB1c2goZW5mb3JjZUhUVFBTKCkpXG4gIC8vIG1pZGRsZXdhcmUucHVzaChoZWxtZXQoKSkgLy8gU2VjdXJpdHkgaGVhZGVyIG1pZGRsZXdhcmUgY29sbGVjdGlvblxufVxuXG5leHBvcnQgZGVmYXVsdCAoKSA9PiBjb21wb3NlKG1pZGRsZXdhcmVBcnJheSlcbiJdfQ==

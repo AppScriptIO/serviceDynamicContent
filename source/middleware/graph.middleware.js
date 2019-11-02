@@ -1,10 +1,11 @@
-import { initializeGraph } from '../utility/graphInitialization.js'
-import * as graphData from '../../resource/graphData.json'
-// TODO: use equivalent functionality
-// import { createTemplateRenderingMiddleware } from './templateRendering.js'
-// import implementConditionActionOnModuleUsingJson from '../../utility/middleware/implementConditionActionOnModuleUsingJson.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.graphMiddleware = graphMiddleware;var _graphInitialization = require("../utility/graphInitialization.js");
+var graphData = _interopRequireWildcard(require("../../resource/graphData.json"));
 
-export async function graphMiddleware({ targetProjectConfig, entrypointKey }) {
-  let { createGraphMiddleware } = await initializeGraph({ targetProjectConfig, graphDataArray: [graphData] })
-  return createGraphMiddleware({ entrypointKey })
+
+
+
+async function graphMiddleware({ targetProjectConfig, entrypointKey }) {
+  let { createGraphMiddleware } = await (0, _graphInitialization.initializeGraph)({ targetProjectConfig, graphDataArray: [graphData] });
+  return createGraphMiddleware({ entrypointKey });
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL2dyYXBoLm1pZGRsZXdhcmUuanMiXSwibmFtZXMiOlsiZ3JhcGhNaWRkbGV3YXJlIiwidGFyZ2V0UHJvamVjdENvbmZpZyIsImVudHJ5cG9pbnRLZXkiLCJjcmVhdGVHcmFwaE1pZGRsZXdhcmUiLCJncmFwaERhdGFBcnJheSIsImdyYXBoRGF0YSJdLCJtYXBwaW5ncyI6IjRNQUFBO0FBQ0E7Ozs7O0FBS08sZUFBZUEsZUFBZixDQUErQixFQUFFQyxtQkFBRixFQUF1QkMsYUFBdkIsRUFBL0IsRUFBdUU7QUFDNUUsTUFBSSxFQUFFQyxxQkFBRixLQUE0QixNQUFNLDBDQUFnQixFQUFFRixtQkFBRixFQUF1QkcsY0FBYyxFQUFFLENBQUNDLFNBQUQsQ0FBdkMsRUFBaEIsQ0FBdEM7QUFDQSxTQUFPRixxQkFBcUIsQ0FBQyxFQUFFRCxhQUFGLEVBQUQsQ0FBNUI7QUFDRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGluaXRpYWxpemVHcmFwaCB9IGZyb20gJy4uL3V0aWxpdHkvZ3JhcGhJbml0aWFsaXphdGlvbi5qcydcbmltcG9ydCAqIGFzIGdyYXBoRGF0YSBmcm9tICcuLi8uLi9yZXNvdXJjZS9ncmFwaERhdGEuanNvbidcbi8vIFRPRE86IHVzZSBlcXVpdmFsZW50IGZ1bmN0aW9uYWxpdHlcbi8vIGltcG9ydCB7IGNyZWF0ZVRlbXBsYXRlUmVuZGVyaW5nTWlkZGxld2FyZSB9IGZyb20gJy4vdGVtcGxhdGVSZW5kZXJpbmcuanMnXG4vLyBpbXBvcnQgaW1wbGVtZW50Q29uZGl0aW9uQWN0aW9uT25Nb2R1bGVVc2luZ0pzb24gZnJvbSAnLi4vLi4vdXRpbGl0eS9taWRkbGV3YXJlL2ltcGxlbWVudENvbmRpdGlvbkFjdGlvbk9uTW9kdWxlVXNpbmdKc29uLmpzJ1xuXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gZ3JhcGhNaWRkbGV3YXJlKHsgdGFyZ2V0UHJvamVjdENvbmZpZywgZW50cnlwb2ludEtleSB9KSB7XG4gIGxldCB7IGNyZWF0ZUdyYXBoTWlkZGxld2FyZSB9ID0gYXdhaXQgaW5pdGlhbGl6ZUdyYXBoKHsgdGFyZ2V0UHJvamVjdENvbmZpZywgZ3JhcGhEYXRhQXJyYXk6IFtncmFwaERhdGFdIH0pXG4gIHJldHVybiBjcmVhdGVHcmFwaE1pZGRsZXdhcmUoeyBlbnRyeXBvaW50S2V5IH0pXG59XG4iXX0=

@@ -1,33 +1,34 @@
-const namedImportMap = [
-  {
-    namedImport: 'webcomponent', // @webcomponent
-    path: 'asset/webcomponent',
-  },
-  {
-    namedImport: 'javascript', // @javascript
-    path: 'asset/javascript',
-  },
-]
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.mapAtSignPathToAbsolutePathMiddleware = void 0;const namedImportMap = [
+{
+  namedImport: 'webcomponent',
+  path: 'asset/webcomponent' },
 
-// NOTE: @ = At sign.
-export const mapAtSignPathToAbsolutePathMiddleware = () => async (context, next) => {
-  let path = context.path
-  // path = path.replace(/^\/|\/$/g, '') // remove first and last slash
-  let pathArray = path.split('/').filter(item => item) // split path and remove empty values
-  let firstURLPart = pathArray[0]
-  // let lastIndexPosition = (path.indexOf("/") == -1) ? path.length : path.indexOf("/");
-  let relativeAtPathName = firstURLPart.substring(firstURLPart.indexOf('@') + 1, firstURLPart.length)
+{
+  namedImport: 'javascript',
+  path: 'asset/javascript' }];
 
-  let namedImportObject = namedImportMap.filter(item => item.namedImport == relativeAtPathName)[0] // example '/@webcomponent/package/x/x.js'
-  let mappedPath = namedImportObject.path
 
-  context.relativeAtPathName = relativeAtPathName
-  // change path if @ path is mapped
-  // if(mappedPath) context.path = context.path.replace(`@${relativeAtPathName}`, mappedPath)
+
+
+const mapAtSignPathToAbsolutePathMiddleware = () => async (context, next) => {
+  let path = context.path;
+
+  let pathArray = path.split('/').filter(item => item);
+  let firstURLPart = pathArray[0];
+
+  let relativeAtPathName = firstURLPart.substring(firstURLPart.indexOf('@') + 1, firstURLPart.length);
+
+  let namedImportObject = namedImportMap.filter(item => item.namedImport == relativeAtPathName)[0];
+  let mappedPath = namedImportObject.path;
+
+  context.relativeAtPathName = relativeAtPathName;
+
+
   if (mappedPath) {
-    // replace part to be mapped
-    pathArray[0] = mappedPath
-    context.path = pathArray.join('/')
+
+    pathArray[0] = mappedPath;
+    context.path = pathArray.join('/');
   }
-  await next()
-}
+  await next();
+};exports.mapAtSignPathToAbsolutePathMiddleware = mapAtSignPathToAbsolutePathMiddleware;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL21hcEBQYXRoVG9BYnNvbHV0ZVBhdGgubWlkZGxld2FyZS5qcyJdLCJuYW1lcyI6WyJuYW1lZEltcG9ydE1hcCIsIm5hbWVkSW1wb3J0IiwicGF0aCIsIm1hcEF0U2lnblBhdGhUb0Fic29sdXRlUGF0aE1pZGRsZXdhcmUiLCJjb250ZXh0IiwibmV4dCIsInBhdGhBcnJheSIsInNwbGl0IiwiZmlsdGVyIiwiaXRlbSIsImZpcnN0VVJMUGFydCIsInJlbGF0aXZlQXRQYXRoTmFtZSIsInN1YnN0cmluZyIsImluZGV4T2YiLCJsZW5ndGgiLCJuYW1lZEltcG9ydE9iamVjdCIsIm1hcHBlZFBhdGgiLCJqb2luIl0sIm1hcHBpbmdzIjoia0lBQUEsTUFBTUEsY0FBYyxHQUFHO0FBQ3JCO0FBQ0VDLEVBQUFBLFdBQVcsRUFBRSxjQURmO0FBRUVDLEVBQUFBLElBQUksRUFBRSxvQkFGUixFQURxQjs7QUFLckI7QUFDRUQsRUFBQUEsV0FBVyxFQUFFLFlBRGY7QUFFRUMsRUFBQUEsSUFBSSxFQUFFLGtCQUZSLEVBTHFCLENBQXZCOzs7OztBQVlPLE1BQU1DLHFDQUFxQyxHQUFHLE1BQU0sT0FBT0MsT0FBUCxFQUFnQkMsSUFBaEIsS0FBeUI7QUFDbEYsTUFBSUgsSUFBSSxHQUFHRSxPQUFPLENBQUNGLElBQW5COztBQUVBLE1BQUlJLFNBQVMsR0FBR0osSUFBSSxDQUFDSyxLQUFMLENBQVcsR0FBWCxFQUFnQkMsTUFBaEIsQ0FBdUJDLElBQUksSUFBSUEsSUFBL0IsQ0FBaEI7QUFDQSxNQUFJQyxZQUFZLEdBQUdKLFNBQVMsQ0FBQyxDQUFELENBQTVCOztBQUVBLE1BQUlLLGtCQUFrQixHQUFHRCxZQUFZLENBQUNFLFNBQWIsQ0FBdUJGLFlBQVksQ0FBQ0csT0FBYixDQUFxQixHQUFyQixJQUE0QixDQUFuRCxFQUFzREgsWUFBWSxDQUFDSSxNQUFuRSxDQUF6Qjs7QUFFQSxNQUFJQyxpQkFBaUIsR0FBR2YsY0FBYyxDQUFDUSxNQUFmLENBQXNCQyxJQUFJLElBQUlBLElBQUksQ0FBQ1IsV0FBTCxJQUFvQlUsa0JBQWxELEVBQXNFLENBQXRFLENBQXhCO0FBQ0EsTUFBSUssVUFBVSxHQUFHRCxpQkFBaUIsQ0FBQ2IsSUFBbkM7O0FBRUFFLEVBQUFBLE9BQU8sQ0FBQ08sa0JBQVIsR0FBNkJBLGtCQUE3Qjs7O0FBR0EsTUFBSUssVUFBSixFQUFnQjs7QUFFZFYsSUFBQUEsU0FBUyxDQUFDLENBQUQsQ0FBVCxHQUFlVSxVQUFmO0FBQ0FaLElBQUFBLE9BQU8sQ0FBQ0YsSUFBUixHQUFlSSxTQUFTLENBQUNXLElBQVYsQ0FBZSxHQUFmLENBQWY7QUFDRDtBQUNELFFBQU1aLElBQUksRUFBVjtBQUNELENBcEJNLEMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBuYW1lZEltcG9ydE1hcCA9IFtcbiAge1xuICAgIG5hbWVkSW1wb3J0OiAnd2ViY29tcG9uZW50JywgLy8gQHdlYmNvbXBvbmVudFxuICAgIHBhdGg6ICdhc3NldC93ZWJjb21wb25lbnQnLFxuICB9LFxuICB7XG4gICAgbmFtZWRJbXBvcnQ6ICdqYXZhc2NyaXB0JywgLy8gQGphdmFzY3JpcHRcbiAgICBwYXRoOiAnYXNzZXQvamF2YXNjcmlwdCcsXG4gIH0sXG5dXG5cbi8vIE5PVEU6IEAgPSBBdCBzaWduLlxuZXhwb3J0IGNvbnN0IG1hcEF0U2lnblBhdGhUb0Fic29sdXRlUGF0aE1pZGRsZXdhcmUgPSAoKSA9PiBhc3luYyAoY29udGV4dCwgbmV4dCkgPT4ge1xuICBsZXQgcGF0aCA9IGNvbnRleHQucGF0aFxuICAvLyBwYXRoID0gcGF0aC5yZXBsYWNlKC9eXFwvfFxcLyQvZywgJycpIC8vIHJlbW92ZSBmaXJzdCBhbmQgbGFzdCBzbGFzaFxuICBsZXQgcGF0aEFycmF5ID0gcGF0aC5zcGxpdCgnLycpLmZpbHRlcihpdGVtID0+IGl0ZW0pIC8vIHNwbGl0IHBhdGggYW5kIHJlbW92ZSBlbXB0eSB2YWx1ZXNcbiAgbGV0IGZpcnN0VVJMUGFydCA9IHBhdGhBcnJheVswXVxuICAvLyBsZXQgbGFzdEluZGV4UG9zaXRpb24gPSAocGF0aC5pbmRleE9mKFwiL1wiKSA9PSAtMSkgPyBwYXRoLmxlbmd0aCA6IHBhdGguaW5kZXhPZihcIi9cIik7XG4gIGxldCByZWxhdGl2ZUF0UGF0aE5hbWUgPSBmaXJzdFVSTFBhcnQuc3Vic3RyaW5nKGZpcnN0VVJMUGFydC5pbmRleE9mKCdAJykgKyAxLCBmaXJzdFVSTFBhcnQubGVuZ3RoKVxuXG4gIGxldCBuYW1lZEltcG9ydE9iamVjdCA9IG5hbWVkSW1wb3J0TWFwLmZpbHRlcihpdGVtID0+IGl0ZW0ubmFtZWRJbXBvcnQgPT0gcmVsYXRpdmVBdFBhdGhOYW1lKVswXSAvLyBleGFtcGxlICcvQHdlYmNvbXBvbmVudC9wYWNrYWdlL3gveC5qcydcbiAgbGV0IG1hcHBlZFBhdGggPSBuYW1lZEltcG9ydE9iamVjdC5wYXRoXG5cbiAgY29udGV4dC5yZWxhdGl2ZUF0UGF0aE5hbWUgPSByZWxhdGl2ZUF0UGF0aE5hbWVcbiAgLy8gY2hhbmdlIHBhdGggaWYgQCBwYXRoIGlzIG1hcHBlZFxuICAvLyBpZihtYXBwZWRQYXRoKSBjb250ZXh0LnBhdGggPSBjb250ZXh0LnBhdGgucmVwbGFjZShgQCR7cmVsYXRpdmVBdFBhdGhOYW1lfWAsIG1hcHBlZFBhdGgpXG4gIGlmIChtYXBwZWRQYXRoKSB7XG4gICAgLy8gcmVwbGFjZSBwYXJ0IHRvIGJlIG1hcHBlZFxuICAgIHBhdGhBcnJheVswXSA9IG1hcHBlZFBhdGhcbiAgICBjb250ZXh0LnBhdGggPSBwYXRoQXJyYXkuam9pbignLycpXG4gIH1cbiAgYXdhaXQgbmV4dCgpXG59XG4iXX0=

@@ -1,12 +1,13 @@
-export function authorizationMiddleware() {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.authorizationMiddleware = authorizationMiddleware;function authorizationMiddleware() {
   return async (context, next) => {
-    // Authorization access example:
-    let token = await OAuthClass.authenticateMiddleware()(context.request, context.response)
+
+    let token = await OAuthClass.authenticateMiddleware()(context.request, context.response);
     if (token) {
-      await next()
+      await next();
     } else {
-      console.log('Sorry unauthorized access')
+      console.log('Sorry unauthorized access');
     }
-    await next()
-  }
+    await next();
+  };
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9taWRkbGV3YXJlL2F1dGhvcml6YXRpb25NaWRkbGV3YXJlLmpzIl0sIm5hbWVzIjpbImF1dGhvcml6YXRpb25NaWRkbGV3YXJlIiwiY29udGV4dCIsIm5leHQiLCJ0b2tlbiIsIk9BdXRoQ2xhc3MiLCJhdXRoZW50aWNhdGVNaWRkbGV3YXJlIiwicmVxdWVzdCIsInJlc3BvbnNlIiwiY29uc29sZSIsImxvZyJdLCJtYXBwaW5ncyI6InFJQUFPLFNBQVNBLHVCQUFULEdBQW1DO0FBQ3hDLFNBQU8sT0FBT0MsT0FBUCxFQUFnQkMsSUFBaEIsS0FBeUI7O0FBRTlCLFFBQUlDLEtBQUssR0FBRyxNQUFNQyxVQUFVLENBQUNDLHNCQUFYLEdBQW9DSixPQUFPLENBQUNLLE9BQTVDLEVBQXFETCxPQUFPLENBQUNNLFFBQTdELENBQWxCO0FBQ0EsUUFBSUosS0FBSixFQUFXO0FBQ1QsWUFBTUQsSUFBSSxFQUFWO0FBQ0QsS0FGRCxNQUVPO0FBQ0xNLE1BQUFBLE9BQU8sQ0FBQ0MsR0FBUixDQUFZLDJCQUFaO0FBQ0Q7QUFDRCxVQUFNUCxJQUFJLEVBQVY7QUFDRCxHQVREO0FBVUQiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZnVuY3Rpb24gYXV0aG9yaXphdGlvbk1pZGRsZXdhcmUoKSB7XG4gIHJldHVybiBhc3luYyAoY29udGV4dCwgbmV4dCkgPT4ge1xuICAgIC8vIEF1dGhvcml6YXRpb24gYWNjZXNzIGV4YW1wbGU6XG4gICAgbGV0IHRva2VuID0gYXdhaXQgT0F1dGhDbGFzcy5hdXRoZW50aWNhdGVNaWRkbGV3YXJlKCkoY29udGV4dC5yZXF1ZXN0LCBjb250ZXh0LnJlc3BvbnNlKVxuICAgIGlmICh0b2tlbikge1xuICAgICAgYXdhaXQgbmV4dCgpXG4gICAgfSBlbHNlIHtcbiAgICAgIGNvbnNvbGUubG9nKCdTb3JyeSB1bmF1dGhvcml6ZWQgYWNjZXNzJylcbiAgICB9XG4gICAgYXdhaXQgbmV4dCgpXG4gIH1cbn1cbiJdfQ==

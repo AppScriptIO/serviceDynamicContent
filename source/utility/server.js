@@ -1,28 +1,29 @@
-import http from 'http'
-import https from 'https'
-import Koa from 'koa' // Koa applicaiton server
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createHttpServer = createHttpServer;var _http = _interopRequireDefault(require("http"));
 
-export async function createHttpServer({ label, port, middlewareArray }) {
-  const serverKoa = new Koa() // create Koa server
-  serverKoa.subdomainOffset = 1 // for localhost domain.
-  // register middleware
-  middlewareArray.forEach(middleware => serverKoa.use(middleware))
+var _koa = _interopRequireDefault(require("koa"));
+
+async function createHttpServer({ label, port, middlewareArray }) {
+  const serverKoa = new _koa.default();
+  serverKoa.subdomainOffset = 1;
+
+  middlewareArray.forEach(middleware => serverKoa.use(middleware));
   await new Promise(
-    (resolve, reject) =>
-      http
-        .createServer(serverKoa.callback())
-        .listen(port, () => {
-          if (process.send !== undefined) process.send({ message: 'Server listening' }) // if process is a forked child process.
-          process.emit('listening')
-          console.log(`☕%c ${label} server listening on port ${port}`)
-        })
-        .on('connection', socket => {
-          console.info('SOCKET OPENED' + JSON.stringify(socket.address()))
-          socket.on('end', () => console.info('SOCKET END: other end of the socket sends a FIN packet'))
-          socket.on('timeout', () => console.info('SOCKET TIMEOUT'))
-          socket.on('error', error => console.info('SOCKET ERROR: ' + JSON.stringify(error)))
-          socket.on('close', had_error => console.info('SOCKET CLOSED. Is ERROR ?: ' + had_error))
-        })
-        .setTimeout(0, () => console.log('HTTP server connection socket was timedout (console.log in httpServer.setTimeout)!')) && resolve(),
-  )
+  (resolve, reject) =>
+  _http.default.
+  createServer(serverKoa.callback()).
+  listen(port, () => {
+    if (process.send !== undefined) process.send({ message: 'Server listening' });
+    process.emit('listening');
+    console.log(`☕%c ${label} server listening on port ${port}`);
+  }).
+  on('connection', socket => {
+    console.info('SOCKET OPENED' + JSON.stringify(socket.address()));
+    socket.on('end', () => console.info('SOCKET END: other end of the socket sends a FIN packet'));
+    socket.on('timeout', () => console.info('SOCKET TIMEOUT'));
+    socket.on('error', error => console.info('SOCKET ERROR: ' + JSON.stringify(error)));
+    socket.on('close', had_error => console.info('SOCKET CLOSED. Is ERROR ?: ' + had_error));
+  }).
+  setTimeout(0, () => console.log('HTTP server connection socket was timedout (console.log in httpServer.setTimeout)!')) && resolve());
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS91dGlsaXR5L3NlcnZlci5qcyJdLCJuYW1lcyI6WyJjcmVhdGVIdHRwU2VydmVyIiwibGFiZWwiLCJwb3J0IiwibWlkZGxld2FyZUFycmF5Iiwic2VydmVyS29hIiwiS29hIiwic3ViZG9tYWluT2Zmc2V0IiwiZm9yRWFjaCIsIm1pZGRsZXdhcmUiLCJ1c2UiLCJQcm9taXNlIiwicmVzb2x2ZSIsInJlamVjdCIsImh0dHAiLCJjcmVhdGVTZXJ2ZXIiLCJjYWxsYmFjayIsImxpc3RlbiIsInByb2Nlc3MiLCJzZW5kIiwidW5kZWZpbmVkIiwibWVzc2FnZSIsImVtaXQiLCJjb25zb2xlIiwibG9nIiwib24iLCJzb2NrZXQiLCJpbmZvIiwiSlNPTiIsInN0cmluZ2lmeSIsImFkZHJlc3MiLCJlcnJvciIsImhhZF9lcnJvciIsInNldFRpbWVvdXQiXSwibWFwcGluZ3MiOiI0TUFBQTs7QUFFQTs7QUFFTyxlQUFlQSxnQkFBZixDQUFnQyxFQUFFQyxLQUFGLEVBQVNDLElBQVQsRUFBZUMsZUFBZixFQUFoQyxFQUFrRTtBQUN2RSxRQUFNQyxTQUFTLEdBQUcsSUFBSUMsWUFBSixFQUFsQjtBQUNBRCxFQUFBQSxTQUFTLENBQUNFLGVBQVYsR0FBNEIsQ0FBNUI7O0FBRUFILEVBQUFBLGVBQWUsQ0FBQ0ksT0FBaEIsQ0FBd0JDLFVBQVUsSUFBSUosU0FBUyxDQUFDSyxHQUFWLENBQWNELFVBQWQsQ0FBdEM7QUFDQSxRQUFNLElBQUlFLE9BQUo7QUFDSixHQUFDQyxPQUFELEVBQVVDLE1BQVY7QUFDRUM7QUFDR0MsRUFBQUEsWUFESCxDQUNnQlYsU0FBUyxDQUFDVyxRQUFWLEVBRGhCO0FBRUdDLEVBQUFBLE1BRkgsQ0FFVWQsSUFGVixFQUVnQixNQUFNO0FBQ2xCLFFBQUllLE9BQU8sQ0FBQ0MsSUFBUixLQUFpQkMsU0FBckIsRUFBZ0NGLE9BQU8sQ0FBQ0MsSUFBUixDQUFhLEVBQUVFLE9BQU8sRUFBRSxrQkFBWCxFQUFiO0FBQ2hDSCxJQUFBQSxPQUFPLENBQUNJLElBQVIsQ0FBYSxXQUFiO0FBQ0FDLElBQUFBLE9BQU8sQ0FBQ0MsR0FBUixDQUFhLE9BQU10QixLQUFNLDZCQUE0QkMsSUFBSyxFQUExRDtBQUNELEdBTkg7QUFPR3NCLEVBQUFBLEVBUEgsQ0FPTSxZQVBOLEVBT29CQyxNQUFNLElBQUk7QUFDMUJILElBQUFBLE9BQU8sQ0FBQ0ksSUFBUixDQUFhLGtCQUFrQkMsSUFBSSxDQUFDQyxTQUFMLENBQWVILE1BQU0sQ0FBQ0ksT0FBUCxFQUFmLENBQS9CO0FBQ0FKLElBQUFBLE1BQU0sQ0FBQ0QsRUFBUCxDQUFVLEtBQVYsRUFBaUIsTUFBTUYsT0FBTyxDQUFDSSxJQUFSLENBQWEsd0RBQWIsQ0FBdkI7QUFDQUQsSUFBQUEsTUFBTSxDQUFDRCxFQUFQLENBQVUsU0FBVixFQUFxQixNQUFNRixPQUFPLENBQUNJLElBQVIsQ0FBYSxnQkFBYixDQUEzQjtBQUNBRCxJQUFBQSxNQUFNLENBQUNELEVBQVAsQ0FBVSxPQUFWLEVBQW1CTSxLQUFLLElBQUlSLE9BQU8sQ0FBQ0ksSUFBUixDQUFhLG1CQUFtQkMsSUFBSSxDQUFDQyxTQUFMLENBQWVFLEtBQWYsQ0FBaEMsQ0FBNUI7QUFDQUwsSUFBQUEsTUFBTSxDQUFDRCxFQUFQLENBQVUsT0FBVixFQUFtQk8sU0FBUyxJQUFJVCxPQUFPLENBQUNJLElBQVIsQ0FBYSxnQ0FBZ0NLLFNBQTdDLENBQWhDO0FBQ0QsR0FiSDtBQWNHQyxFQUFBQSxVQWRILENBY2MsQ0FkZCxFQWNpQixNQUFNVixPQUFPLENBQUNDLEdBQVIsQ0FBWSxvRkFBWixDQWR2QixLQWM2SFosT0FBTyxFQWhCbEksQ0FBTjs7QUFrQkQiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgaHR0cCBmcm9tICdodHRwJ1xuaW1wb3J0IGh0dHBzIGZyb20gJ2h0dHBzJ1xuaW1wb3J0IEtvYSBmcm9tICdrb2EnIC8vIEtvYSBhcHBsaWNhaXRvbiBzZXJ2ZXJcblxuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGNyZWF0ZUh0dHBTZXJ2ZXIoeyBsYWJlbCwgcG9ydCwgbWlkZGxld2FyZUFycmF5IH0pIHtcbiAgY29uc3Qgc2VydmVyS29hID0gbmV3IEtvYSgpIC8vIGNyZWF0ZSBLb2Egc2VydmVyXG4gIHNlcnZlcktvYS5zdWJkb21haW5PZmZzZXQgPSAxIC8vIGZvciBsb2NhbGhvc3QgZG9tYWluLlxuICAvLyByZWdpc3RlciBtaWRkbGV3YXJlXG4gIG1pZGRsZXdhcmVBcnJheS5mb3JFYWNoKG1pZGRsZXdhcmUgPT4gc2VydmVyS29hLnVzZShtaWRkbGV3YXJlKSlcbiAgYXdhaXQgbmV3IFByb21pc2UoXG4gICAgKHJlc29sdmUsIHJlamVjdCkgPT5cbiAgICAgIGh0dHBcbiAgICAgICAgLmNyZWF0ZVNlcnZlcihzZXJ2ZXJLb2EuY2FsbGJhY2soKSlcbiAgICAgICAgLmxpc3Rlbihwb3J0LCAoKSA9PiB7XG4gICAgICAgICAgaWYgKHByb2Nlc3Muc2VuZCAhPT0gdW5kZWZpbmVkKSBwcm9jZXNzLnNlbmQoeyBtZXNzYWdlOiAnU2VydmVyIGxpc3RlbmluZycgfSkgLy8gaWYgcHJvY2VzcyBpcyBhIGZvcmtlZCBjaGlsZCBwcm9jZXNzLlxuICAgICAgICAgIHByb2Nlc3MuZW1pdCgnbGlzdGVuaW5nJylcbiAgICAgICAgICBjb25zb2xlLmxvZyhg4piVJWMgJHtsYWJlbH0gc2VydmVyIGxpc3RlbmluZyBvbiBwb3J0ICR7cG9ydH1gKVxuICAgICAgICB9KVxuICAgICAgICAub24oJ2Nvbm5lY3Rpb24nLCBzb2NrZXQgPT4ge1xuICAgICAgICAgIGNvbnNvbGUuaW5mbygnU09DS0VUIE9QRU5FRCcgKyBKU09OLnN0cmluZ2lmeShzb2NrZXQuYWRkcmVzcygpKSlcbiAgICAgICAgICBzb2NrZXQub24oJ2VuZCcsICgpID0+IGNvbnNvbGUuaW5mbygnU09DS0VUIEVORDogb3RoZXIgZW5kIG9mIHRoZSBzb2NrZXQgc2VuZHMgYSBGSU4gcGFja2V0JykpXG4gICAgICAgICAgc29ja2V0Lm9uKCd0aW1lb3V0JywgKCkgPT4gY29uc29sZS5pbmZvKCdTT0NLRVQgVElNRU9VVCcpKVxuICAgICAgICAgIHNvY2tldC5vbignZXJyb3InLCBlcnJvciA9PiBjb25zb2xlLmluZm8oJ1NPQ0tFVCBFUlJPUjogJyArIEpTT04uc3RyaW5naWZ5KGVycm9yKSkpXG4gICAgICAgICAgc29ja2V0Lm9uKCdjbG9zZScsIGhhZF9lcnJvciA9PiBjb25zb2xlLmluZm8oJ1NPQ0tFVCBDTE9TRUQuIElzIEVSUk9SID86ICcgKyBoYWRfZXJyb3IpKVxuICAgICAgICB9KVxuICAgICAgICAuc2V0VGltZW91dCgwLCAoKSA9PiBjb25zb2xlLmxvZygnSFRUUCBzZXJ2ZXIgY29ubmVjdGlvbiBzb2NrZXQgd2FzIHRpbWVkb3V0IChjb25zb2xlLmxvZyBpbiBodHRwU2VydmVyLnNldFRpbWVvdXQpIScpKSAmJiByZXNvbHZlKCksXG4gIClcbn1cbiJdfQ==

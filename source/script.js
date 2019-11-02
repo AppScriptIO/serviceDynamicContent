@@ -1,59 +1,56 @@
-import filesystem from 'fs'
-import serviceConfig from './configuration/configuration.js'
-import { createHttpServer } from './utility/server.js'
-import { graphMiddleware } from './middleware/graph.middleware.js'
-import { createTemplateRenderingMiddleware } from './middleware/templateRendering.js'
-import { transformJavascriptMiddleware } from './middleware/babelTranspiler.middleware.js'
-import { serveStaticFile } from './middleware/serveFile.middleware.js'
-
-/**
-Static content Condition Graph (cdn.domain.com): 
-
-GET request:
-  /@<...> "serve files/directories with @ prefix"
-    babelTranspiler.middleware.js TODO: add condition if(targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION)
-    serveFile.middlewareGenerator.js arguments:"{"options":{"gzip":true}}"
-    "Map @ folder path" map@PathToAbsolutePath.middleware.js
-    *"set response headers + Common functions + language content + cache"
-  /asset --> callback: "{"name":"a8sdf52-43cd-91fd-9eae5843c74c" [or other entry was found with value] "da18242e-792e-4e44-a12b-b280f6331b7c","type":"middlewareNestedUnit"}"  ""{"name":"da18242e-792e-4e44-a12b-b280f6331b7c","type":"middlewareNestedUnit"}""
-      <...>$function (ifLastUrlPathtIncludesFunction.js) --> callback: "{"name":"2yvc-91fd-9eae5843c74c","type":"middlewareNestedUnit"}"
-      javascript/jspm.config.js --> value: ""{"name":"68fb59e3-af0b-4ea2-800e-7e7e37d7cc31","type":"middlewareNestedUnit"}""
-  /upload --> callback: "{"name":"9w9f-9ab6-43cd-91fd-9eae5843c74c","type":"middlewareNestedUnit"}"
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.initializeContentDelivery = initializeContentDelivery;exports.initializeContentRendering = initializeContentRendering;
+var _configuration = _interopRequireDefault(require("./configuration/configuration.js"));
+var _server = require("./utility/server.js");
+var _graphMiddleware = require("./middleware/graph.middleware.js");
+var _templateRendering = require("./middleware/templateRendering.js");
+var _babelTranspilerMiddleware = require("./middleware/babelTranspiler.middleware.js");
+var _serveFileMiddleware = require("./middleware/serveFile.middleware.js");
 
 
-*/
-export async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.contentDelivery.port }) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = _configuration.default.contentDelivery.port }) {
   let middlewareArray = [
-    transformJavascriptMiddleware(),
-    serveStaticFile({ targetProjectConfig }),
-    createTemplateRenderingMiddleware(),
-    // authorizationMiddleware(),
-    await graphMiddleware({ targetProjectConfig, entrypointKey }),
-    async (context, next) => {
-      console.log('Last Middleware reached.')
-      await next()
-      context.compress = true
-    },
-  ]
-  // create http server
-  await createHttpServer({ label: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
-}
+  (0, _babelTranspilerMiddleware.transformJavascriptMiddleware)(),
+  (0, _serveFileMiddleware.serveStaticFile)({ targetProjectConfig }),
+  (0, _templateRendering.createTemplateRenderingMiddleware)(),
 
-// Mainly user interface rendering.
-export async function initializeContentRendering({ targetProjectConfig, entrypointKey = 'default', additionalData, port = serviceConfig.contentRendering.port }) {
-  let middlewareArray = [
-    createTemplateRenderingMiddleware(),
-    async (context, next) => {
-      context.set('connection', 'keep-alive')
-      await next()
-    },
-    await graphMiddleware({ targetProjectConfig, entrypointKey }),
-  ]
+  await (0, _graphMiddleware.graphMiddleware)({ targetProjectConfig, entrypointKey }),
+  async (context, next) => {
+    console.log('Last Middleware reached.');
+    await next();
+    context.compress = true;
+  }];
 
-  // create http server
-  await createHttpServer({ label: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+
+  await (0, _server.createHttpServer)({ label: `${_configuration.default.contentDelivery.serviceName}`, port, middlewareArray });
 }
 
 
+async function initializeContentRendering({ targetProjectConfig, entrypointKey = 'default', additionalData, port = _configuration.default.contentRendering.port }) {
+  let middlewareArray = [
+  (0, _templateRendering.createTemplateRenderingMiddleware)(),
+  async (context, next) => {
+    context.set('connection', 'keep-alive');
+    await next();
+  },
+  await (0, _graphMiddleware.graphMiddleware)({ targetProjectConfig, entrypointKey })];
 
 
+
+  await (0, _server.createHttpServer)({ label: `${_configuration.default.contentRendering.serviceName}`, port, middlewareArray });
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NvdXJjZS9zY3JpcHQuanMiXSwibmFtZXMiOlsiaW5pdGlhbGl6ZUNvbnRlbnREZWxpdmVyeSIsInRhcmdldFByb2plY3RDb25maWciLCJlbnRyeXBvaW50S2V5IiwiYWRkaXRpb25hbERhdGEiLCJwb3J0Iiwic2VydmljZUNvbmZpZyIsImNvbnRlbnREZWxpdmVyeSIsIm1pZGRsZXdhcmVBcnJheSIsImNvbnRleHQiLCJuZXh0IiwiY29uc29sZSIsImxvZyIsImNvbXByZXNzIiwibGFiZWwiLCJzZXJ2aWNlTmFtZSIsImluaXRpYWxpemVDb250ZW50UmVuZGVyaW5nIiwiY29udGVudFJlbmRlcmluZyIsInNldCJdLCJtYXBwaW5ncyI6IjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBa0JPLGVBQWVBLHlCQUFmLENBQXlDLEVBQUVDLG1CQUFGLEVBQXVCQyxhQUF2QixFQUFzQ0MsY0FBdEMsRUFBc0RDLElBQUksR0FBR0MsdUJBQWNDLGVBQWQsQ0FBOEJGLElBQTNGLEVBQXpDLEVBQTRJO0FBQ2pKLE1BQUlHLGVBQWUsR0FBRztBQUNwQixpRUFEb0I7QUFFcEIsNENBQWdCLEVBQUVOLG1CQUFGLEVBQWhCLENBRm9CO0FBR3BCLDZEQUhvQjs7QUFLcEIsUUFBTSxzQ0FBZ0IsRUFBRUEsbUJBQUYsRUFBdUJDLGFBQXZCLEVBQWhCLENBTGM7QUFNcEIsU0FBT00sT0FBUCxFQUFnQkMsSUFBaEIsS0FBeUI7QUFDdkJDLElBQUFBLE9BQU8sQ0FBQ0MsR0FBUixDQUFZLDBCQUFaO0FBQ0EsVUFBTUYsSUFBSSxFQUFWO0FBQ0FELElBQUFBLE9BQU8sQ0FBQ0ksUUFBUixHQUFtQixJQUFuQjtBQUNELEdBVm1CLENBQXRCOzs7QUFhQSxRQUFNLDhCQUFpQixFQUFFQyxLQUFLLEVBQUcsR0FBRVIsdUJBQWNDLGVBQWQsQ0FBOEJRLFdBQVksRUFBdEQsRUFBeURWLElBQXpELEVBQStERyxlQUEvRCxFQUFqQixDQUFOO0FBQ0Q7OztBQUdNLGVBQWVRLDBCQUFmLENBQTBDLEVBQUVkLG1CQUFGLEVBQXVCQyxhQUFhLEdBQUcsU0FBdkMsRUFBa0RDLGNBQWxELEVBQWtFQyxJQUFJLEdBQUdDLHVCQUFjVyxnQkFBZCxDQUErQlosSUFBeEcsRUFBMUMsRUFBMEo7QUFDL0osTUFBSUcsZUFBZSxHQUFHO0FBQ3BCLDZEQURvQjtBQUVwQixTQUFPQyxPQUFQLEVBQWdCQyxJQUFoQixLQUF5QjtBQUN2QkQsSUFBQUEsT0FBTyxDQUFDUyxHQUFSLENBQVksWUFBWixFQUEwQixZQUExQjtBQUNBLFVBQU1SLElBQUksRUFBVjtBQUNELEdBTG1CO0FBTXBCLFFBQU0sc0NBQWdCLEVBQUVSLG1CQUFGLEVBQXVCQyxhQUF2QixFQUFoQixDQU5jLENBQXRCOzs7O0FBVUEsUUFBTSw4QkFBaUIsRUFBRVcsS0FBSyxFQUFHLEdBQUVSLHVCQUFjVyxnQkFBZCxDQUErQkYsV0FBWSxFQUF2RCxFQUEwRFYsSUFBMUQsRUFBZ0VHLGVBQWhFLEVBQWpCLENBQU47QUFDRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBmaWxlc3lzdGVtIGZyb20gJ2ZzJ1xuaW1wb3J0IHNlcnZpY2VDb25maWcgZnJvbSAnLi9jb25maWd1cmF0aW9uL2NvbmZpZ3VyYXRpb24uanMnXG5pbXBvcnQgeyBjcmVhdGVIdHRwU2VydmVyIH0gZnJvbSAnLi91dGlsaXR5L3NlcnZlci5qcydcbmltcG9ydCB7IGdyYXBoTWlkZGxld2FyZSB9IGZyb20gJy4vbWlkZGxld2FyZS9ncmFwaC5taWRkbGV3YXJlLmpzJ1xuaW1wb3J0IHsgY3JlYXRlVGVtcGxhdGVSZW5kZXJpbmdNaWRkbGV3YXJlIH0gZnJvbSAnLi9taWRkbGV3YXJlL3RlbXBsYXRlUmVuZGVyaW5nLmpzJ1xuaW1wb3J0IHsgdHJhbnNmb3JtSmF2YXNjcmlwdE1pZGRsZXdhcmUgfSBmcm9tICcuL21pZGRsZXdhcmUvYmFiZWxUcmFuc3BpbGVyLm1pZGRsZXdhcmUuanMnXG5pbXBvcnQgeyBzZXJ2ZVN0YXRpY0ZpbGUgfSBmcm9tICcuL21pZGRsZXdhcmUvc2VydmVGaWxlLm1pZGRsZXdhcmUuanMnXG5cbi8qKlxuU3RhdGljIGNvbnRlbnQgQ29uZGl0aW9uIEdyYXBoIChjZG4uZG9tYWluLmNvbSk6IFxuXG5HRVQgcmVxdWVzdDpcbiAgL0A8Li4uPiBcInNlcnZlIGZpbGVzL2RpcmVjdG9yaWVzIHdpdGggQCBwcmVmaXhcIlxuICAgIGJhYmVsVHJhbnNwaWxlci5taWRkbGV3YXJlLmpzIFRPRE86IGFkZCBjb25kaXRpb24gaWYodGFyZ2V0UHJvamVjdENvbmZpZy5ydW50aW1lVmFyaWFibGUuREVQTE9ZTUVOVCA9PSAnZGV2ZWxvcG1lbnQnICYmICF0YXJnZXRQcm9qZWN0Q29uZmlnLnJ1bnRpbWVWYXJpYWJsZS5ESVNUUklCVVRJT04pXG4gICAgc2VydmVGaWxlLm1pZGRsZXdhcmVHZW5lcmF0b3IuanMgYXJndW1lbnRzOlwie1wib3B0aW9uc1wiOntcImd6aXBcIjp0cnVlfX1cIlxuICAgIFwiTWFwIEAgZm9sZGVyIHBhdGhcIiBtYXBAUGF0aFRvQWJzb2x1dGVQYXRoLm1pZGRsZXdhcmUuanNcbiAgICAqXCJzZXQgcmVzcG9uc2UgaGVhZGVycyArIENvbW1vbiBmdW5jdGlvbnMgKyBsYW5ndWFnZSBjb250ZW50ICsgY2FjaGVcIlxuICAvYXNzZXQgLS0+IGNhbGxiYWNrOiBcIntcIm5hbWVcIjpcImE4c2RmNTItNDNjZC05MWZkLTllYWU1ODQzYzc0Y1wiIFtvciBvdGhlciBlbnRyeSB3YXMgZm91bmQgd2l0aCB2YWx1ZV0gXCJkYTE4MjQyZS03OTJlLTRlNDQtYTEyYi1iMjgwZjYzMzFiN2NcIixcInR5cGVcIjpcIm1pZGRsZXdhcmVOZXN0ZWRVbml0XCJ9XCIgIFwiXCJ7XCJuYW1lXCI6XCJkYTE4MjQyZS03OTJlLTRlNDQtYTEyYi1iMjgwZjYzMzFiN2NcIixcInR5cGVcIjpcIm1pZGRsZXdhcmVOZXN0ZWRVbml0XCJ9XCJcIlxuICAgICAgPC4uLj4kZnVuY3Rpb24gKGlmTGFzdFVybFBhdGh0SW5jbHVkZXNGdW5jdGlvbi5qcykgLS0+IGNhbGxiYWNrOiBcIntcIm5hbWVcIjpcIjJ5dmMtOTFmZC05ZWFlNTg0M2M3NGNcIixcInR5cGVcIjpcIm1pZGRsZXdhcmVOZXN0ZWRVbml0XCJ9XCJcbiAgICAgIGphdmFzY3JpcHQvanNwbS5jb25maWcuanMgLS0+IHZhbHVlOiBcIlwie1wibmFtZVwiOlwiNjhmYjU5ZTMtYWYwYi00ZWEyLTgwMGUtN2U3ZTM3ZDdjYzMxXCIsXCJ0eXBlXCI6XCJtaWRkbGV3YXJlTmVzdGVkVW5pdFwifVwiXCJcbiAgL3VwbG9hZCAtLT4gY2FsbGJhY2s6IFwie1wibmFtZVwiOlwiOXc5Zi05YWI2LTQzY2QtOTFmZC05ZWFlNTg0M2M3NGNcIixcInR5cGVcIjpcIm1pZGRsZXdhcmVOZXN0ZWRVbml0XCJ9XCJcblxuXG4qL1xuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGluaXRpYWxpemVDb250ZW50RGVsaXZlcnkoeyB0YXJnZXRQcm9qZWN0Q29uZmlnLCBlbnRyeXBvaW50S2V5LCBhZGRpdGlvbmFsRGF0YSwgcG9ydCA9IHNlcnZpY2VDb25maWcuY29udGVudERlbGl2ZXJ5LnBvcnQgfSkge1xuICBsZXQgbWlkZGxld2FyZUFycmF5ID0gW1xuICAgIHRyYW5zZm9ybUphdmFzY3JpcHRNaWRkbGV3YXJlKCksXG4gICAgc2VydmVTdGF0aWNGaWxlKHsgdGFyZ2V0UHJvamVjdENvbmZpZyB9KSxcbiAgICBjcmVhdGVUZW1wbGF0ZVJlbmRlcmluZ01pZGRsZXdhcmUoKSxcbiAgICAvLyBhdXRob3JpemF0aW9uTWlkZGxld2FyZSgpLFxuICAgIGF3YWl0IGdyYXBoTWlkZGxld2FyZSh7IHRhcmdldFByb2plY3RDb25maWcsIGVudHJ5cG9pbnRLZXkgfSksXG4gICAgYXN5bmMgKGNvbnRleHQsIG5leHQpID0+IHtcbiAgICAgIGNvbnNvbGUubG9nKCdMYXN0IE1pZGRsZXdhcmUgcmVhY2hlZC4nKVxuICAgICAgYXdhaXQgbmV4dCgpXG4gICAgICBjb250ZXh0LmNvbXByZXNzID0gdHJ1ZVxuICAgIH0sXG4gIF1cbiAgLy8gY3JlYXRlIGh0dHAgc2VydmVyXG4gIGF3YWl0IGNyZWF0ZUh0dHBTZXJ2ZXIoeyBsYWJlbDogYCR7c2VydmljZUNvbmZpZy5jb250ZW50RGVsaXZlcnkuc2VydmljZU5hbWV9YCwgcG9ydCwgbWlkZGxld2FyZUFycmF5IH0pXG59XG5cbi8vIE1haW5seSB1c2VyIGludGVyZmFjZSByZW5kZXJpbmcuXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gaW5pdGlhbGl6ZUNvbnRlbnRSZW5kZXJpbmcoeyB0YXJnZXRQcm9qZWN0Q29uZmlnLCBlbnRyeXBvaW50S2V5ID0gJ2RlZmF1bHQnLCBhZGRpdGlvbmFsRGF0YSwgcG9ydCA9IHNlcnZpY2VDb25maWcuY29udGVudFJlbmRlcmluZy5wb3J0IH0pIHtcbiAgbGV0IG1pZGRsZXdhcmVBcnJheSA9IFtcbiAgICBjcmVhdGVUZW1wbGF0ZVJlbmRlcmluZ01pZGRsZXdhcmUoKSxcbiAgICBhc3luYyAoY29udGV4dCwgbmV4dCkgPT4ge1xuICAgICAgY29udGV4dC5zZXQoJ2Nvbm5lY3Rpb24nLCAna2VlcC1hbGl2ZScpXG4gICAgICBhd2FpdCBuZXh0KClcbiAgICB9LFxuICAgIGF3YWl0IGdyYXBoTWlkZGxld2FyZSh7IHRhcmdldFByb2plY3RDb25maWcsIGVudHJ5cG9pbnRLZXkgfSksXG4gIF1cblxuICAvLyBjcmVhdGUgaHR0cCBzZXJ2ZXJcbiAgYXdhaXQgY3JlYXRlSHR0cFNlcnZlcih7IGxhYmVsOiBgJHtzZXJ2aWNlQ29uZmlnLmNvbnRlbnRSZW5kZXJpbmcuc2VydmljZU5hbWV9YCwgcG9ydCwgbWlkZGxld2FyZUFycmF5IH0pXG59XG5cblxuXG5cbiJdfQ==
