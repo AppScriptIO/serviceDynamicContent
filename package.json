@@ -1,7 +1,7 @@
 {
 	"name": "@dependency/serviceDynamicContent",
 	"main": "./entrypoint/programmaticAPI",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"scripts": {
 		"exportGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.exportAllGraphData({targetPath: './temporary/resource',fileName: 'graphData.json'})\"",
 		"loadGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.loadGraphDataFromFile({ shouldClearDatabase: true, graphDataFilePath: './resource/graphData.json' })\"",
