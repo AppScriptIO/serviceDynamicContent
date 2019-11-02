@@ -39,3 +39,6 @@ export async function initialize({ targetProjectConfig, entrypointKey, additiona
   // create http server
   await createHttpServer({ label: serviceConfig.serviceName, port, middlewareArray })
 }
+
+export * as staticContent from './service/staticContent'
+// export * as webappUserInterface from './service/webappUserInterface'

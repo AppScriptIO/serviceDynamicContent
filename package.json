@@ -1,5 +1,5 @@
 {
-	"name": "@dependency/serviceStaticContent",
+	"name": "@dependency/serviceDynamicContent",
 	"main": "./entrypoint/programmaticAPI",
 	"version": "1.0.0",
 	"scripts": {
@@ -10,16 +10,14 @@
 		"install": "yarn workspaces run install",
 		"upgrade": "yarn workspaces run upgrade"
 	},
-	"workspaces": [
-		"./source/service/*"
-	],
 	"flat": false,
 	"private": true,
 	"dependencies": {  
 		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^1.x.x",
 		"koa": "*",
-		"koa-views": "*"
-
+		"koa-views": "*",
+		"openid-client": "*",
+		"underscore": "*"
 	},
 	"devDependencies": {
 		"@dependency/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^1.x.x",

@@ -1,1 +1,1 @@
-export * as staticContent from './service/staticContent'
+export * as dynamicContent from './service/dynamicContent'
