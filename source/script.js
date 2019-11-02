@@ -1,11 +1,10 @@
-// Static content server - could be upgraded to Content Delivery Network
-import { createTemplateRenderingMiddleware } from './middleware/templateRendering.js'
-import { graphMiddleware } from './middleware/graphMiddleware.js'
+import filesystem from 'fs'
 import serviceConfig from './configuration/configuration.js'
-import { createHttpServer } from '../../utility/server.js'
-
-import { transformJavascriptMiddleware } from '../../middleware/babelTranspiler.middleware.js'
-import { serveStaticFile } from '../../middleware/serveFile.middleware.js'
+import { createHttpServer } from './utility/server.js'
+import { graphMiddleware } from './middleware/graph.middleware.js'
+import { createTemplateRenderingMiddleware } from './middleware/templateRendering.js'
+import { transformJavascriptMiddleware } from './middleware/babelTranspiler.middleware.js'
+import { serveStaticFile } from './middleware/serveFile.middleware.js'
 
 /**
 Static content Condition Graph (cdn.domain.com): 
@@ -23,7 +22,7 @@ GET request:
 
 
 */
-export async function initialize({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.port }) {
+export async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.contentDelivery.port }) {
   let middlewareArray = [
     transformJavascriptMiddleware(),
     serveStaticFile({ targetProjectConfig }),
@@ -37,8 +36,24 @@ export async function initialize({ targetProjectConfig, entrypointKey, additiona
     },
   ]
   // create http server
-  await createHttpServer({ label: serviceConfig.serviceName, port, middlewareArray })
+  await createHttpServer({ label: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
 }
 
-export * as staticContent from './service/staticContent'
-// export * as webappUserInterface from './service/webappUserInterface'
+// Mainly user interface rendering.
+export async function initializeContentRendering({ targetProjectConfig, entrypointKey = 'default', additionalData, port = serviceConfig.contentRendering.port }) {
+  let middlewareArray = [
+    createTemplateRenderingMiddleware(),
+    async (context, next) => {
+      context.set('connection', 'keep-alive')
+      await next()
+    },
+    await graphMiddleware({ targetProjectConfig, entrypointKey }),
+  ]
+
+  // create http server
+  await createHttpServer({ label: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+}
+
+
+
+

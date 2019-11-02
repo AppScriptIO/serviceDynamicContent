@@ -6,18 +6,30 @@
 		"exportGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.exportAllGraphData({targetPath: './temporary/resource',fileName: 'graphData.json'})\"",
 		"loadGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.loadGraphDataFromFile({ shouldClearDatabase: true, graphDataFilePath: './resource/graphData.json' })\"",
 		"build": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".buildSourceCode.moduleProject({}, {compile:[/**'./test'*/]})\"",
-		"buildAndRelease": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".buildAndRelease.moduleProject({})\"",
-		"install": "yarn workspaces run install",
-		"upgrade": "yarn workspaces run upgrade"
+		"buildAndRelease": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".buildAndRelease.moduleProject({})\""
 	},
 	"flat": false,
 	"private": true,
-	"dependencies": {  
+	"dependencies": {
+		"openid-client": "*",
+		"underscore": "*",
+		"@babel/core": "*",
 		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^1.x.x",
+		"@dependency/streamToStringConvertion": "https://github.com/AppScriptIO/streamToStringConvertion#semver:^1.x.x",
+		"@dependency/wrapStringStream": "https://github.com/AppScriptIO/wrapStringStream#semver:^1.x.x",
+		"co-body": "*",
 		"koa": "*",
 		"koa-views": "*",
-		"openid-client": "*",
-		"underscore": "*"
+		"koa-bodyparser": "^4.2.1",
+		"koa-compress": "*",
+		"koa-json-error": "*",
+		"koa-logger": "*",
+		"koa-response-time": "*",
+		"koa-sendfile": "*",
+		"moment": "*",
+		"multistream": "*",
+		"promise-events": "*",
+		"useragent": "*"
 	},
 	"devDependencies": {
 		"@dependency/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^1.x.x",

@@ -1,6 +1,6 @@
 import underscore from 'underscore'
 import koaViews from 'koa-views'
-import { underscoreTemplateInterpolationSetting } from '../../../utility/underscoreTemplateInterpolation.js'
+import { underscoreTemplateInterpolationSetting } from '../utility/underscoreTemplateInterpolation.js'
 
 export function createTemplateRenderingMiddleware() {
   underscore.templateSettings = underscoreTemplateInterpolationSetting
