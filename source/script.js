@@ -1,34 +1,75 @@
 import filesystem from 'fs'
-import serviceConfig from './configuration/configuration.js'
+import * as serviceConfig from './configuration/configuration.js'
 import { createHttpServer } from './utility/server.js'
-import { graphMiddleware } from './middleware/graph.middleware.js'
-import { createTemplateRenderingMiddleware } from './middleware/templateRendering.js'
-import { transformJavascriptMiddleware } from './middleware/babelTranspiler.middleware.js'
-import { serveStaticFile } from './middleware/serveFile.middleware.js'
+import { graphMiddleware } from './middleware/graph.js'
+import { templateRenderingMiddleware } from './middleware/templateRendering.js'
+import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
+import { serveStaticFile } from './middleware/serveFile.js'
+import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
 
 /**
 Static content Condition Graph (cdn.domain.com): 
 
 GET request:
-  /@<...> "serve files/directories with @ prefix"
-    babelTranspiler.middleware.js TODO: add condition if(targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION)
-    serveFile.middlewareGenerator.js arguments:"{"options":{"gzip":true}}"
-    "Map @ folder path" map@PathToAbsolutePath.middleware.js
-    *"set response headers + Common functions + language content + cache"
-  /asset --> callback: "{"name":"a8sdf52-43cd-91fd-9eae5843c74c" [or other entry was found with value] "da18242e-792e-4e44-a12b-b280f6331b7c","type":"middlewareNestedUnit"}"  ""{"name":"da18242e-792e-4e44-a12b-b280f6331b7c","type":"middlewareNestedUnit"}""
-      <...>$function (ifLastUrlPathtIncludesFunction.js) --> callback: "{"name":"2yvc-91fd-9eae5843c74c","type":"middlewareNestedUnit"}"
-      javascript/jspm.config.js --> value: ""{"name":"68fb59e3-af0b-4ea2-800e-7e7e37d7cc31","type":"middlewareNestedUnit"}""
-  /upload --> callback: "{"name":"9w9f-9ab6-43cd-91fd-9eae5843c74c","type":"middlewareNestedUnit"}"
+/@<...> 
+    babelTranspiler.js TODO: add condition if(targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION)
+    serveFile.js 
+    map@PathToAbsolutePath.js
+    setResponseHeaders.js
+    languageContent.js
+    useragentDetection.js
+    bodyParser.js
+    serverCommonFunctionality.js
+    notFound.js
+    cacheControl.js
 
+if(/asset)
+    setResponseHeaders.js
+    languageContent.js
+    useragentDetection.js
+    bodyParser.js
+    serverCommonFunctionality.js
+    notFound.js
+    cacheControl.js
+    serveFile.js
+
+    if(<...>$function)
+      setResponseHeaders.js
+      languageContent.js
+      useragentDetection.js
+      bodyParser.js
+      serverCommonFunctionality.js
+      notFound.js
+      cacheControl.js
+      serveServerSideRenderedFile:serveFile.js
+
+    if(javascript/jspm.config.js) 
+      serve jspm file (/asset/javascript/jspm.config.js).
+
+if(/upload)
+    setResponseHeaders.js
+    languageContent.js
+    useragentDetection.js
+    bodyParser.js
+    serverCommonFunctionality.js
+    notFound.js
+    cacheControl.js
+    serveFile
+
+
+
+
+arguments:"{"options":{"gzip":true}}"
 
 */
 export async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.contentDelivery.port }) {
   let middlewareArray = [
+    pickClientSideProjectConfig({ targetProjectConfig }),
     transformJavascriptMiddleware(),
-    serveStaticFile({ targetProjectConfig }),
-    createTemplateRenderingMiddleware(),
+    // serveStaticFile({ targetProjectConfig }),
+    templateRenderingMiddleware(),
     // authorizationMiddleware(),
-    await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    // await graphMiddleware({ targetProjectConfig, entrypointKey }),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()
@@ -42,7 +83,7 @@ export async function initializeContentDelivery({ targetProjectConfig, entrypoin
 // Mainly user interface rendering.
 export async function initializeContentRendering({ targetProjectConfig, entrypointKey = 'default', additionalData, port = serviceConfig.contentRendering.port }) {
   let middlewareArray = [
-    createTemplateRenderingMiddleware(),
+    templateRenderingMiddleware(),
     async (context, next) => {
       context.set('connection', 'keep-alive')
       await next()
@@ -53,7 +94,3 @@ export async function initializeContentRendering({ targetProjectConfig, entrypoi
   // create http server
   await createHttpServer({ label: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
 }
-
-
-
-

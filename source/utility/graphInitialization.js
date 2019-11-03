@@ -14,7 +14,7 @@ const { Graph } = GraphModule,
   { GraphTraversal } = GraphTraversalModule
 
 import composeMiddleware from 'koa-compose'
-import { bodyParserMiddleware } from '../middleware/bodyParser.middleware.js'
+import { bodyParserMiddleware } from '../middleware/bodyParser.js'
 
 const debugGraphMiddleware = targetMiddleware =>
   new Proxy(targetMiddleware, {

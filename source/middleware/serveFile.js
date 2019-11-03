@@ -3,11 +3,10 @@ import filesystem from 'fs'
 import Stream from 'stream'
 import multistream from 'multistream'
 import underscore from 'underscore'
-// import serverStatic from 'koa-static' // Static files.
 import send from 'koa-sendfile' // Static files.
+// import serverStatic from 'koa-static' // Static files.
 // import mount from 'koa-mount'
 import { wrapStringStream } from '@dependency/wrapStringStream'
-import { streamToString } from '@dependency/streamToStringConvertion'
 
 /**
  * serve static file.
@@ -15,6 +14,7 @@ import { streamToString } from '@dependency/streamToStringConvertion'
  */
 export let serveStaticFile = ({ targetProjectConfig } = {}) =>
   async function(context, next) {
+    let option = {}
     let relativeFilePath = option.filePath || context.path // a predefined path or an extracted url path
     let baseFolderRelativePath = option.directoryRelativePath || '' // additional folder path.
     let clientSidePath = targetProjectConfig.clientSidePath
