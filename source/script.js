@@ -66,7 +66,7 @@ export async function initializeContentDelivery({ targetProjectConfig, entrypoin
   let middlewareArray = [
     pickClientSideProjectConfig({ targetProjectConfig }),
     transformJavascriptMiddleware(),
-    // serveStaticFile({ targetProjectConfig }),
+    serveStaticFile({ targetProjectConfig }),
     templateRenderingMiddleware(),
     // authorizationMiddleware(),
     // await graphMiddleware({ targetProjectConfig, entrypointKey }),

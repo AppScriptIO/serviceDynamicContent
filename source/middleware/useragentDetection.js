@@ -1,5 +1,6 @@
 import path from 'path'
 import assert from 'assert'
+import * as symbol from '../symbol.reference.js'
 const useragentParser = require('useragent') // https://www.npmjs.com/package/useragent
 require('useragent/features')
 
@@ -12,6 +13,6 @@ export const pickClientSideProjectConfig = ({ targetProjectConfig }) => async (c
   clientSideProjectConfig ||= targetProjectConfig.clientSideProjectConfigList.find(config => !config.targetAgent) // defualt to the configuration which is not restricted to specific client agent information.
   assert(clientSideProjectConfig, `• No clientSideProjectConfig was found satisfying the current agent header information.`)
   // set resolved clientSide config object
-  context.clientSideProjectConfig = clientSideProjectConfig
+  context[symbol.context.clientSideProjectConfig] = clientSideProjectConfig
   await next()
 }

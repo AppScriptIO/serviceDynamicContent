@@ -7,6 +7,7 @@ import send from 'koa-sendfile' // Static files.
 // import serverStatic from 'koa-static' // Static files.
 // import mount from 'koa-mount'
 import { wrapStringStream } from '@dependency/wrapStringStream'
+import * as symbol from '../symbol.reference.js'
 
 /**
  * serve static file.
@@ -17,8 +18,7 @@ export let serveStaticFile = ({ targetProjectConfig } = {}) =>
     let option = {}
     let relativeFilePath = option.filePath || context.path // a predefined path or an extracted url path
     let baseFolderRelativePath = option.directoryRelativePath || '' // additional folder path.
-    let clientSidePath = targetProjectConfig.clientSidePath
-    let absoluteFilePath = path.normalize(path.join(clientSidePath, baseFolderRelativePath, relativeFilePath))
+    let absoluteFilePath = path.normalize(path.join(context[symbol.context.clientSideProjectConfig].path, baseFolderRelativePath, relativeFilePath))
     let fileStats = await send(context, absoluteFilePath)
     // if file doesn't exist then pass to the next middleware.
     if (!fileStats || !fileStats.isFile()) await next()
