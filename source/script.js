@@ -1,7 +1,7 @@
 import filesystem from 'fs'
 import * as serviceConfig from './configuration/configuration.js'
 import { createHttpServer } from './utility/server.js'
-import { graphMiddleware } from './middleware/graph.js'
+import { graphMiddlewareImmediatelyExecuted } from './middleware/graph.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile } from './middleware/serveFile.js'
@@ -69,7 +69,7 @@ export async function initializeContentDelivery({ targetProjectConfig, entrypoin
     serveStaticFile({ targetProjectConfig }),
     templateRenderingMiddleware(),
     // authorizationMiddleware(),
-    // await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    // await graphMiddlewareImmediatelyExecuted({ targetProjectConfig, entrypointKey }),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()
@@ -88,7 +88,7 @@ export async function initializeContentRendering({ targetProjectConfig, entrypoi
       context.set('connection', 'keep-alive')
       await next()
     },
-    await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    await graphMiddlewareImmediatelyExecuted({ targetProjectConfig, entrypointKey }),
   ]
 
   // create http server
