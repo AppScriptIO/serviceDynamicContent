@@ -4,7 +4,7 @@ import { createHttpServer } from './utility/server.js'
 import { graphMiddleware } from './middleware/graph.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
-import { serveStaticFile } from './middleware/serveFile.js'
+import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
 
 /**
@@ -63,11 +63,11 @@ arguments:"{"options":{"gzip":true}}"
 export async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.contentDelivery.port }) {
   let middlewareArray = [
     pickClientSideProjectConfig({ targetProjectConfig }),
-    transformJavascriptMiddleware(),
-    serveStaticFile({ targetProjectConfig, directoryRelativePath: 'asset' }),
     templateRenderingMiddleware(),
-    // authorizationMiddleware(),
+    // serveStaticFile({ targetProjectConfig, basePath: 'asset' }),
+    serveServerSideRenderedFile({}),
     // await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    transformJavascriptMiddleware(),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()

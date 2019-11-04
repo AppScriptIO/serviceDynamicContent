@@ -1,7 +1,7 @@
 /** Wrap css style in a tag (created using javascript) - to support shared styles in Polymer 3 javascript imports
  * Polyfill from https://github.com/Polymer/polymer-modulizer/blob/f1ef5dea3978a9601248d73f4d23dc033382286c/fixtures/packages/polymer/expected/test/unit/styling-import-shared-styles.js
  */
-export async function convertSharedStylesToJS({ filePath, context }) {
+export async function convertSharedStylesToJS({ filePath }) {
   return await wrapStringStream({
     stream: filesystem.createReadStream(filePath),
     beforeString: "const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `",
@@ -10,7 +10,7 @@ export async function convertSharedStylesToJS({ filePath, context }) {
 }
 
 /** Wrap text file with export default - converting it to js module */
-export async function covertTextFileToJSModule({ filePath, context }) {
+export async function covertTextFileToJSModule({ filePath }) {
   let fileStream = filesystem.createReadStream(filePath)
   return await wrapStringStream({ stream: fileStream, beforeString: 'export default `', afterString: '`' })
 }
@@ -18,7 +18,7 @@ export async function covertTextFileToJSModule({ filePath, context }) {
 /**
  * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations.
  */
-export function renderJSImportWebcomponent({ filePath, context }) {
+export function renderJSImportWebcomponent({ filePath }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
   let argument = { layoutElement: 'webapp-layout-list' }
   let view = {}
@@ -39,7 +39,7 @@ export function renderJSImportWebcomponent({ filePath, context }) {
 /**
  * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations.
  */
-export function renderHTMLImportWebcomponent({ filePath, context }) {
+export function renderHTMLImportWebcomponent({ filePath }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
   let argument = { layoutElement: 'webapp-layout-list' }
   let view = {}
@@ -66,24 +66,18 @@ export function renderHTMLImportWebcomponent({ filePath, context }) {
 //   instance: [],
 // }
 // getTableDocument.instance['template_documentBackend'] = getTableDocument.generate('webappSetting', 'template_documentBackend')
-export function renderTemplateDocument({ documentKey }) {
-  let TemplateController = createStaticInstanceClasses({
-    Superclass: Application,
-    implementationType: 'Template',
-  })
-  return async (context, next) => {
-    let connection = Application.rethinkdbConnection
-    let documentObject = await getTableDocument.instance['template_documentBackend'](connection, documentKey)
-    // context.instance.config.clientBasePath should be defined using useragentDetection module.
-    // NOTE:  documentKey should be received from database and nested unit key retreived from there too.
-    // document could have different rules for users etc.. access previlages
-    let templateController = await TemplateController.createContext({ portAppInstance: context.instance })
+export const renderTemplateDocument = ({ documentKey }) => async (context, next) => {
+  let connection = Application.rethinkdbConnection
+  let documentObject = await getTableDocument.instance['template_documentBackend'](connection, documentKey)
+  // context.instance.config.clientBasePath should be defined using useragentDetection module.
+  // NOTE:  documentKey should be received from database and nested unit key retreived from there too.
+  // document could have different rules for users etc.. access previlages
+  let templateController = await TemplateController.createContext({ portAppInstance: context.instance })
 
-    let renderedContent = await templateController.initializeNestedUnit({ nestedUnitKey: documentObject.templateNestedUnit })
-    context.body = renderedContent
+  let renderedContent = await templateController.initializeNestedUnit({ nestedUnitKey: documentObject.templateNestedUnit })
+  context.body = renderedContent
 
-    await next()
-  }
+  await next()
 }
 
 // example of rendering template not using the graph traversal module:

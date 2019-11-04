@@ -18,52 +18,62 @@ import { convertSharedStylesToJS, renderHTMLImportWebcomponent, covertTextFileTo
 
 /**
  * serve static file.
- * @dependence userAgent middleware
+ * @dependency useragentDetection middleware, userAgent modules
  * @param filepath maybe a partial path which uses basePath to create an absolute path, or it may provide a full path without basePath
  * @param basePath relative to the clientside source/distribution path.
+ * @param context[symbol.context.clientSideProjectConfig] is a property created by a previous useragentDetection middleware
  */
 export let serveStaticFile = ({ targetProjectConfig, filePath, basePath } = {}) =>
   async function(context, next) {
-    let relativeFilePath = filePath || context.path // a predefined path or an extracted url path
-    let baseFolderRelativePath = basePath || '' // additional folder path.
-    let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath, relativeFilePath)
-
+    let absoluteFilePath = path.join(
+      context[symbol.context.clientSideProjectConfig].path,
+      basePath || '', // additional folder path.
+      filePath || context.path, // a predefined path or an extracted url path
+    )
     let fileStats = await send(context, absoluteFilePath)
     // if file doesn't exist then pass to the next middleware.
     if (!fileStats || !fileStats.isFile()) await next()
   }
 
-// read streams and send them using koa - https://github.com/koajs/koa/issues/944 http://book.mixu.net/node/ch9.html
-// TODO: change file name to something like 'render serverside javascript' & convert function to be used for other files not only web components.
-export const serveServerSideRenderedFile = option => async (context, next) => {
-  let clientSidePath = context.instance.config.clientSidePath
-  let baseFolderRelativePath = option.directoryRelativePath || '' // additional folder path.
-  let filePath = option.filePath || context.path // a predefined path or an extracted url path
-  let renderType = option.renderType // check if renderType is in nested unit options/arguments if not use the $ in filePath (as all paths should contain $ sign from url because the condition claims it, can be overridden using option argument)
-    ? option.renderType
-    : filePath.substr(filePath.lastIndexOf('$') + 1, filePath.length) // $function extracted from url after '$' signature
-  let lastIndexPosition = filePath.lastIndexOf('$') == -1 ? filePath.length : filePath.lastIndexOf('$')
-  let relativeFilePath = option.renderType ? filePath : filePath.substr(0, lastIndexPosition) // remove function name
-  let absoluteFilePath = path.normalize(path.join(clientSidePath, baseFolderRelativePath, relativeFilePath))
+/**
+ * servers serverside rendered javascript blocks or other rendering.
+ * @dependency useragentDetection middleware, userAgent modules
+ * @dependency templateRenderingMiddleware middleware, koa-views & underscore modules
+ * @param context[symbol.context.clientSideProjectConfig] is a property created by a previous useragentDetection middleware
+ * Resources:
+ * - read streams and send them using koa - https://github.com/koajs/koa/issues/944 http://book.mixu.net/node/ch9.html
+ */
+export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType } = {}) => async (context, next) => {
+  let filePath_ = filePath || context.path // a predefined path or an extracted url path
+  // check if renderType is in nested unit options/arguments if not use the $ in filePath (as all paths should contain $ sign from url because the condition claims it, can be overridden using option argument)
+  let renderType_ = renderType ? renderType : filePath_.substr(filePath_.lastIndexOf('$') + 1, filePath_.length) // $function extracted from url after '$' signature
+  let lastIndexPosition = filePath_.lastIndexOf('$') == -1 ? filePath_.length : filePath_.lastIndexOf('$')
+  let absoluteFilePath = path.join(
+    context[symbol.context.clientSideProjectConfig].path,
+    basePath || '', // additional folder path.
+    renderType_ ? filePath_ : filePath_.substr(0, lastIndexPosition), // remove function name
+  )
+
+  console.log(absoluteFilePath)
 
   let renderedContent
-  switch (renderType) {
+  switch (renderType_) {
     case 'convertSharedStylesToJS':
-      renderedContent = await convertSharedStylesToJS({ filePath: absoluteFilePath, context })
+      renderedContent = await convertSharedStylesToJS({ filePath: absoluteFilePath })
       context.body = renderedContent
       context.response.type = 'application/javascript'
       await next()
       break
 
     case 'covertTextFileToJSModule':
-      renderedContent = await covertTextFileToJSModule({ filePath: absoluteFilePath, context })
+      renderedContent = await covertTextFileToJSModule({ filePath: absoluteFilePath })
       context.body = renderedContent
       context.response.type = 'application/javascript'
       await next()
       break
 
     case 'renderHTMLImportWebcomponent':
-      renderedContent = renderHTMLImportWebcomponent({ filePath: absoluteFilePath, context })
+      renderedContent = renderHTMLImportWebcomponent({ filePath: absoluteFilePath })
       context.body = renderedContent
       await next()
       break
@@ -76,38 +86,32 @@ export const serveServerSideRenderedFile = option => async (context, next) => {
       break
 
     default:
-      if (option.mimeType) {
+      if (mimeType)
         // Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
         try {
           // render template
           renderedContent = filesystem.readFileSync(absoluteFilePath, 'utf8')
           context.body = underscore.template(renderedContent)({
-            Application,
             context,
             view: {},
             argument: {},
           }) // Koa handles the stream and send it to the client.
-          // TODO: detect MIME type automatically and support other mimes.
-          context.response.type = option.mimeType
+          context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
         } catch (error) {
           console.log(error)
           await next()
         }
-      } else {
-        if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-          // serve rendered file. Implementation using render using underscore (framework like).
-          await context.render(absoluteFilePath, {
-            context,
-            Application,
-            view: {},
-            argument: { layoutElement: 'webapp-layout-list' },
-          })
-          context.response.type = path.extname(absoluteFilePath)
-          await next()
-        } else {
-          await next()
-        }
-      }
+      else if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
+        // serve rendered file. Implementation using render using underscore (framework like).
+        await context.render(absoluteFilePath, {
+          context,
+          view: {},
+          argument: { layoutElement: 'webapp-layout-list' },
+        })
+        context.response.type = path.extname(absoluteFilePath)
+        await next()
+      } else await next()
+
       break
   }
 }

@@ -3,7 +3,7 @@ import * as graphData from '../../resource/graphData.json'
 
 import composeMiddleware from 'koa-compose'
 import { bodyParserMiddleware } from '../middleware/bodyParser.js'
-import { serveStaticFile } from '../middleware/serveFile.js'
+import { serveStaticFile, serveServerSideRenderedFile } from '../middleware/serveFile.js'
 
 const debugGraphMiddleware = targetMiddleware =>
   new Proxy(targetMiddleware, {
@@ -28,6 +28,8 @@ export async function graphMiddleware({
     // middlewares
     bodyParser: () => bodyParserMiddleware |> debugGraphMiddleware,
     serveStaticFile: ({ node }) => serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }),
+    serveServerSideRenderedFile: ({ node }) =>
+      serveServerSideRenderedFile({ filePath: node.properties.filePath, basePath: node.properties.basePath, renderType: node.properties.renderType, mimeType: node.properties.mimeType }),
     // conditions
   }
 
