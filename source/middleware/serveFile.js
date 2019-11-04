@@ -19,13 +19,14 @@ import { convertSharedStylesToJS, renderHTMLImportWebcomponent, covertTextFileTo
 /**
  * serve static file.
  * @dependence userAgent middleware
+ * @param filepath maybe a partial path which uses basePath to create an absolute path, or it may provide a full path without basePath
+ * @param basePath relative to the clientside source/distribution path.
  */
-export let serveStaticFile = ({ targetProjectConfig } = {}) =>
+export let serveStaticFile = ({ targetProjectConfig, filePath, basePath } = {}) =>
   async function(context, next) {
-    let option = {}
-    let relativeFilePath = option.filePath || context.path // a predefined path or an extracted url path
-    let baseFolderRelativePath = option.directoryRelativePath || '' // additional folder path.
-    let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, baseFolderRelativePath, relativeFilePath)
+    let relativeFilePath = filePath || context.path // a predefined path or an extracted url path
+    let baseFolderRelativePath = basePath || '' // additional folder path.
+    let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath, relativeFilePath)
 
     let fileStats = await send(context, absoluteFilePath)
     // if file doesn't exist then pass to the next middleware.

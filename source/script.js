@@ -1,7 +1,7 @@
 import filesystem from 'fs'
 import * as serviceConfig from './configuration/configuration.js'
 import { createHttpServer } from './utility/server.js'
-import { graphMiddlewareImmediatelyExecuted } from './middleware/graph.js'
+import { graphMiddleware } from './middleware/graph.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile } from './middleware/serveFile.js'
@@ -57,8 +57,6 @@ if(/upload)
     serveFile
 
 
-
-
 arguments:"{"options":{"gzip":true}}"
 
 */
@@ -66,10 +64,10 @@ export async function initializeContentDelivery({ targetProjectConfig, entrypoin
   let middlewareArray = [
     pickClientSideProjectConfig({ targetProjectConfig }),
     transformJavascriptMiddleware(),
-    serveStaticFile({ targetProjectConfig }),
+    serveStaticFile({ targetProjectConfig, directoryRelativePath: 'asset' }),
     templateRenderingMiddleware(),
     // authorizationMiddleware(),
-    // await graphMiddlewareImmediatelyExecuted({ targetProjectConfig, entrypointKey }),
+    // await graphMiddleware({ targetProjectConfig, entrypointKey }),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()
@@ -88,7 +86,7 @@ export async function initializeContentRendering({ targetProjectConfig, entrypoi
       context.set('connection', 'keep-alive')
       await next()
     },
-    await graphMiddlewareImmediatelyExecuted({ targetProjectConfig, entrypointKey }),
+    await graphMiddleware({ targetProjectConfig, entrypointKey }),
   ]
 
   // create http server
