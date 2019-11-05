@@ -24,6 +24,8 @@
 		"koa-response-time": "*",
 		"koa-sendfile": "*",
 		"koa-views": "*",
+		"koa-helmet": "*",
+		"koa-sslify": "*",
 		"moment": "*",
 		"multistream": "*",
 		"openid-client": "*",

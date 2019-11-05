@@ -1,33 +1,31 @@
+// map for resolving @ paths.
 const namedImportMap = [
   {
-    namedImport: 'webcomponent', // @webcomponent
+    key: 'webcomponent', // @webcomponent
     path: 'asset/webcomponent',
   },
   {
-    namedImport: 'javascript', // @javascript
+    key: 'javascript', // @javascript
     path: 'asset/javascript',
   },
 ]
 
-// NOTE: @ = At sign.
+/** Middleware that overrides the path, resolving `@<keyword>` section in the begging of the url path.
+ * NOTE: @ = At sign.
+Example: `/@javascript/x/y/z` --> `/asset/javascript/x/y/z`
+*/
 export const mapAtSignPathToAbsolutePathMiddleware = () => async (context, next) => {
-  let path = context.path
-  // path = path.replace(/^\/|\/$/g, '') // remove first and last slash
-  let pathArray = path.split('/').filter(item => item) // split path and remove empty values
-  let firstURLPart = pathArray[0]
-  // let lastIndexPosition = (path.indexOf("/") == -1) ? path.length : path.indexOf("/");
-  let relativeAtPathName = firstURLPart.substring(firstURLPart.indexOf('@') + 1, firstURLPart.length)
-
-  let namedImportObject = namedImportMap.filter(item => item.namedImport == relativeAtPathName)[0] // example '/@webcomponent/package/x/x.js'
-  let mappedPath = namedImportObject.path
-
-  context.relativeAtPathName = relativeAtPathName
-  // change path if @ path is mapped
-  // if(mappedPath) context.path = context.path.replace(`@${relativeAtPathName}`, mappedPath)
-  if (mappedPath) {
-    // replace part to be mapped
-    pathArray[0] = mappedPath
-    context.path = pathArray.join('/')
+  let pathArray = context.path.split('/').filter(item => item) // split path and remove empty values
+  // check if @ sign exists in beggining of url path.
+  if (pathArray[0].indexOf('@') >= 0) {
+    // Get the keyword after @ sign i.e. `/@<key name>/x/y/z`
+    let keywordAfterAtSign = pathArray[0].substring(pathArray[0].indexOf('@') + 1, pathArray[0].length)
+    let resolvedAtSignSection = namedImportMap.find(item => item.key == keywordAfterAtSign)?.path
+    // change path if @ path was found and mapped
+    if (resolvedAtSignSection) {
+      pathArray[0] = resolvedAtSignSection
+      context.path = `/${pathArray.join('/')}`
+    }
   }
   await next()
 }
