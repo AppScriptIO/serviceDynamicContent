@@ -1,72 +1,55 @@
 import filesystem from 'fs'
 import * as serviceConfig from './configuration/configuration.js'
 import { createHttpServer } from './utility/server.js'
+import * as assetContentDeliveryGraph from '../resource/assetContentDelivery.graph.json'
+import * as rootContentRenderingGraph from '../resource/rootContentRendering.graph.json'
+import { initialieGraph } from './utility/graphInitialization.js'
+import * as graphEvaluationFunction from './utility/graphEvaluationFunction.js'
+import { initializeGraph } from './utility/graphInitialization.js'
+
 import { graphMiddleware } from './middleware/graph.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
+import { commonFunctionality } from './middleware/commonFunctionality.js'
+import { notFound } from './middleware/notFound.js'
+import { mapAtSignPathToAbsolutePathMiddleware } from './middleware/map@PathToAbsolutePath.js'
+import { bodyParserMiddleware } from './middleware/bodyParser.js'
 
-/**
-Static content Condition Graph (cdn.domain.com): 
+// Create a grpah instance with middleware references and load graph data.
+async function configureGrpah({ targetProjectConfig, graphDataArray }) {
+  // context that will be used by the graph traversal during execution.
+  // functions registered in this object must comply (use adapter - wrapper function) with the graph middleware implementation - i.e. a function wrapped middleware.
+  const functionReferenceContext = Object.assign(
+    // middlewares
+    {
+      bodyParser: () => bodyParserMiddleware |> debugGraphMiddleware,
+      serveStaticFile: ({ node }) => serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }),
+      serveServerSideRenderedFile: ({ node }) =>
+        serveServerSideRenderedFile({ filePath: node.properties.filePath, basePath: node.properties.basePath, renderType: node.properties.renderType, mimeType: node.properties.mimeType }),
+    },
+    // conditions
+    graphEvaluationFunction,
+  )
+  return await initializeGraph({ targetProjectConfig, graphDataArray, functionReferenceContext }) // returns a configuredGraph element.
+}
 
-GET request:
-/@<...> 
-    babelTranspiler.js TODO: add condition if(targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION)
-    serveFile.js 
-    map@PathToAbsolutePath.js
-    setResponseHeaders.js
-    languageContent.js
-    useragentDetection.js
-    bodyParser.js
-    serverCommonFunctionality.js
-    notFound.js
-    cacheControl.js
-
-if(/asset)
-    setResponseHeaders.js
-    languageContent.js
-    useragentDetection.js
-    bodyParser.js
-    serverCommonFunctionality.js
-    notFound.js
-    cacheControl.js
-    serveFile.js
-
-    if(<...>$function)
-      setResponseHeaders.js
-      languageContent.js
-      useragentDetection.js
-      bodyParser.js
-      serverCommonFunctionality.js
-      notFound.js
-      cacheControl.js
-      serveServerSideRenderedFile:serveFile.js
-
-    if(javascript/jspm.config.js) 
-      serve jspm file (/asset/javascript/jspm.config.js).
-
-if(/upload)
-    setResponseHeaders.js
-    languageContent.js
-    useragentDetection.js
-    bodyParser.js
-    serverCommonFunctionality.js
-    notFound.js
-    cacheControl.js
-    serveFile
-
-
-arguments:"{"options":{"gzip":true}}"
-
+/** Assets, different components of the site, and static files, intended to be requested from a subdomain.
+  - Serves static files
+  - Rendered files
 */
-export async function initializeContentDelivery({ targetProjectConfig, entrypointKey, additionalData, port = serviceConfig.contentDelivery.port }) {
+export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
+  let configuredGraph = await configureGrpah({ targetProjectConfig, graphDataArray: [assetContentDeliveryGraph] })
   let middlewareArray = [
+    mapAtSignPathToAbsolutePathMiddleware(),
+    notFound(),
     pickClientSideProjectConfig({ targetProjectConfig }),
     templateRenderingMiddleware(),
-    // serveStaticFile({ targetProjectConfig, basePath: 'asset' }),
-    serveServerSideRenderedFile({}),
-    // await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    serveStaticFile({ targetProjectConfig }),
+    commonFunctionality(),
+    // serveServerSideRenderedFile({ renderType: 'convertSharedStylesToJS' }),
+    await graphMiddleware({ entrypointKey, configuredGraph }),
     transformJavascriptMiddleware(),
     async (context, next) => {
       console.log('Last Middleware reached.')
@@ -78,15 +61,19 @@ export async function initializeContentDelivery({ targetProjectConfig, entrypoin
   await createHttpServer({ label: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
 }
 
-// Mainly user interface rendering.
-export async function initializeContentRendering({ targetProjectConfig, entrypointKey = 'default', additionalData, port = serviceConfig.contentRendering.port }) {
+/** Root domain content Mainly user interface related
+ *  - servers template rendered files for webapp interface.
+ *  - serves some static files required in the root domain.
+ */
+export async function initializeRootContentRendering({ targetProjectConfig, entrypointKey = 'default', port = serviceConfig.contentRendering.port }) {
+  let configuredGraph = await configureGrpah({ targetProjectConfig, graphDataArray: [rootContentRenderingGraph] })
   let middlewareArray = [
     templateRenderingMiddleware(),
     async (context, next) => {
       context.set('connection', 'keep-alive')
       await next()
     },
-    await graphMiddleware({ targetProjectConfig, entrypointKey }),
+    await graphMiddleware({ entrypointKey, configuredGraph }),
   ]
 
   // create http server

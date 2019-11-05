@@ -1,9 +1,4 @@
-import { initializeGraph } from '../utility/graphInitialization.js'
-import * as graphData from '../../resource/graphData.json'
-
 import composeMiddleware from 'koa-compose'
-import { bodyParserMiddleware } from '../middleware/bodyParser.js'
-import { serveStaticFile, serveServerSideRenderedFile } from '../middleware/serveFile.js'
 
 const debugGraphMiddleware = targetMiddleware =>
   new Proxy(targetMiddleware, {
@@ -15,25 +10,7 @@ const debugGraphMiddleware = targetMiddleware =>
     },
   })
 
-export async function graphMiddleware({
-  targetProjectConfig,
-  entrypointKey = '05bd55ed-212c-4609-8caf-e464a7cceb74',
-  implementation,
-}: {
-  implementation: 'immediatelyExecute' | 'aggregateThenExecute',
-}) {
-  // context that will be used by the graph traversal during execution.
-  // functions registered in this object must comply (use adapter - wrapper function) with the graph middleware implementation - i.e. a function wrapped middleware.
-  const functionReferenceContext = {
-    // middlewares
-    bodyParser: () => bodyParserMiddleware |> debugGraphMiddleware,
-    serveStaticFile: ({ node }) => serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }),
-    serveServerSideRenderedFile: ({ node }) =>
-      serveServerSideRenderedFile({ filePath: node.properties.filePath, basePath: node.properties.basePath, renderType: node.properties.renderType, mimeType: node.properties.mimeType }),
-    // conditions
-  }
-
-  let configuredGraph = await initializeGraph({ targetProjectConfig, graphDataArray: [graphData], functionReferenceContext })
+export async function graphMiddleware({ configuredGraph, entrypointKey, implementation }: { implementation: 'immediatelyExecute' | 'aggregateThenExecute' }) {
   switch (implementation) {
     case 'aggregateThenExecute':
       // Aggregating middleware approach - return a middleware array, then use koa-compose to merge the middlewares and execute it.
