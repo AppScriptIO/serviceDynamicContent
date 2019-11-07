@@ -42,15 +42,15 @@ async function configureGrpah({ targetProjectConfig, graphDataArray }) {
 export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
   let configuredGraph = await configureGrpah({ targetProjectConfig, graphDataArray: [assetContentDeliveryGraph] })
   let middlewareArray = [
-    mapAtSignPathToAbsolutePathMiddleware(),
-    notFound(),
-    pickClientSideProjectConfig({ targetProjectConfig }),
-    templateRenderingMiddleware(),
-    serveStaticFile({ targetProjectConfig }),
-    commonFunctionality(),
+    // mapAtSignPathToAbsolutePathMiddleware(),
+    // notFound(),
+    // pickClientSideProjectConfig({ targetProjectConfig }),
+    // templateRenderingMiddleware(),
+    // serveStaticFile({ targetProjectConfig }),
+    // commonFunctionality(),
     // serveServerSideRenderedFile({ renderType: 'convertSharedStylesToJS' }),
     await graphMiddleware({ entrypointKey, configuredGraph }),
-    transformJavascriptMiddleware(),
+    // transformJavascriptMiddleware(),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()
@@ -68,12 +68,12 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
 export async function initializeRootContentRendering({ targetProjectConfig, entrypointKey = 'default', port = serviceConfig.contentRendering.port }) {
   let configuredGraph = await configureGrpah({ targetProjectConfig, graphDataArray: [rootContentRenderingGraph] })
   let middlewareArray = [
-    templateRenderingMiddleware(),
-    async (context, next) => {
-      context.set('connection', 'keep-alive')
-      await next()
-    },
     await graphMiddleware({ entrypointKey, configuredGraph }),
+    async (context, next) => {
+      console.log('Last Middleware reached.')
+      await next()
+      context.compress = true
+    },
   ]
 
   // create http server
