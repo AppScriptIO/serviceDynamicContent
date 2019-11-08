@@ -1,4 +1,4 @@
-// map for resolving @ paths.
+// map for resolving/expanding @ paths.
 const namedImportMap = [
   {
     key: 'webcomponent', // @webcomponent

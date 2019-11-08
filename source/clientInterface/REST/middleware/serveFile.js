@@ -6,7 +6,8 @@ import underscore from 'underscore'
 import send from 'koa-sendfile' // Static files.
 import { wrapStringStream } from '@dependency/wrapStringStream'
 import * as symbol from '../symbol.reference.js'
-import { convertSharedStylesToJS, renderHTMLImportWebcomponent, covertTextFileToJSModule, renderJSImportWebcomponent } from '../utility/renderFile.js'
+import { convertSharedStylesToJS, renderHTMLImportWebcomponent, covertTextFileToJSModule, renderJSImportWebcomponent, evaluateJsTemplate } from '../../../../'
+import { renderLayoutTemplate } from '../../../../'
 
 // import serverStatic from 'koa-static' // Static files.
 // import mount from 'koa-mount'
@@ -57,29 +58,25 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
   let renderedContent
   switch (renderType_) {
     case 'convertSharedStylesToJS':
-      renderedContent = await convertSharedStylesToJS({ filePath: absoluteFilePath })
-      context.body = renderedContent
+      context.body = await convertSharedStylesToJS({ filePath: absoluteFilePath })
       context.response.type = 'application/javascript'
       await next()
       break
 
     case 'covertTextFileToJSModule':
-      renderedContent = await covertTextFileToJSModule({ filePath: absoluteFilePath })
-      context.body = renderedContent
+      context.body = await covertTextFileToJSModule({ filePath: absoluteFilePath })
       context.response.type = 'application/javascript'
       await next()
       break
 
     case 'renderHTMLImportWebcomponent':
-      renderedContent = renderHTMLImportWebcomponent({ filePath: absoluteFilePath })
-      context.body = renderedContent
+      context.body = renderHTMLImportWebcomponent({ filePath: absoluteFilePath })
       await next()
       break
 
     case 'renderJSImportWebcomponent':
-      renderedContent = renderJSImportWebcomponent({ filePath: absoluteFilePath, context })
       context.response.type = 'application/javascript'
-      context.body = renderedContent
+      context.body = renderJSImportWebcomponent({ filePath: absoluteFilePath })
       await next()
       break
 
@@ -87,22 +84,16 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
       if (mimeType)
         // Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
         try {
-          // render template
-          renderedContent = filesystem.readFileSync(absoluteFilePath, 'utf8')
-          context.body = underscore.template(renderedContent)({
-            context,
-            view: {},
-            argument: {},
-          }) // Koa handles the stream and send it to the client.
+          context.body = evaluateJsTemplate({ filePath: absoluteFilePath, setting: context /** Refactor context propeties to match the settings - i.e. pass object that relies on context */ })
           context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
         } catch (error) {
           console.log(error)
           await next()
         }
       else if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-        // serve rendered file. Implementation using render using underscore (framework like).
+        // serve evaluated file. Implementation using render using underscore (framework like).
         await context.render(absoluteFilePath, {
-          context,
+          settings: context, // TODO refactor
           view: {},
           argument: { layoutElement: 'webapp-layout-list' },
         })
@@ -114,58 +105,7 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
   }
 }
 
-/**
- * Render document using template nested unit tree.
-
- let getTableDocument = {
-  generate: getTableDocumentDefault,
-  instance: [],
-}
-getTableDocument.instance['template_documentBackend'] = getTableDocument.generate('webappSetting', 'template_documentBackend')
-
- */
 export const renderTemplateDocument = ({ documentKey }) => async (context, next) => {
-  // document could have different rules for users etc.. access previlages
-  let templateController = await TemplateController.createContext({ portAppInstance: context.instance })
-  let renderedContent = await templateController.initializeNestedUnit({ nestedUnitKey: get['template_documentBackend'](documentKey).templateNestedUnit })
-  context.body = renderedContent
+  context.body = await renderLayoutTemplate({ documentKey })
   await next()
-}
-
-// example of rendering template not using the graph traversal module:
-async function handleTemplateDocument(documentKey) {
-  // context.instance.config.clientBasePath should be defined using useragentDetection module.
-  let clientBasePath = ''
-
-  let documentObject =
-    {
-      key: '0d65c113-acce-4f01-8eea-ab6cb7152405',
-      label: { name: 'entrypoint' },
-      templateNestedUnit: '0d65c113-acce-4f01-8eea-ab6cb7152405',
-    } || (await getTableDocument.instance['template_documentBackend'](connection, documentKey))
-
-  let renderedContent = await TemplateController.traverse(documentObject.templateNestedUnit)
-  this.context.body = renderedContent
-
-  let argument = { layoutElement: 'webapp-layout-list' }
-  let mainDocumentElement = await filesystem.readFileSync(`${this.context.instance.config.clientBasePath}/template/root/document-element/document-element.html`, 'utf-8')
-  let mainDocumentElementImport = await filesystem.readFileSync(`${this.context.instance.config.clientBasePath}/template/root/document-element/document-element.import.html`, 'utf-8')
-
-  // Shared arguments between all templates being rendered
-  const templateArgument = {
-    templateController,
-    context: this.context,
-    argument: {},
-  }
-
-  const view = {
-    metadata: underscore.template(await filesystem.readFileSync(`${this.context.instance.config.clientBasePath}/asset/metadata/metadata.html`, 'utf-8')),
-    header: underscore.template(await filesystem.readFileSync(`${this.context.instance.config.clientBasePath}/template/root/entrypoint.js.html`, 'utf-8')),
-    body: underscore.template(mainDocumentElement, { argument }),
-  }
-  let template = underscore.template(await filesystem.readFileSync(`${this.context.instance.config.clientBasePath}/template/root/entrypoint.html`, 'utf-8'))
-  this.context.body = template(Object.assign({}, templateArgument, { view, templateArgument }))
-
-  // Using 'context.render' using koa-views that uses consolidate.js as an underlying module.
-  await this.context.render(`${this.context.instance.config.clientBasePath}/template/root/entrypoint.html`, Object.assign({}, templateArgument, { view, templateArgument }))
 }

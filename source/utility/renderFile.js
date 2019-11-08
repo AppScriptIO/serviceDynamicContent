@@ -61,3 +61,13 @@ export function renderHTMLImportWebcomponent({ filePath }) {
     console.log(error)
   }
 }
+
+// render javascript template
+export function evaluateJsTemplate({ filePath, setting }) {
+  fileContent = filesystem.readFileSync(filePath, 'utf8')
+  return underscore.template(fileContent)({
+    setting,
+    view: {},
+    argument: {},
+  }) // Koa handles the stream and send it to the client.
+}
