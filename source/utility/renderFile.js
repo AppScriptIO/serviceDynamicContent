@@ -22,7 +22,7 @@ export async function covertTextFileToJSModule({ filePath }) {
 /**
  * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations.
  */
-export function renderJSImportWebcomponent({ filePath }) {
+export function combineJSImportWebcomponent({ filePath }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
   let argument = { layoutElement: 'webapp-layout-list' }
   let view = {}
@@ -43,7 +43,7 @@ export function renderJSImportWebcomponent({ filePath }) {
 /**
  * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations.
  */
-export function renderHTMLImportWebcomponent({ filePath }) {
+export function combineHTMLImportWebcomponent({ filePath }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
   let argument = { layoutElement: 'webapp-layout-list' }
   let view = {}

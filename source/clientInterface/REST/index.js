@@ -14,7 +14,7 @@ import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serve
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
 import { commonFunctionality } from './middleware/commonFunctionality.js'
 import { notFound } from './middleware/notFound.js'
-import { mapAtSignPathToAbsolutePathMiddleware } from './middleware/map@PathToAbsolutePath.js'
+import { expandAtSignPath } from './middleware/map@PathToAbsolutePath.js'
 import { bodyParserMiddleware } from './middleware/bodyParser.js'
 
 // Create a grpah instance with middleware references and load graph data.
@@ -42,7 +42,7 @@ async function configureGrpah({ targetProjectConfig, graphDataArray }) {
 export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
   let configuredGraph = await configureGrpah({ targetProjectConfig, graphDataArray: [assetContentDeliveryGraph] })
   let middlewareArray = [
-    // mapAtSignPathToAbsolutePathMiddleware(),
+    // expandAtSignPath(),
     // notFound(),
     // pickClientSideProjectConfig({ targetProjectConfig }),
     // templateRenderingMiddleware(),

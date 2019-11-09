@@ -3,6 +3,8 @@
 	"main": "./entrypoint/programmaticAPI",
 	"version": "1.0.1",
 	"scripts": {
+		"test": "yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'] })\"",
+		"test-inspect": "export NODE_OPTIONS='--inspect-brk' && yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
 		"exportGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.exportAllGraphData({targetPath: './temporary/resource',fileName: 'graphData.json'})\"",
 		"loadGraphData": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".graphDataLoading.loadGraphDataFromFile({ shouldClearDatabase: true, graphDataFilePath: './resource/graphData.json' })\"",
 		"build": "yarn run scriptManager shouldCompileScript=true @dependency/deploymentScript \".buildSourceCode.moduleProject({}, {compile:[/**'./test'*/]})\"",

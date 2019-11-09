@@ -12,9 +12,10 @@ export const getUrlPathAsArray = async ({ node, context }) => {
   let lastQuestionMark = path.lastIndexOf('?')
   if (lastQuestionMark > lastSlash) path = path.substring(0, lastQuestionMark)
 
-  let pathArray = await path.split('/') // split path sections to an array.
-  pathArray = await pathArray.filter(String) // remove empty string.
-  pathArray = pathArray.filter(string => !string.startsWith('?')) // remove parameters from individual path in the array. i.e. don't count params as path.
+  let pathArray = path
+    .split('/') // split path sections to an array.
+    .filter(String) // remove empty string.
+    .filter(string => !string.startsWith('?')) // remove parameters from individual path in the array. i.e. don't count params as path.
   return pathArray
 }
 
@@ -31,6 +32,7 @@ export const getUrlPathLevel2 = async ({ node, context }) => {
     return pathArray[1]
   }
 }
+
 export const getUrlPathLevel3 = async ({ node, context }) => {
   let pathArray = await getUrlPathAsArray(...arguments)
   return pathArray[3]
@@ -48,7 +50,6 @@ export const ifLastUrlPathtIncludesFunction = async ({ node, context }) => {
   return lastPath.includes('$') ? true : false
 }
 
-// previous name: `ifLevel1Includes@.js`
 export const ifLevel1IncludesAt = async ({ node, context }) => {
   let requestContext = context.middlewareParameter.context
   let pathArray = await getUrlPathAsArray(...arguments)
