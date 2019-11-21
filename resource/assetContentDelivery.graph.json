@@ -1,4 +1,35 @@
 {
-  "node": [],
-  "edge": []
+  "node": [{
+    "identity": 41633,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "293097b9-3522-4f2b-b557-8380ff3e96e3",
+      "name": "Asset Content Delivery - REST architecture + Custom concepts"
+    }
+  }, {
+    "identity": 41634,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "d3297ef3-52b6-4895-b1cf-f3b6987cefdd",
+      "name": "HTTP protocol: method request switch"
+    }
+  }],
+  "edge": [{
+    "identity": 63560,
+    "start": 41633,
+    "end": 41634,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "1e08a1ae-ff16-4e98-9861-5f3023626a24"
+    }
+  }, {
+    "identity": 63561,
+    "start": 41634,
+    "end": 41634,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "f5c4eaaf-d709-4a1a-aa04-b1665e902531",
+      "resolutionImplementation": "caseSwitch"
+    }
+  }]
 }

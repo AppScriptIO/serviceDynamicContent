@@ -1,3 +1,4 @@
+// This data is rendered in server-side and used in the frontend application
 async function loadFrontendData({ targetConfig }) {
   let defaultLanguage = 'English'
   targetConfig.frontendStatic = {
