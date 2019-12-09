@@ -28,11 +28,12 @@ async function clearGraphData() {
 suite('Service components:', () => {
   setup(async () => await clearGraphData())
 
+  // TODO: create unit tests for server functions.
   suite('Test template rendering ', () => {
     test('Should render template correctly', async () => {
       setUnderscoreTemplateSetting()
       let renderedContent = await convertSharedStylesToJS({ filePath: path.normalize(path.join(__dirname, './asset/file.txt')) })
-      console.log(await streamToString(renderedContent))
+      await streamToString(renderedContent)
       // chaiAssertion.deepEqual(true, true)
     })
   })

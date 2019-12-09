@@ -1,44 +1,51 @@
-import { Graph as GraphModule, Context as ContextModule, Database as DatabaseModule, Traversal as TraversalModule, Entity, schemeReference } from '@dependency/graphTraversal'
+import { Graph, Context, Database, Traversal, Entity, schemeReference } from '@dependency/graphTraversal'
 import { database, traversal as traversalImplementation } from '@dependency/graphTraversal-implementation'
 
-const { Graph } = GraphModule,
-  { Context } = ContextModule,
-  { Database } = DatabaseModule,
-  { Traversal } = TraversalModule
-
-export async function initializeGraph({ targetProjectConfig, graphDataArray = [], functionReferenceContext }) {
+export async function initializeGraph({ targetProjectConfig, graphDataArray = [], contextData = {} /** object to be merged with context data */ }) {
   // context
-  let contextInstance = new Context.clientInterface({ targetProjectConfig, functionReferenceContext, implementationKey: { traversalInterception: 'handleMiddlewareNextCall' } })
+  let context = new Context.clientInterface({
+    data: Object.assign(
+      {
+        targetProjectConfig,
+        implementationKey: {
+          traversalInterception: 'handleMiddlewareNextCall',
+        },
+      },
+      contextData,
+    ),
+  })
+
   // database
   let concreteDatabaseBehavior = new Database.clientInterface({
     implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ schemeReference, url: { protocol: 'bolt', hostname: 'localhost', port: 7687 } }) },
     defaultImplementation: 'boltCypherModelAdapter',
   })
+
   // traversal implementation
   let implementationList =
     traversalImplementation
     |> (list => {
       // add specific graph dependent implementations
-      // list.processData['someCustomImplementation'] = function() {}
+      // list.processNode['someCustomImplementation'] = function() {}
       return list
     })
   let concreteGraphTraversalBehavior = new Traversal.clientInterface({ implementationList: { middlewareGraph: implementationList }, defaultImplementation: 'middlewareGraph' })
+
   // configured graph
   let configuredGraph = Graph.clientInterface({
     parameter: [
       {
         traversal: concreteGraphTraversalBehavior,
         database: concreteDatabaseBehavior,
-        concreteBehaviorList: [contextInstance],
+        concreteBehaviorList: [context],
       },
     ],
   })
 
   // load graph data:
   console.log(`• loading service graph data...`)
-  let concereteDatabaseInstance = concreteDatabaseBehavior[Entity.reference.getInstanceOf](Database)
-  let concereteDatabase = concereteDatabaseInstance[Database.reference.key.getter]()
+  let concereteDatabase = concreteDatabaseBehavior[Database.$.key.getter]()
   for (let graphData of graphDataArray) await concereteDatabase.loadGraphData({ nodeEntryData: graphData.node, connectionEntryData: graphData.edge })
 
-  return configuredGraph
+  return { configuredGraph }
 }

@@ -1,35 +1,139 @@
 {
   "node": [{
-    "identity": 41633,
+    "identity": 49779,
     "labels": ["Reroute"],
     "properties": {
       "key": "293097b9-3522-4f2b-b557-8380ff3e96e3",
       "name": "Asset Content Delivery - REST architecture + Custom concepts"
     }
   }, {
-    "identity": 41634,
+    "identity": 49780,
     "labels": ["Reroute"],
     "properties": {
       "key": "d3297ef3-52b6-4895-b1cf-f3b6987cefdd",
       "name": "HTTP protocol: method request switch"
     }
+  }, {
+    "identity": 49781,
+    "labels": ["Stage", "Process"],
+    "properties": {
+      "key": "400f822b-ed2c-4503-ad53-370668603d04"
+    }
+  }, {
+    "identity": 49782,
+    "labels": ["Function"],
+    "properties": {
+      "functionName": "getRequestMethod",
+      "key": "b9df12da-b2d7-48a8-83d6-3cdaf6491cff"
+    }
+  }, {
+    "identity": 49783,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "nodeDebug",
+      "key": "116407fa-a49e-4f94-a594-9f9589aaeb34"
+    }
+  }, {
+    "identity": 49784,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "nodeDebug",
+      "key": "3e5c6b3e-136e-4cde-bb2c-e58ff08450cd"
+    }
   }],
   "edge": [{
-    "identity": 63560,
-    "start": 41633,
-    "end": 41634,
+    "identity": 77614,
+    "start": 49779,
+    "end": 49780,
     "type": "REFERENCE",
     "properties": {
       "key": "1e08a1ae-ff16-4e98-9861-5f3023626a24"
     }
   }, {
-    "identity": 63561,
-    "start": 41634,
-    "end": 41634,
+    "identity": 77615,
+    "start": 49780,
+    "end": 49780,
     "type": "REFERENCE",
     "properties": {
       "key": "f5c4eaaf-d709-4a1a-aa04-b1665e902531",
       "resolutionImplementation": "caseSwitch"
+    }
+  }, {
+    "identity": 77616,
+    "start": 49781,
+    "end": 49780,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "f0c197ef-1ccd-4e74-aae6-3a0d58a0d961"
+    }
+  }, {
+    "identity": 77617,
+    "start": 49781,
+    "end": 49781,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "089b17e3-f9ad-42f9-b565-ba807e22d369"
+    }
+  }, {
+    "identity": 77618,
+    "start": 49782,
+    "end": 49781,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "f04c4e6e-391f-447b-b8ae-e01c5dede5c2"
+    }
+  }, {
+    "identity": 77619,
+    "start": 49780,
+    "end": 49783,
+    "type": "CASE",
+    "properties": {
+      "expected": "GET",
+      "key": "d57e7921-217c-484f-8448-00c7c05f4162"
+    }
+  }, {
+    "identity": 77621,
+    "start": 49783,
+    "end": 49783,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "72ad8420-7f34-4243-bb9b-96e580f15267"
+    }
+  }, {
+    "identity": 77622,
+    "start": 49783,
+    "end": 49783,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "55920618-db5f-4bb5-8335-00447ebc8c67"
+    }
+  }, {
+    "identity": 77620,
+    "start": 49780,
+    "end": 49784,
+    "type": "DEFAULT",
+    "properties": {
+      "key": "6514e54a-11b7-4182-a00c-44d15a860e65"
+    }
+  }, {
+    "identity": 77623,
+    "start": 49784,
+    "end": 49784,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "ca6e884d-38f0-4eee-9d47-b2391a3c6d1a"
+    }
+  }, {
+    "identity": 77624,
+    "start": 49784,
+    "end": 49784,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "96a899dc-bfff-4dfb-8faa-bbe9d73570e5"
     }
   }]
 }

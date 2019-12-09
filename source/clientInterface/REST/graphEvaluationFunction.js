@@ -1,6 +1,8 @@
-export function getMethod({ node, context }) {
-  let requestContext = context.middlewareParameter.context
-  return requestContext.request.method
+/**
+ * @param {Koa Context {request, response}} middlewareContext
+ */
+export function getRequestMethod(middlewareContext) {
+  return middlewareContext.request.method
 }
 
 export const getUrlPathAsArray = async ({ node, context }) => {
