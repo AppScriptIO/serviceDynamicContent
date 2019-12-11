@@ -5,9 +5,8 @@ export function getRequestMethod(middlewareContext) {
   return middlewareContext.request.method
 }
 
-export const getUrlPathAsArray = async ({ node, context }) => {
-  let requestContext = context.middlewareParameter.context
-  let path = requestContext.request.url // get path
+export const getUrlPathAsArray = async middlewareContext => {
+  let path = middlewareContext.request.url // get path
 
   // Remove parameters starting with "?" after last slash
   let lastSlash = path.lastIndexOf('/')
@@ -21,13 +20,13 @@ export const getUrlPathAsArray = async ({ node, context }) => {
   return pathArray
 }
 
-export const getUrlPathLevel1 = async ({ node, context }) => {
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const getUrlPathLevel1 = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   return pathArray[0]
 }
 
-export const getUrlPathLevel2 = async ({ node, context }) => {
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const getUrlPathLevel2 = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   if (pathArray[1] == null) {
     return false
   } else {
@@ -35,14 +34,13 @@ export const getUrlPathLevel2 = async ({ node, context }) => {
   }
 }
 
-export const getUrlPathLevel3 = async ({ node, context }) => {
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const getUrlPathLevel3 = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   return pathArray[3]
 }
 
-export const ifLastUrlPathtIncludesFunction = async ({ node, context }) => {
-  let requestContext = context.middlewareParameter.context
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const ifLastUrlPathtIncludesFunction = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   let lastPath = pathArray.pop() // get url path
 
   // remove parameters
@@ -52,23 +50,20 @@ export const ifLastUrlPathtIncludesFunction = async ({ node, context }) => {
   return lastPath.includes('$') ? true : false
 }
 
-export const ifLevel1IncludesAt = async ({ node, context }) => {
-  let requestContext = context.middlewareParameter.context
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const ifLevel1IncludesAt = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   let firstPath = pathArray.shift() // get url path
 
   // check if function sign exists
   return firstPath.includes('@') ? true : false
 }
 
-export const isExistUrlPathLevel1 = async ({ node, context }) => {
-  let requestContext = context.middlewareParameter.context
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const isExistUrlPathLevel1 = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   return pathArray[0] == null ? false : true
 }
 
-export const isExistUrlPathLevel2 = async ({ node, context }) => {
-  let requestContext = context.middlewareParameter.context
-  let pathArray = await getUrlPathAsArray(...arguments)
+export const isExistUrlPathLevel2 = async middlewareContext => {
+  let pathArray = await getUrlPathAsArray(middlewareContext)
   return pathArray[1] == null ? false : true
 }

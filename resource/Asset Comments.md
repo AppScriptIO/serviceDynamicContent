@@ -1,17 +1,3 @@
-```js
-expandAtSignPath(),
-notFound(),
-pickClientSideProjectConfig({ targetProjectConfig }),
-templateRenderingMiddleware(),
-serveStaticFile({ targetProjectConfig }),
-commonFunctionality(),
-serveServerSideRenderedFile({ renderType: 'convertSharedStylesToJS' }),
-await graphMiddlewareImmediatelyExecute({ entrypointKey, configuredGraph }),
-transformJavascriptMiddleware(),
-```
-
-GET request:
-
 /@<...> 
     babelTranspiler.js TODO: add condition if(targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION)
     serveFile.js 
@@ -56,4 +42,3 @@ if(/upload)
     notFound.js
     cacheControl.js
     serveFile
-
