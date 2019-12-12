@@ -12,7 +12,7 @@ import { renderLayoutTemplate } from '../../../../'
 /** extract function name from keyword following $ signature.
  * Usage: `import html from './.html$convertTextToJSModule'`
  */
-export function extractDollarSignKeyword(string) {
+function extractDollarSignKeyword(string) {
   if (string.lastIndexOf('$') == -1) return false
   let keyword = string.substr(string.lastIndexOf('$') + 1, string.length) // $function extracted from url after '$' signature
   string.substr(0, string.lastIndexOf('$')) // remove function name

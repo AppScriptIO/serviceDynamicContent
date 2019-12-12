@@ -42,20 +42,15 @@ export const getUrlPathLevel3 = async middlewareContext => {
 export const ifLastUrlPathtIncludesFunction = async middlewareContext => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
   let lastPath = pathArray.pop() // get url path
-
-  // remove parameters
-  if (lastPath.includes('?')) lastPath = lastPath.substr(0, lastPath.lastIndexOf('?'))
-
-  // check if function sign exists
-  return lastPath.includes('$') ? true : false
+  if (!lastPath) return
+  if (lastPath.includes('?')) lastPath = lastPath.substr(0, lastPath.lastIndexOf('?')) // remove parameters
+  return lastPath.includes('$') ? true : false // check if function sign exists
 }
 
 export const ifLevel1IncludesAt = async middlewareContext => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
   let firstPath = pathArray.shift() // get url path
-
-  // check if function sign exists
-  return firstPath.includes('@') ? true : false
+  return firstPath && firstPath.includes('@') ? true : false // check if function sign exists
 }
 
 export const isExistUrlPathLevel1 = async middlewareContext => {
