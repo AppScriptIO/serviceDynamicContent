@@ -1,7 +1,7 @@
 import path from 'path'
 import assert from 'assert'
 import * as symbol from '../symbol.reference.js'
-import { pickClientSideConfiguration } from '../../../../'
+import { pickClientSideConfiguration } from '../../../pickClientSideConfiguration.js'
 const useragentParser = require('useragent') // https://www.npmjs.com/package/useragent
 require('useragent/features')
 

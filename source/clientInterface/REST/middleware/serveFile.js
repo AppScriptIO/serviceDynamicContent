@@ -6,8 +6,8 @@ import underscore from 'underscore'
 import send from 'koa-sendfile' // Static files.
 import { wrapStringStream } from '@dependency/wrapStringStream'
 import * as symbol from '../symbol.reference.js'
-import { convertSharedStylesToJS, combineHTMLImportWebcomponent, covertTextFileToJSModule, combineJSImportWebcomponent, evaluateJsTemplate } from '../../../../'
-import { renderLayoutTemplate } from '../../../../'
+import { convertSharedStylesToJS, combineHTMLImportWebcomponent, covertTextFileToJSModule, combineJSImportWebcomponent, evaluateJsTemplate } from '../../../renderFile.js'
+import { renderLayoutTemplate } from '../../../layoutTemplateGraphRendering.js'
 
 /** extract function name from keyword following $ signature.
  * Usage: `import html from './.html$convertTextToJSModule'`

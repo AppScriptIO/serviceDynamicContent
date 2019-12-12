@@ -1,4 +1,4 @@
-import { getRequestMethod, getUrlPathLevel1, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction } from './graphEvaluationFunction.js'
+import { getRequestMethod, getUrlPathLevel1, getUrlPathAsArray, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction } from './graphEvaluationFunction.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
@@ -7,7 +7,7 @@ import { notFound } from './middleware/notFound.js'
 import { expandAtSignPath } from './middleware/map@PathToAbsolutePath.js'
 import { bodyParserMiddleware } from './middleware/bodyParser.js'
 import { debugMiddlewareProxy } from '../../utility/debugMiddlewareProxy.js'
-import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middleware/bodyParser.js'
+import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middleware/contextManipulation.js'
 import { setFrontendSetting } from './middleware/languageContent.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 
@@ -43,9 +43,10 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
      */
     {
       debugMode: ({ node, context }) => targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION,
-      ifLevel1IncludesAt: ({ node, context }) => ifLevel1IncludesAt(context.middlewareParameter.context),
+      ifLevel1IncludesAt: async ({ node, context }) => await ifLevel1IncludesAt(context.middlewareParameter.context),
       ifLastUrlPathtIncludesFunction: ({ node, context }) => ifLastUrlPathtIncludesFunction(context.middlewareParameter.context),
       getRequestMethod: ({ node, context }) => getRequestMethod(context.middlewareParameter.context),
       getUrlPathLevel1: ({ node, context }) => getUrlPathLevel1(context.middlewareParameter.context),
+      getUrlPathAsArray: ({ node, context }) => getUrlPathAsArray(context.middlewareParameter.context),
     },
   )
