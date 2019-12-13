@@ -4,13 +4,10 @@ import { assert as chaiAssertion } from 'chai'
 import utility from 'util'
 import path from 'path'
 import filesystem from 'fs'
-import { application } from '..'
+import { service } from '..'
 import ownProjectConfig from '../configuration'
 const boltProtocolDriver = require('neo4j-driver').v1
 import { memgraphContainer } from '@dependency/deploymentProvisioning'
-import { setUnderscoreTemplateSetting, convertSharedStylesToJS } from '../'
-import { streamToString } from '@dependency/streamToStringConvertion'
-
 async function clearGraphData() {
   console.groupCollapsed('• Run prerequisite containers:')
   memgraphContainer.runDockerContainer() // temporary solution
@@ -25,16 +22,40 @@ async function clearGraphData() {
   session.close()
 }
 
+// Mock project configuration settings that the service depends upon.
+const targetProjectConfig = Object.assign({
+  runtimeVariable: {
+    DEPLOYMENT: 'development', // Deployment type
+    DISTRIBUTION: false,
+  },
+  clientSideProjectConfigList: [{ path: path.join(__dirname, 'asset/clientSideMock') }],
+})
+
 suite('Service components:', () => {
   setup(async () => await clearGraphData())
 
-  // TODO: create unit tests for server functions.
-  suite('Test template rendering ', () => {
-    test('Should render template correctly', async () => {
-      setUnderscoreTemplateSetting()
-      let renderedContent = await convertSharedStylesToJS({ filePath: path.normalize(path.join(__dirname, './asset/file.txt')) })
-      await streamToString(renderedContent)
-      // chaiAssertion.deepEqual(true, true)
+  suite('REST API - Http server', () => {
+    const port = 9999
+    const url = `http://localhost:${port}`
+    test('Should respond to requests', async () => {
+      await service.restApi.initializeAssetContentDelivery({ port, targetProjectConfig }).catch(error => throw error)
+
+      try {
+        await new Promise((resolve, reject) => {
+          let urlPath = `/@javascript`
+          http.get(`${url}${urlPath}`, response => resolve())
+        })
+        await new Promise((resolve, reject) => {
+          let urlPath = `/asset`
+          http.get(`${url}${urlPath}`, response => resolve())
+        })
+        await new Promise((resolve, reject) => {
+          let urlPath = `/upload`
+          http.get(`${url}${urlPath}`, response => resolve())
+        })
+      } catch (error) {
+        throw error
+      }
     })
   })
 })
