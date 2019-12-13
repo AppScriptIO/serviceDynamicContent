@@ -1,0 +1,26 @@
+<!-- Problematic !! <base target="_top" href="{%= argument.layoutElement %}"> -->
+
+<link rel="import" href="../component.package/polymer/polymer-element.html">
+<link rel="import" href="../component.package/iron-pages/iron-pages.html">
+<link rel="import" href="../component.package/app-route/app-location.html">
+<link rel="import" href="../component.package/app-route/app-route.html">
+<!-- LAYOUT -->
+<link rel="import" href="../webapp-layout-toolbar/webapp-layout-toolbar.html$">
+
+<!-- CUSTOM STYLE -->
+<link rel="stylesheet" href="/asset/stylesheet/default.css">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="document-element">
+    <template>
+        <custom-style>
+            <style include="shared-styles">
+                {%= `${argument.templatePart.css}` %}
+            </style>
+        </custom-style>
+        {%=`${argument.templatePart.html}` %}
+    </template>
+    <script>
+        {%= `${argument.templatePart.js}` %}
+    </script>
+</dom-module>

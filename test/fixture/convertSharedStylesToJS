@@ -1,0 +1,13 @@
+const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `* {
+    font-family: calibri;
+    text-align: right;
+    direction: rtl;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    background-color: #eeeeee;
+}`;document.head.appendChild($_documentContainer);

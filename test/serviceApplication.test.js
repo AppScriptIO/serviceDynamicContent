@@ -28,7 +28,7 @@ const targetProjectConfig = Object.assign({
     DEPLOYMENT: 'development', // Deployment type
     DISTRIBUTION: false,
   },
-  clientSideProjectConfigList: [{ path: path.join(__dirname, 'asset/clientSideMock') }],
+  clientSideProjectConfigList: [{ path: path.join(__dirname, 'asset/clientSide') }],
 })
 
 suite('Service components:', () => {

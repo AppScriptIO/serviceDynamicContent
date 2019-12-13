@@ -5,17 +5,55 @@ import utility from 'util'
 import path from 'path'
 import filesystem from 'fs'
 import ownProjectConfig from '../configuration'
-import { setUnderscoreTemplateSetting, convertSharedStylesToJS } from '../'
 import { streamToString } from '@dependency/streamToStringConvertion'
+import { setUnderscoreTemplateSetting } from '../source/functionality/underscoreTemplateInterpolation.js'
+import { convertSharedStylesToJS, covertTextFileToJSModule, combineJSImportWebcomponent, combineHTMLImportWebcomponent, evaluateJsTemplate } from '../'
 
-suite('Functionality - service components:', () => {
-  // TODO: create unit tests for server functions.
-  suite('Test template rendering ', () => {
-    test('Should render template correctly', async () => {
-      setUnderscoreTemplateSetting()
-      let renderedContent = await convertSharedStylesToJS({ filePath: path.normalize(path.join(__dirname, './asset/file.txt')) })
-      await streamToString(renderedContent)
-      // chaiAssertion.deepEqual(true, true)
+// TODO: create unit tests for server functions.
+suite('Functionality used in the service:', () => {
+  suiteSetup(() => {
+    setUnderscoreTemplateSetting() // set underscore settings for template string characters used for rendering.
+  })
+
+  //* Write new fixtures `filesystem.writeFileSync(path.join(__dirname, 'fixture', 'filename'), content)`
+  suite('Template rendering functions', () => {
+    const fixture =
+      {}
+      |> (object => {
+        filesystem.readdirSync(path.join(__dirname, 'fixture')).forEach(filename => {
+          object[filename] = filesystem.readFileSync(path.join(__dirname, 'fixture', filename), { encoding: 'utf-8' })
+        })
+        return object
+      })
+
+    test('convertSharedStylesToJS', async () => {
+      let rendered = await streamToString(await convertSharedStylesToJS({ filePath: path.join(__dirname, './asset/file.css') }))
+      // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'convertSharedStylesToJS'), rendered)
+      assert(rendered === fixture.convertSharedStylesToJS, `• Content must be rendered correctly.`)
+    })
+
+    test('covertTextFileToJSModule', async () => {
+      let rendered = await streamToString(await covertTextFileToJSModule({ filePath: path.join(__dirname, './asset/file.txt') }))
+      // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'covertTextFileToJSModule'), rendered)
+      assert(rendered === fixture.covertTextFileToJSModule, `• Content must be rendered correctly.`)
+    })
+
+    test('combineJSImportWebcomponent', async () => {
+      let rendered = await combineJSImportWebcomponent({ filePath: path.join(__dirname, './asset/webcomponent-element/element.html') })
+      // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'combineJSImportWebcomponent'), rendered)
+      assert(rendered === fixture.combineJSImportWebcomponent, `• Content must be rendered correctly.`)
+    })
+
+    test('combineHTMLImportWebcomponent', async () => {
+      let rendered = await combineHTMLImportWebcomponent({ filePath: path.join(__dirname, './asset/webcomponent-element/element.html') })
+      // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'combineHTMLImportWebcomponent'), rendered)
+      assert(rendered === fixture.combineHTMLImportWebcomponent, `• Content must be rendered correctly.`)
+    })
+
+    test('evaluateJsTemplate', async () => {
+      let rendered = await evaluateJsTemplate({ filePath: path.join(__dirname, './asset/file.js'), argument: { someConfig1: 'someConfig1', someConfig2: 'someConfig2' } })
+      // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'evaluateJsTemplate'), rendered)
+      assert(rendered === fixture.evaluateJsTemplate, `• Content must be rendered correctly.`)
     })
   })
 })
