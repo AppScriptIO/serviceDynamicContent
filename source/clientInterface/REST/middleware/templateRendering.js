@@ -1,5 +1,5 @@
 import koaViews from 'koa-views'
-import { setUnderscoreTemplateSetting } from '../../../underscoreTemplateInterpolation.js'
+import { setUnderscoreTemplateSetting } from '../../../functionality/underscoreTemplateInterpolation.js'
 
 export function templateRenderingMiddleware() {
   setUnderscoreTemplateSetting()

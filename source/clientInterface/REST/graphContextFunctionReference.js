@@ -39,7 +39,7 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
       templateRenderingMiddleware: () => templateRenderingMiddleware(),
     },
     /**  conditions
-     * @return {any} value for condition comparison.
+     * @return {any} value for condition comparison. Could return boolean, string, array.
      */
     {
       debugMode: ({ node, context }) => targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION,
