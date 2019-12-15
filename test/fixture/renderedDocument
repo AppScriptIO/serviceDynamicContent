@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- base url for all relative urls.  -->
+  <base href="" target="_top">
+
+  
+  <script type="application/javascript"
+    src="/asset/webcomponent/component.package/webcomponentsjs/webcomponents-loader.js"></script>
+  
+
+  <!-- Analytics -->
+  
+  <script>
+    console.info('☕ Analytics is disabled for development.');
+  </script>
+  
+
+  <document-element>
+  <span id="loader"
+    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
+    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+  <script>
+    setTimeout(function() {
+      document.getElementById('loader').style.display = "none";
+    }, 10000)
+  </script>
+</document-element>
+
+  <!-- NOTE: Loading Polymer on the main document, in addition to the elements causes issues for some reason.
+      <link rel="import" href="/asset/webcomponent/component.package/polymer/polymer-element.html"> 
+    -->
+  <link rel="import" href="/asset/webcomponent/document-element/document-element.html$">
+
+  <style>
+  </style>
+</head>
+
+<body>
+
+  <document-element>
+  <span id="loader"
+    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
+    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+  <script>
+    setTimeout(function() {
+      document.getElementById('loader').style.display = "none";
+    }, 10000)
+  </script>
+</document-element>
+
+  <document-element>
+    <span id="loader"
+      style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
+      𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+    <script>
+      setTimeout(function() {
+        document.getElementById('loader').style.display = "none";
+      }, 10000)
+    </script>
+  </document-element>
+  <!-- With ❤ From AppScript.io -->
+
+  <!-- Allows usage of binding in main document
+      <dom-bind><template></template></dom-bind>
+      <script>/* let autobind = document.querySelector('dom-bind'); */</script>
+    -->
+
+  <h1><document-element>
+  <span id="loader"
+    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
+    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+  <script>
+    setTimeout(function() {
+      document.getElementById('loader').style.display = "none";
+    }, 10000)
+  </script>
+</document-element></h1>
+
+</body>
+
+</html>

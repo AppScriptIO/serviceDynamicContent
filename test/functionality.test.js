@@ -12,6 +12,7 @@ import { setUnderscoreTemplateSetting } from '../source/functionality/underscore
 import { convertSharedStylesToJS, covertTextFileToJSModule, combineJSImportWebcomponent, combineHTMLImportWebcomponent, evaluateJsTemplate } from '../source/functionality/renderFile.js'
 import { transformJavascript } from '../source/functionality/babelTransformJsStream.js'
 import { pickClientSideConfiguration } from '../source/functionality/pickClientSideConfiguration.js'
+import {} from '../source/functionality/layoutTemplateGraphRendering.js'
 
 // TODO: create unit tests for server functions.
 suite('Functionality used in the service:', () => {
@@ -61,8 +62,8 @@ suite('Functionality used in the service:', () => {
     })
   })
 
-  suite('Template rendering functions', () => {
-    test('evaluateJsTemplate', async () => {
+  suite('Transform javascript file using Babel', () => {
+    test('transformJavascript', async () => {
       let transpiled = await transformJavascript({ scriptCode: filesystem.readFileSync(path.join(__dirname, './asset/file.js'), { encoding: 'utf8' }) })
       // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'transformJavascript'), transpiled)
       assert(transpiled === fixture.transformJavascript, `• Content must be rendered correctly.`)
@@ -86,6 +87,52 @@ suite('Functionality used in the service:', () => {
       })
 
       assert(clientSideConfig === fixture.clientSideConfig, `• Content must be rendered correctly.`)
+    })
+  })
+
+  // TODO: deal with wrapping layouts e.g. layoutElement: 'webapp-layout-list'
+  /**
+    Server-side template system (run-time substitution happens on the web server): 
+      - Template resource: template file with insertion points.
+      - Content resource: Argumnets passed to the parsed template function. 
+      - Template engine/processing/rendening element/module: underscore.template 
+
+    server-side javascript that is located in the templates, is executed. Where:
+      - Each 'insertionPoint' array item should be a function which returns a string to be concatenated into the template.
+  */
+  suite('layoutTemplateGraphRendering', () => {
+    const underscore = require('underscore') // should be already loaded and initialized in the suite setup ('setUnderscoreTemplateSetting')
+    suite.only('Render template using underscore algorithm or other engine, without graph traversal.', () => {
+      test('Should render template correctly', async () => {
+        // template resource
+        let resource = [
+          await filesystem.readFileSync(`${__dirname}/asset/template.html`, 'utf-8'),
+          `<h1>{% print(insertionPoint[1] && insertionPoint[1]()) %}</h1>`,
+          await filesystem.readFileSync(`${__dirname}/asset/file.html`, 'utf-8'),
+        ]
+
+        let parsedTemplate2 = underscore.template(resource[1])
+        let renderedDocument2 = () =>
+          parsedTemplate2({
+            argument: {},
+            insertionPoint: {
+              1: underscore.template(resource[2]),
+            },
+          })
+
+        let parsedTemplate1 = underscore.template(resource[0])
+        let renderedDocument1 = parsedTemplate1({
+          argument: {},
+          insertionPoint: {
+            1: underscore.template(resource[2]),
+            2: underscore.template(resource[2]),
+            3: renderedDocument2,
+          },
+        })
+
+        // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'renderedDocument'), renderedDocument1)
+        assert(renderedDocument1 === fixture.renderedDocument, `• Document must be rendered correctly.`)
+      })
     })
   })
 })
