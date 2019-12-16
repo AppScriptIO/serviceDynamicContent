@@ -6,8 +6,15 @@ import underscore from 'underscore'
 import send from 'koa-sendfile' // Static files.
 import { wrapStringStream } from '@dependency/wrapStringStream'
 import * as symbol from '../symbol.reference.js'
-import { convertSharedStylesToJS, combineHTMLImportWebcomponent, covertTextFileToJSModule, combineJSImportWebcomponent, evaluateJsTemplate } from '../../../functionality/renderFile.js'
-import { renderLayoutTemplate } from '../../../functionality/layoutTemplateGraphRendering.js'
+import {
+  convertSharedStylesToJS,
+  covertTextFileToJSModule,
+  renderTemplateEvaluatingJs,
+  renderTemplateInsertionPosition,
+  combineJSImportWebcomponent,
+  combineHTMLImportWebcomponent,
+  renderGraphTemplate,
+} from '../../../functionality/renderFile.js'
 
 /** extract function name from keyword following $ signature.
  * Usage: `import html from './.html$convertTextToJSModule'`
@@ -121,7 +128,7 @@ export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) => async
     filePath_,
   )
   try {
-    context.body = evaluateJsTemplate({ filePath: absoluteFilePath, setting: context /** Refactor context propeties to match the settings - i.e. pass object that relies on context */ })
+    context.body = renderTemplateEvaluatingJs({ filePath: absoluteFilePath, argument: { context } })
     context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
   } catch (error) {
     console.log(error)
@@ -129,8 +136,9 @@ export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) => async
   }
 }
 
-// serve evaluated file. Implementation using render using underscore (framework like).
-export const renderJsTemplateKoaMiddleware = ({ filePath, basePath }) => async (context, next) => {
+// serve evaluated file. Implementation using render using underlying `underscore` through `consolidate` module(framework like).
+// Takes into account
+export const renderTemplateUsingKoaViews = ({ filePath, basePath }) => async (context, next) => {
   let clientSidePath = context[symbol.context.clientSideProjectConfig].path
   let filePath_ = filePath || context.path // a predefined path or an extracted url path
   let absoluteFilePath = path.join(
@@ -140,17 +148,14 @@ export const renderJsTemplateKoaMiddleware = ({ filePath, basePath }) => async (
   )
 
   if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-    await context.render(absoluteFilePath, {
-      settings: context, // TODO refactor
-      view: {},
-      argument: { layoutElement: 'webapp-layout-list' },
-    })
+    await context.render(absoluteFilePath, { argument: {} })
     context.response.type = path.extname(absoluteFilePath)
     await next()
   } else await next()
 }
 
+// Use graph traversal module to render document
 export const renderTemplateDocument = ({ documentKey }) => async (context, next) => {
-  context.body = await renderLayoutTemplate({ documentKey })
+  context.body = await renderGraphTemplate({ documentKey })
   await next()
 }

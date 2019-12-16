@@ -19,13 +19,9 @@
   
 
   •<document-element>
-  <span id="loader"
-    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
-    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+  <span id="loader">⫷ 𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
   <script>
-    setTimeout(function() {
-      document.getElementById('loader').style.display = "none";
-    }, 10000)
+    setTimeout(() => document.getElementById('loader').style.display = "none", 10000)
   </script>
 </document-element>
 
@@ -42,31 +38,12 @@
 
   
 
-  <document-element>
-    <span id="loader"
-      style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
-      𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
-    <script>
-      setTimeout(function() {
-        document.getElementById('loader').style.display = "none";
-      }, 10000)
-    </script>
-  </document-element>
-  <!-- With ❤ From AppScript.io -->
-
-  <!-- Allows usage of binding in main document
-      <dom-bind><template></template></dom-bind>
-      <script>/* let autobind = document.querySelector('dom-bind'); */</script>
-    -->
+  <span>Footer:</span>
 
   •<h1>@<document-element>
-  <span id="loader"
-    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
-    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+  <span id="loader">⫷ 𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
   <script>
-    setTimeout(function() {
-      document.getElementById('loader').style.display = "none";
-    }, 10000)
+    setTimeout(() => document.getElementById('loader').style.display = "none", 10000)
   </script>
 </document-element></h1>
 

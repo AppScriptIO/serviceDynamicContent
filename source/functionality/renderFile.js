@@ -20,54 +20,52 @@ export async function covertTextFileToJSModule({ filePath }) {
   return await wrapStringStream({ stream: fileStream, beforeString: 'export default `', afterString: '`' })
 }
 
+// render template using underscore - evaluating js code.
+export function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
+  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ argument }) // Koa handles the stream and send it to the client.
+}
+
+// render template using underscore with insertion positions concept
+export function renderTemplateInsertionPosition({ filePath, insert = {}, argument = {} }) {
+  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ insert, argument }) // Koa handles the stream and send it to the client.
+}
+
 /**
- * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations.
+ * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
  */
-export function combineJSImportWebcomponent({ filePath, argument = { layoutElement: 'webapp-layout-list' }, view = {} }) {
+export function combineJSImportWebcomponent({ filePath, argument = {} }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/')) // directory base path of file
-
-  Object.assign(argument, {
-    templatePart: {
-      css: underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      html: underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
+  return renderTemplateInsertionPosition({
+    filePath,
+    insert: {
+      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
     },
+    argument,
   })
-
-  try {
-    let rendered = underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ view, argument })
-    return rendered // Koa handles the stream and send it to the client.
-  } catch (error) {
-    console.log(error)
-  }
 }
 
 /**
- * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations.
+ * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
  */
-export function combineHTMLImportWebcomponent({ filePath, argument = { layoutElement: 'webapp-layout-list' }, view = {} }) {
+export function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
   let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
-
-  Object.assign(argument, {
-    templatePart: {
-      css: underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      js: underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
-      html: underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
+  return renderTemplateInsertionPosition({
+    filePath,
+    insert: {
+      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      js: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
+      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
     },
+    argument,
   })
-
-  try {
-    let rendered = underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ view, argument })
-    return rendered // Koa handles the stream and send it to the client.
-  } catch (error) {
-    console.log(error)
-  }
 }
 
-// render javascript template
-export function evaluateJsTemplate({ filePath, view = {}, argument = {} }) {
-  try {
-    return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ view, argument }) // Koa handles the stream and send it to the client.
-  } catch (error) {
-    console.log(error)
-  }
+/**
+ * Render document using template graph traversal.
+ - in case underscore is used: Using 'context.render' using koa-views that uses consolidate.js as an underlying module.
+ */
+export async function renderGraphTemplate({ documentKey }) {
+  let renderedContent = await graph.traverse({ nodeKey: documentKey })
+  return renderedContent
 }

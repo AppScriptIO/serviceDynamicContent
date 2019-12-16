@@ -1,4 +1,4 @@
-<!-- Problematic !! <base target="_top" href="webapp-layout-list"> -->
+<!-- Problematic !! <base target="_top" href=""> -->
 
 <link rel="import" href="../component.package/polymer/polymer-element.html">
 <link rel="import" href="../component.package/iron-pages/iron-pages.html">
@@ -89,6 +89,6 @@ paper-tab[link] a {
 
     </template>
     <script>
-        undefined
+        
     </script>
 </dom-module>

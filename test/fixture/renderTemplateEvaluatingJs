@@ -1,7 +1,7 @@
 {
-  const AppFrontEnd = JSON.parse('{%= JSON.stringify(argument.someConfig1) %}')
+  const AppFrontEnd = JSON.parse('"someConfig1"')
 
-  AppFrontEnd.instance = JSON.parse('{%= JSON.stringify(argument.someConfig2) %}')
+  AppFrontEnd.instance = JSON.parse('"someConfig2"')
 
   function AppClass() {}
 

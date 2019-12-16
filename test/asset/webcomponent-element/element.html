@@ -15,12 +15,12 @@
     <template>
         <custom-style>
             <style include="shared-styles">
-                {%= `${argument.templatePart.css}` %}
+                {%= insert['css'] && insert['css']() %}
             </style>
         </custom-style>
-        {%=`${argument.templatePart.html}` %}
+        {%= insert['html'] && insert['html']() %}
     </template>
     <script>
-        {%= `${argument.templatePart.js}` %}
+        {%= insert['js'] && insert['js']() %}
     </script>
 </dom-module>
