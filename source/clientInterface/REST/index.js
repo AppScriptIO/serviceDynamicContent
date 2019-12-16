@@ -35,7 +35,7 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
 }
 
 /** Root domain content Mainly user interface related
- *  - servers template rendered files for webapp interface.
+ *  - servers template rendered files for webapp interface (manipulated files using nodejs rendering).
  *  - serves some static files required in the root domain.
  * 
  Architecture: REST + Custom concepts, Protocol: HTTP
@@ -45,7 +45,7 @@ export async function initializeRootContentRendering({ targetProjectConfig, entr
   let { configuredGraph } = await initializeGraph({
     targetProjectConfig,
     contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }) },
-    graphDataArray: [rootContentRenderingGraph],
+    // graphDataArray: [rootContentRenderingGraph],
   }) // returns a configuredGraph element.
 
   let middlewareArray = [

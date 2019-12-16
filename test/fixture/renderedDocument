@@ -18,7 +18,7 @@
   </script>
   
 
-  <document-element>
+  •<document-element>
   <span id="loader"
     style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
     𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
@@ -40,16 +40,7 @@
 
 <body>
 
-  <document-element>
-  <span id="loader"
-    style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
-    𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
-  <script>
-    setTimeout(function() {
-      document.getElementById('loader').style.display = "none";
-    }, 10000)
-  </script>
-</document-element>
+  
 
   <document-element>
     <span id="loader"
@@ -68,7 +59,7 @@
       <script>/* let autobind = document.querySelector('dom-bind'); */</script>
     -->
 
-  <h1><document-element>
+  •<h1>@<document-element>
   <span id="loader"
     style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto; margin-top: 20px;">⫷
     𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>

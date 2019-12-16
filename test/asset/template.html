@@ -52,7 +52,7 @@
   </script>
   {% } %}
 
-  {% print(insertionPoint[1]()) %}
+  {% print(insert[1] && insert[1]())  // `print` is a function provided by underscore.template, allows for printing string through js logic %}
 
   <!-- NOTE: Loading Polymer on the main document, in addition to the elements causes issues for some reason.
       <link rel="import" href="/asset/webcomponent/component.package/polymer/polymer-element.html"> 
@@ -65,7 +65,7 @@
 
 <body>
 
-  {% print(insertionPoint[2]()) %}
+  {%= insert[2] && insert[2]() %}
 
   <document-element>
     <span id="loader"
@@ -84,7 +84,7 @@
       <script>/* let autobind = document.querySelector('dom-bind'); */</script>
     -->
 
-  {% print(insertionPoint[3]()) %}
+  {%=  insert[3] && insert[3]() %}
 
 </body>
 
