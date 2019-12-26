@@ -48,8 +48,8 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
  * @param basePath relative to the clientside source/distribution path.
  * @param context[symbol.context.clientSideProjectConfig] is a property created by a previous useragentDetection middleware
  */
-export let serveStaticFile = ({ filePath, basePath } = {}) =>
-  async function(context, next) {
+export const serveStaticFile = ({ filePath, basePath } = {}) =>
+  async function serveStaticFile(context, next) {
     let absoluteFilePath = path.join(
       context[symbol.context.clientSideProjectConfig].path,
       basePath || '', // additional folder path.
@@ -68,94 +68,106 @@ export let serveStaticFile = ({ filePath, basePath } = {}) =>
  * Resources:
  * - read streams and send them using koa - https://github.com/koajs/koa/issues/944 http://book.mixu.net/node/ch9.html
  */
-export const renderSharedStyle = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
-  context.body = await convertSharedStylesToJS({ filePath: absoluteFilePath })
-  context.response.type = 'application/javascript'
-  await next()
-}
-
-export const renderFileAsJSModule = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
-  context.body = await covertTextFileToJSModule({ filePath: absoluteFilePath })
-  context.response.type = 'application/javascript'
-  await next()
-}
-
-export const renderHTMLImportWebcomponent = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
-  context.body = await combineHTMLImportWebcomponent({ filePath: absoluteFilePath })
-  await next()
-}
-
-export const renderJSImportWebcomponent = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
-  context.body = await combineJSImportWebcomponent({ filePath: absoluteFilePath })
-  await next()
-}
-
-// Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
-export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
-  try {
-    context.body = renderTemplateEvaluatingJs({ filePath: absoluteFilePath, argument: { context } })
-    context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
-  } catch (error) {
-    console.log(error)
+export const renderSharedStyle = ({ filePath, basePath }) =>
+  async function renderSharedStyle(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
+    context.body = await convertSharedStylesToJS({ filePath: absoluteFilePath })
+    context.response.type = 'application/javascript'
     await next()
   }
-}
+
+export const renderFileAsJSModule = ({ filePath, basePath }) =>
+  async function renderFileAsJSModule(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
+    context.body = await covertTextFileToJSModule({ filePath: absoluteFilePath })
+    context.response.type = 'application/javascript'
+    await next()
+  }
+
+export const renderHTMLImportWebcomponent = ({ filePath, basePath }) =>
+  async function renderHTMLImportWebcomponent(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
+    context.body = await combineHTMLImportWebcomponent({ filePath: absoluteFilePath })
+    await next()
+  }
+
+export const renderJSImportWebcomponent = ({ filePath, basePath }) =>
+  async function renderJSImportWebcomponent(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
+    context.body = await combineJSImportWebcomponent({ filePath: absoluteFilePath })
+    await next()
+  }
+
+// Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
+export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) =>
+  async function renderJsTemplateUsingUnderscore(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
+    try {
+      context.body = renderTemplateEvaluatingJs({ filePath: absoluteFilePath, argument: { context } })
+      context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
+    } catch (error) {
+      console.log(error)
+      await next()
+    }
+  }
 
 // serve evaluated file. Implementation using render using underlying `underscore` through `consolidate` module(framework like).
 // Takes into account
-export const renderTemplateUsingKoaViews = ({ filePath, basePath }) => async (context, next) => {
-  let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-  let filePath_ = filePath || context.path // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(
-    clientSidePath,
-    basePath || '', // additional folder path.
-    filePath_,
-  )
+export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
+  async function renderTemplateUsingKoaViews(context, next) {
+    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
+    let filePath_ = filePath || context.path // a predefined path or an extracted url path
+    let absoluteFilePath = path.join(
+      clientSidePath,
+      basePath || '', // additional folder path.
+      filePath_,
+    )
 
-  if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-    await context.render(absoluteFilePath, { argument: {} })
-    context.response.type = path.extname(absoluteFilePath)
+    if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
+      await context.render(absoluteFilePath, { argument: {} })
+      context.response.type = path.extname(absoluteFilePath)
+      await next()
+    } else await next()
+  }
+
+/**
+ * Use graph traversal module to render document - Render document using template graph traversal.
+ - in case underscore is used through koa-views: Using 'context.render' using koa-views that uses consolidate.js as an underlying module.
+ @dependency `graphTraversal` module - instance of Graph class.
+ */
+export const graphRenderedTemplateDocument = ({ documentKey, graphInstance }) =>
+  async function graphRenderedTemplateDocument(context, next) {
+    let renderedContent = await graphInstance.traverse({ nodeKey: documentKey })
+    context.body = renderedContent
     await next()
-  } else await next()
-}
-
-// Use graph traversal module to render document
-export const renderTemplateDocument = ({ documentKey }) => async (context, next) => {
-  context.body = await renderGraphTemplate({ documentKey })
-  await next()
-}
+  }

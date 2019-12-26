@@ -21,7 +21,6 @@ import {
 import { transformJavascript } from '../source/functionality/babelTransformJsStream.js'
 import { pickClientSideConfiguration } from '../source/functionality/pickClientSideConfiguration.js'
 
-// TODO: create unit tests for server functions.
 suite('Functionality used in the service:', () => {
   suiteSetup(() => {
     setUnderscoreTemplateSetting() // set underscore settings for template string characters used for rendering.
@@ -37,7 +36,7 @@ suite('Functionality used in the service:', () => {
     })
 
   //* Write new fixtures `filesystem.writeFileSync(path.join(__dirname, 'fixture', 'filename'), content)`
-  suite.only('Template rendering functions', () => {
+  suite('Template rendering functions', () => {
     test('convertSharedStylesToJS', async () => {
       let rendered = await streamToString(await convertSharedStylesToJS({ filePath: path.join(__dirname, './asset/file.css') }))
       // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'convertSharedStylesToJS'), rendered)
@@ -70,23 +69,9 @@ suite('Functionality used in the service:', () => {
       })
     })
 
-    // TODO: deal with wrapping layouts e.g. layoutElement: 'webapp-layout-list'
-    /**
-      Server-side template system (run-time substitution happens on the web server): 
-        - Template resource: template file with insertion points.
-        - Content resource (template parts): Argumnets passed to the parsed template function. 
-        - Template engine/processing/rendening element/module: underscore.template 
-
-      server-side javascript that is located in the templates, is executed. Rendering template requires an object of functions for each insetion position key.
-      Where:
-        - insert object functions are called and expect to return a string. Functions represent- the algorithms used to deal with content value and add it to the document in a specific position,
-          which will receive the parameters that can change it's behavior. Using a function allows for creating specific logic for each insetion point.
-        - Each insertion position is distinguished by the keys of the insert object. 
-        - Content value (String | Array | Object) - which insert function is initialized with, and handles it. 
-
-    */
     suite('templateGraphRendering', () => {
       const underscore = require('underscore') // should be already loaded and initialized in the suite setup ('setUnderscoreTemplateSetting')
+
       suite('Render template using underscore algorithm or other engine, without graph traversal.', () => {
         test('Should render template correctly', async () => {
           // template resource
@@ -123,11 +108,6 @@ suite('Functionality used in the service:', () => {
           assert(renderedDocument1 === fixture.renderedDocument, `• Document must be rendered correctly.`)
         })
       })
-      test('renderGraphTemplate', async () => {
-        // let rendered = await renderGraphTemplate({ filePath: path.join(__dirname, './asset/webcomponent-element/element.html') })
-        // // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'combineHTMLImportWebcomponent'), rendered)
-        // assert(rendered === fixture.renderGraphTemplate, `• Content must be rendered correctly.`)
-      })
     })
   })
 
@@ -154,7 +134,6 @@ suite('Functionality used in the service:', () => {
         clientSideProjectConfigList: [{ path: path.join(__dirname, 'asset') }, fixture.clientSideConfig],
         agentInstance,
       })
-
       assert(clientSideConfig === fixture.clientSideConfig, `• Content must be rendered correctly.`)
     })
   })

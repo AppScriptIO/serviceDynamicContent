@@ -10,6 +10,8 @@ import { debugMiddlewareProxy } from '../../utility/debugMiddlewareProxy.js'
 import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middleware/contextManipulation.js'
 import { setFrontendSetting } from './middleware/languageContent.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
+import { graphRenderedTemplateDocument } from './middleware/serveFile.js'
+import { wrapWithJsTag } from './pipeFunction/wrapString.js'
 
 // list of function used in the context of graph traversal.
 export const functionReferenceList = async ({ targetProjectConfig }) =>
@@ -23,7 +25,8 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
      * @return {Function (context, next)=>{} } functions that return a middleware.
      */
     {
-      bodyParser: () => bodyParserMiddleware |> debugMiddlewareProxy,
+      // bodyParser: () => bodyParserMiddleware |> debugMiddlewareProxy,
+      bodyParser: () => bodyParserMiddleware,
       serveStaticFile: ({ node }) => serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }),
       serveServerSideRenderedFile: ({ node }) =>
         serveServerSideRenderedFile({ filePath: node.properties.filePath, basePath: node.properties.basePath, renderType: node.properties.renderType, mimeType: node.properties.mimeType }),
@@ -37,16 +40,22 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
       transformJavascriptMiddleware: () => transformJavascriptMiddleware(),
       expandAtSignPath: () => expandAtSignPath(),
       templateRenderingMiddleware: () => templateRenderingMiddleware(),
+      graphRenderedTemplateDocument: ({ node, graph }) => graphRenderedTemplateDocument({ documentKey: node.properties.documentKey, graphInstance: graph }),
     },
     /**  conditions
      * @return {any} value for condition comparison. Could return boolean, string, array.
      */
     {
-      debugMode: ({ node, context }) => targetProjectConfig.runtimeVariable.DEPLOYMENT == 'development' && !targetProjectConfig.runtimeVariable.DISTRIBUTION,
       ifLevel1IncludesAt: async ({ node, context }) => await ifLevel1IncludesAt(context.middlewareParameter.context),
       ifLastUrlPathtIncludesFunction: ({ node, context }) => ifLastUrlPathtIncludesFunction(context.middlewareParameter.context),
       getRequestMethod: ({ node, context }) => getRequestMethod(context.middlewareParameter.context),
       getUrlPathLevel1: ({ node, context }) => getUrlPathLevel1(context.middlewareParameter.context),
       getUrlPathAsArray: ({ node, context }) => getUrlPathAsArray(context.middlewareParameter.context),
+    },
+    /** Pipes - for further processing results of template renderning
+     * @return {Function (input)=>output } functions that return a pipe function - receiving an input and returning a processed output.
+     */
+    {
+      wrapWithJsTag: ({ node, graph }) => wrapWithJsTag(),
     },
   )

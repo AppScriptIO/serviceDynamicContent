@@ -7,9 +7,10 @@ require('useragent/features')
 
 // USAGE: localhost/?distribution="<clientSide folder name"
 // This module defines context.instance.config.clientBasePath to be later used in template composition.
-export const pickClientSideProjectConfig = ({ targetProjectConfig }) => async (context, next) => {
-  let agent = useragentParser.lookup(context.request.headers['user-agent'])
-  // set resolved clientSide config object
-  context[symbol.context.clientSideProjectConfig] = pickClientSideConfiguration({ clientSideProjectConfigList: targetProjectConfig.clientSideProjectConfigList, agentInstance: agent })
-  await next()
-}
+export const pickClientSideProjectConfig = ({ targetProjectConfig }) =>
+  async function pickClientSideProjectConfig(context, next) {
+    let agent = useragentParser.lookup(context.request.headers['user-agent'])
+    // set resolved clientSide config object
+    context[symbol.context.clientSideProjectConfig] = pickClientSideConfiguration({ clientSideProjectConfigList: targetProjectConfig.clientSideProjectConfigList, agentInstance: agent })
+    await next()
+  }

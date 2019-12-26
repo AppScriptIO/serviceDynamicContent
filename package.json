@@ -14,8 +14,8 @@
 	"private": true,
 	"dependencies": {
 		"@babel/core": "*",
-		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^2.x.x",
-		"@dependency/graphTraversal-implementation": "https://github.com/AppScriptIO/graphTraversal-implementation#semver:^2.x.x",
+		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^3.x.x",
+		"@dependency/graphTraversal-implementation": "https://github.com/AppScriptIO/graphTraversal-implementation#semver:^3.x.x",
 		"@dependency/streamToStringConvertion": "https://github.com/AppScriptIO/streamToStringConvertion#semver:^1.x.x",
 		"@dependency/wrapStringStream": "https://github.com/AppScriptIO/wrapStringStream#semver:^1.x.x",
 		"co-body": "*",

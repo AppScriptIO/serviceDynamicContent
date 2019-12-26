@@ -60,12 +60,3 @@ export function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
     argument,
   })
 }
-
-/**
- * Render document using template graph traversal.
- - in case underscore is used: Using 'context.render' using koa-views that uses consolidate.js as an underlying module.
- */
-export async function renderGraphTemplate({ documentKey }) {
-  let renderedContent = await graph.traverse({ nodeKey: documentKey })
-  return renderedContent
-}

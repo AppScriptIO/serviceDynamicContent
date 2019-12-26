@@ -23,17 +23,18 @@ const namedImportMap = [
  * NOTE: @ = At sign.
 Example: `/@javascript/x/y/z` --> `/asset/javascript/x/y/z`
 */
-export const expandAtSignPath = () => async (context, next) => {
-  let pathArray = context.path.split('/').filter(item => item) // split path and remove empty values
-  let signKeyword = extractAtSignKeyword(pathArray[0])
-  if (signKeyword) {
-    // check if @ sign exists in beggining of url path.
-    let resolvedAtSignSection = namedImportMap.find(item => item.key == signKeyword)?.path
-    // change path if @ path was found and mapped
-    if (resolvedAtSignSection) {
-      pathArray[0] = resolvedAtSignSection
-      context.path = `/${pathArray.join('/')}`
+export const expandAtSignPath = () =>
+  async function expandAtSignPath(context, next) {
+    let pathArray = context.path.split('/').filter(item => item) // split path and remove empty values
+    let signKeyword = extractAtSignKeyword(pathArray[0])
+    if (signKeyword) {
+      // check if @ sign exists in beggining of url path.
+      let resolvedAtSignSection = namedImportMap.find(item => item.key == signKeyword)?.path
+      // change path if @ path was found and mapped
+      if (resolvedAtSignSection) {
+        pathArray[0] = resolvedAtSignSection
+        context.path = `/${pathArray.join('/')}`
+      }
     }
+    await next()
   }
-  await next()
-}
