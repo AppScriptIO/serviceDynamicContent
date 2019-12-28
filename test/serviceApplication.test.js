@@ -32,9 +32,9 @@ const targetProjectConfig = Object.assign({
 })
 
 suite('Service components:', () => {
-  setup(async () => await clearGraphData())
+  suiteSetup(async () => await clearGraphData())
 
-  suite('REST API - Http server', () => {
+  suite('Asset content delivery: REST API - Http server', () => {
     const port = 9999
     const url = `http://localhost:${port}`
     test('Should respond to requests', async () => {
@@ -51,6 +51,23 @@ suite('Service components:', () => {
         })
         await new Promise((resolve, reject) => {
           let urlPath = `/upload`
+          http.get(`${url}${urlPath}`, response => resolve())
+        })
+      } catch (error) {
+        throw error
+      }
+    })
+  })
+
+  suite.only('Root content rendering: REST API - Http server', () => {
+    const port = 9999
+    const url = `http://localhost:${port}`
+    test('Should respond to requests', async () => {
+      await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
+
+      try {
+        await new Promise((resolve, reject) => {
+          let urlPath = `/`
           http.get(`${url}${urlPath}`, response => resolve())
         })
       } catch (error) {

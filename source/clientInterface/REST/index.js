@@ -40,16 +40,16 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
  * 
  Architecture: REST + Custom concepts, Protocol: HTTP
  */
-export async function initializeRootContentRendering({ targetProjectConfig, entrypointKey = 'default', port = serviceConfig.contentRendering.port }) {
+export async function initializeRootContentRendering({ targetProjectConfig, entrypointKey, port = serviceConfig.contentRendering.port }) {
   // Create a grpah instance with middleware references and load graph data.
   let { configuredGraph } = await initializeGraph({
     targetProjectConfig,
     contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }) },
-    // graphDataArray: [rootContentRenderingGraph],
+    graphDataArray: [rootContentRenderingGraph],
   }) // returns a configuredGraph element.
 
   let middlewareArray = [
-    await graphMiddlewareImmediatelyExecute({ entrypointKey, configuredGraph }),
+    await graphMiddlewareImmediatelyExecute({ entrypointKey: '928efj94-29034jg90248-g2390jg823', configuredGraph }),
     async (context, next) => {
       console.log('Last Middleware reached.')
       await next()
