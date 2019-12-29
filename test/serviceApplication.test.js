@@ -35,7 +35,7 @@ suite('Service components:', () => {
   suiteSetup(async () => await clearGraphData())
 
   suite('Asset content delivery: REST API - Http server', () => {
-    const port = 9999
+    const port = 9991
     const url = `http://localhost:${port}`
     test('Should respond to requests', async () => {
       await service.restApi.initializeAssetContentDelivery({ port, targetProjectConfig }).catch(error => throw error)
@@ -59,8 +59,8 @@ suite('Service components:', () => {
     })
   })
 
-  suite.only('Root content rendering: REST API - Http server', () => {
-    const port = 9999
+  suite('Root content rendering: REST API - Http server', () => {
+    const port = 9992
     const url = `http://localhost:${port}`
     test('Should respond to requests', async () => {
       await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)

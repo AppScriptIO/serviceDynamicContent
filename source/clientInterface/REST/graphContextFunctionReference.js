@@ -25,12 +25,12 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
      * @return {Function (context, next)=>{} } functions that return a middleware.
      */
     {
+      nodeDebug: ({ node }) => (async (context, next) => console.log(`• executed middleware in node: ${JSON.stringify(node.properties)}`)) |> debugMiddlewareProxy, // debug
       // bodyParser: () => bodyParserMiddleware |> debugMiddlewareProxy,
       bodyParser: () => bodyParserMiddleware,
       serveStaticFile: ({ node }) => serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }),
       serveServerSideRenderedFile: ({ node }) =>
         serveServerSideRenderedFile({ filePath: node.properties.filePath, basePath: node.properties.basePath, renderType: node.properties.renderType, mimeType: node.properties.mimeType }),
-      nodeDebug: ({ node }) => async (context, next) => console.log(`• executed middleware in node: ${JSON.stringify(node.properties)}`), // debug
       setResponseHeaders: () => setResponseHeaders(),
       setFrontendSetting: () => setFrontendSetting(),
       pickClientSideProjectConfig: () => pickClientSideProjectConfig({ targetProjectConfig }),

@@ -1,19 +1,14 @@
-GET request
-
-  if(/google276dc830e9fade0c.html) 
     serveStaticFile google276dc830e9fade0c.html
   
-  if(/serviceWorker.js)
     <!-- X --> 
     serverStaticFile serviceWorker.js 
-
-  /<*>
+  
     languageContent.js
     <!-- X --> 
     serveUnderscoreRendered /template/*
 
-  /
     <!-- Template graph root -->
+
 
 X = {
     useragentDetection.js
