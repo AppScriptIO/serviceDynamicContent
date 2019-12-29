@@ -1,4 +1,4 @@
-import { getRequestMethod, getUrlPathLevel1, getUrlPathAsArray, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction } from './graphEvaluationFunction.js'
+import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction } from './graphEvaluationFunction.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
@@ -46,10 +46,11 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
      * @return {any} value for condition comparison. Could return boolean, string, array.
      */
     {
+      getUrlPathLevel: ({ node, context }) => getUrlPathLevel({ middlewareContext: context.middlewareParameter.context, level: node.properties.level }),
+      isExistUrlPathLevel: ({ node, context }) => isExistUrlPathLevel({ middlewareContext: context.middlewareParameter.context, level: node.properties.level }),
       ifLevel1IncludesAt: async ({ node, context }) => await ifLevel1IncludesAt(context.middlewareParameter.context),
       ifLastUrlPathtIncludesFunction: ({ node, context }) => ifLastUrlPathtIncludesFunction(context.middlewareParameter.context),
       getRequestMethod: ({ node, context }) => getRequestMethod(context.middlewareParameter.context),
-      getUrlPathLevel1: ({ node, context }) => getUrlPathLevel1(context.middlewareParameter.context),
       getUrlPathAsArray: ({ node, context }) => getUrlPathAsArray(context.middlewareParameter.context),
     },
     /** Pipes - for further processing results of template renderning

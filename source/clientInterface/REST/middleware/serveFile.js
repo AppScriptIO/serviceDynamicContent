@@ -1,4 +1,5 @@
 import path from 'path'
+import assert from 'assert'
 import filesystem from 'fs'
 import Stream from 'stream'
 import multistream from 'multistream'
@@ -50,6 +51,7 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
  */
 export const serveStaticFile = ({ filePath, basePath } = {}) =>
   async function serveStaticFile(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let absoluteFilePath = path.join(
       context[symbol.context.clientSideProjectConfig].path,
       basePath || '', // additional folder path.
@@ -70,6 +72,7 @@ export const serveStaticFile = ({ filePath, basePath } = {}) =>
  */
 export const renderSharedStyle = ({ filePath, basePath }) =>
   async function renderSharedStyle(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -84,6 +87,7 @@ export const renderSharedStyle = ({ filePath, basePath }) =>
 
 export const renderFileAsJSModule = ({ filePath, basePath }) =>
   async function renderFileAsJSModule(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -98,6 +102,7 @@ export const renderFileAsJSModule = ({ filePath, basePath }) =>
 
 export const renderHTMLImportWebcomponent = ({ filePath, basePath }) =>
   async function renderHTMLImportWebcomponent(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -111,6 +116,7 @@ export const renderHTMLImportWebcomponent = ({ filePath, basePath }) =>
 
 export const renderJSImportWebcomponent = ({ filePath, basePath }) =>
   async function renderJSImportWebcomponent(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -125,6 +131,7 @@ export const renderJSImportWebcomponent = ({ filePath, basePath }) =>
 // Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
 export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) =>
   async function renderJsTemplateUsingUnderscore(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -145,6 +152,7 @@ export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) =>
 // Takes into account
 export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
   async function renderTemplateUsingKoaViews(context, next) {
+    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
     let absoluteFilePath = path.join(
@@ -154,7 +162,7 @@ export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
     )
 
     if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-      await context.render(absoluteFilePath, { argument: {} })
+      await context.render(absoluteFilePath, { argument: { context } })
       context.response.type = path.extname(absoluteFilePath)
       await next()
     } else await next()
@@ -167,7 +175,10 @@ export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
  */
 export const graphRenderedTemplateDocument = ({ documentKey, graphInstance }) =>
   async function graphRenderedTemplateDocument(context, next) {
-    let renderedContent = await graphInstance.traverse({ nodeKey: documentKey })
+    console.log(context.path)
+
+    const nodeKey = documentKey || ''
+    let renderedContent = await graphInstance.traverse({ nodeKey })
     context.body = renderedContent
     await next()
   }

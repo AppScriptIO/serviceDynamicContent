@@ -1,22 +1,10 @@
     serveStaticFile google276dc830e9fade0c.html
   
-    <!-- X --> 
     serverStaticFile serviceWorker.js 
   
-    languageContent.js
-    <!-- X --> 
     serveUnderscoreRendered /template/*
 
     <!-- Template graph root -->
-
-
-X = {
-    useragentDetection.js
-    bodyParser.js
-    serverCommonFunctionality.js
-    notFound.js
-}
-
 
 Template Graph Root = {
     entrypoint.html underscoreRendering

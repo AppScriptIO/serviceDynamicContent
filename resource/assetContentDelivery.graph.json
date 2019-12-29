@@ -185,9 +185,10 @@
     "identity": 4623,
     "labels": ["Stage", "Process", "Function"],
     "properties": {
-      "functionName": "getUrlPathLevel1",
+      "functionName": "getUrlPathLevel",
       "key": "a2db9344-58fc-47b0-a41e-b48c8c7f859e",
-      "name": "getUrlPathLevel1"
+      "name": "getUrlPathLevel",
+      "level": 0
     }
   }, {
     "identity": 4624,

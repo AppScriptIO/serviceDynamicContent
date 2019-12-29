@@ -20,23 +20,14 @@ export const getUrlPathAsArray = async middlewareContext => {
   return pathArray
 }
 
-export const getUrlPathLevel1 = async middlewareContext => {
+export const isExistUrlPathLevel = async ({ middlewareContext, level = 0 }) => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
-  return pathArray[0]
+  return pathArray[level] == null ? false : true
 }
 
-export const getUrlPathLevel2 = async middlewareContext => {
+export const getUrlPathLevel = async ({ middlewareContext, level = 0 }) => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
-  if (pathArray[1] == null) {
-    return false
-  } else {
-    return pathArray[1]
-  }
-}
-
-export const getUrlPathLevel3 = async middlewareContext => {
-  let pathArray = await getUrlPathAsArray(middlewareContext)
-  return pathArray[3]
+  return pathArray[level]
 }
 
 export const ifLastUrlPathtIncludesFunction = async middlewareContext => {
@@ -51,14 +42,4 @@ export const ifLevel1IncludesAt = async middlewareContext => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
   let firstPath = pathArray.shift() // get url path
   return firstPath && firstPath.includes('@') ? true : false // check if function sign exists
-}
-
-export const isExistUrlPathLevel1 = async middlewareContext => {
-  let pathArray = await getUrlPathAsArray(middlewareContext)
-  return pathArray[0] == null ? false : true
-}
-
-export const isExistUrlPathLevel2 = async middlewareContext => {
-  let pathArray = await getUrlPathAsArray(middlewareContext)
-  return pathArray[1] == null ? false : true
 }
