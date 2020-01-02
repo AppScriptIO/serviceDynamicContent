@@ -6,7 +6,7 @@ import * as rootContentRenderingGraph from '../../../resource/rootContentRenderi
 import { initializeGraph } from '../../utility/graphInitialization.js'
 import * as graphEvaluationFunction from './graphEvaluationFunction.js'
 import { graphMiddlewareImmediatelyExecute } from './middleware/traverseGraph.js'
-import { functionReferenceList } from './graphContextFunctionReference.js'
+import { functionReferenceList, fileReferenceList } from './graphReferenceContext.js'
 
 /** Assets, different components of the site, and static files, intended to be requested from a subdomain.
   - Serves static files
@@ -18,7 +18,7 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
   // Create a grpah instance with middleware references and load graph data.
   let { configuredGraph } = await initializeGraph({
     targetProjectConfig,
-    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }) },
+    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }), fileContext: await fileReferenceList({ targetProjectConfig }) },
     graphDataArray: [assetContentDeliveryGraph],
   }) // returns a configuredGraph element.
 
@@ -44,7 +44,7 @@ export async function initializeRootContentRendering({ targetProjectConfig, entr
   // Create a grpah instance with middleware references and load graph data.
   let { configuredGraph } = await initializeGraph({
     targetProjectConfig,
-    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }) },
+    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }), fileContext: await fileReferenceList({ targetProjectConfig }) },
     graphDataArray: [rootContentRenderingGraph],
   }) // returns a configuredGraph element.
 

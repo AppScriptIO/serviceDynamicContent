@@ -40,7 +40,7 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
       transformJavascriptMiddleware: () => transformJavascriptMiddleware(),
       expandAtSignPath: () => expandAtSignPath(),
       templateRenderingMiddleware: () => templateRenderingMiddleware(),
-      graphRenderedTemplateDocument: ({ node, graph }) => graphRenderedTemplateDocument({ documentKey: node.properties.documentKey, graphInstance: graph }),
+      graphRenderedTemplateDocument: ({ node, graph }) => graphRenderedTemplateDocument({ middlewareNode: node, graphInstance: graph }),
     },
     /**  conditions
      * @return {any} value for condition comparison. Could return boolean, string, array.
@@ -58,5 +58,15 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
      */
     {
       wrapWithJsTag: ({ node, graph }) => wrapWithJsTag(),
+    },
+  )
+
+// list of files used in the context of graph traversal.
+export const fileReferenceList = async ({ targetProjectConfig }) =>
+  Object.assign(
+    /** Template files */
+    {
+      entrypointHTML: '',
+      //TODO:
     },
   )
