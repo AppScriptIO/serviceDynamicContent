@@ -1,11 +1,3 @@
-    serveStaticFile google276dc830e9fade0c.html
-  
-    serverStaticFile serviceWorker.js 
-  
-    serveUnderscoreRendered /template/*
-
-    <!-- Template graph root -->
-
 Template Graph Root = {
     entrypoint.html underscoreRendering
       -header
