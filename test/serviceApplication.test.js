@@ -7,6 +7,7 @@ import filesystem from 'fs'
 import { service } from '..'
 import ownProjectConfig from '../configuration'
 const boltProtocolDriver = require('neo4j-driver').v1
+import { streamToString } from '@dependency/streamToStringConvertion'
 import { memgraphContainer } from '@dependency/deploymentProvisioning'
 async function clearGraphData() {
   console.groupCollapsed('• Run prerequisite containers:')
@@ -37,24 +38,49 @@ suite('Service components:', () => {
   suite('Asset content delivery: REST API - Http server', () => {
     const port = 9991
     const url = `http://localhost:${port}`
-    test('Should respond to requests', async () => {
+    test('Should respond to requests and responed correctly', async () => {
       await service.restApi.initializeAssetContentDelivery({ port, targetProjectConfig }).catch(error => throw error)
 
-      try {
-        await new Promise((resolve, reject) => {
-          let urlPath = `/@javascript`
-          http.get(`${url}${urlPath}`, response => resolve())
+      {
+        let stream = await new Promise((resolve, reject) => {
+          let urlPath = `/upload/file.txt`
+          http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        await new Promise((resolve, reject) => {
-          let urlPath = `/asset`
-          http.get(`${url}${urlPath}`, response => resolve())
+        let content = await streamToString(stream)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
+      }
+      {
+        let stream = await new Promise((resolve, reject) => {
+          let urlPath = `/@javascript/file.js`
+          let content = http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        await new Promise((resolve, reject) => {
-          let urlPath = `/upload`
-          http.get(`${url}${urlPath}`, response => resolve())
+        let content = await streamToString(stream)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/javascript/file.js'), { encoding: 'utf-8' }), `• Correct content must be served.`)
+      }
+      {
+        let stream = await new Promise((resolve, reject) => {
+          let urlPath = `/asset/file.css`
+          http.get(`${url}${urlPath}`, response => resolve(response))
         })
-      } catch (error) {
-        throw error
+        let content = await streamToString(stream)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/file.css'), { encoding: 'utf-8' }), `• Correct content must be served.`)
+      }
+      {
+        let stream = await new Promise((resolve, reject) => {
+          let urlPath = `/asset/file.txt$covertTextFileToJSModule`
+          let content = http.get(`${url}${urlPath}`, response => resolve(response))
+        })
+        let content = await streamToString(stream)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'fixture', 'covertTextFileToJSModule'), { encoding: 'utf-8' }), `• Correct content must be served.`)
+      }
+      {
+        // test explicitely mentioned paths in the graph:
+        let stream = await new Promise((resolve, reject) => {
+          let urlPath = `/javascript/jspm.config.js`
+          http.get(`${url}${urlPath}`, response => resolve(response))
+        })
+        let content = await streamToString(stream)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/javascript/file.js'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
     })
   })

@@ -17,6 +17,7 @@ export const getUrlPathAsArray = async middlewareContext => {
     .split('/') // split path sections to an array.
     .filter(String) // remove empty string.
     .filter(string => !string.startsWith('?')) // remove parameters from individual path in the array. i.e. don't count params as path.
+
   return pathArray
 }
 
