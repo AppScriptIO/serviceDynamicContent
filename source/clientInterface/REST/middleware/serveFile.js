@@ -16,6 +16,7 @@ import {
   combineHTMLImportWebcomponent,
   renderGraphTemplate,
 } from '../../../functionality/renderFile.js'
+import * as renderFile from '../../../functionality/renderFile.js'
 
 /** extract function name from keyword following $ signature.
  * Usage: `import html from './.html$convertTextToJSModule'`
@@ -23,15 +24,29 @@ import {
 function extractDollarSignKeyword(string) {
   if (string.lastIndexOf('$') == -1) return false
   let keyword = string.substr(string.lastIndexOf('$') + 1, string.length) // $function extracted from url after '$' signature
-  string.substr(0, string.lastIndexOf('$')) // remove function name
-  return { signKeyword, stringWithRemovedSign }
+  string = string.substr(0, string.lastIndexOf('$')) // remove function name
+  return { signKeyword: keyword, stringWithRemovedSign: string }
 }
 
-//TODO:
-export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType } = {}) => async (context, next) => {
-  let { signKeyword, stringWithRemovedSign } = extractDollarSignKeyword(filePath)
-  filePath = stringWithRemovedSign // if sign exist the actual file path woule be what comes before `./.html$convertTextToJSModule`
-  let renderType = signKeyword
+export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType = 'application/javascript' } = {}) => async (context, next) => {
+  assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+
+  filePath ||= context.path // a predefined path or an extracted url path
+  basePath ||= '' // additional folder path.
+
+  if (!renderType) {
+    let { signKeyword, stringWithRemovedSign } = extractDollarSignKeyword(filePath)
+    filePath = stringWithRemovedSign // if sign exist the actual file path woule be what comes before `./.html$convertTextToJSModule`
+    renderType ||= signKeyword
+  }
+
+  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath, filePath)
+  //TODO: - reconsider the function context used for referencing the dollar extracted function keyword.
+  let functionReference = renderFile[renderType] // the reference context is actually the module "renderFile.js"
+  assert(functionReference, `• function keyword in the url must have an equivalent in the function reference.`)
+  context.body = await functionReference({ filePath: absoluteFilePath })
+  context.response.type = mimeType
+  await next()
 }
 
 // import serverStatic from 'koa-static' // Static files.
@@ -70,7 +85,7 @@ export const serveStaticFile = ({ filePath, basePath } = {}) =>
  * Resources:
  * - read streams and send them using koa - https://github.com/koajs/koa/issues/944 http://book.mixu.net/node/ch9.html
  */
-export const renderSharedStyle = ({ filePath, basePath }) =>
+export const renderSharedStyle = ({ filePath, basePath, mimeType = 'application/javascript' }) =>
   async function renderSharedStyle(context, next) {
     assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
@@ -81,11 +96,11 @@ export const renderSharedStyle = ({ filePath, basePath }) =>
       filePath_,
     )
     context.body = await convertSharedStylesToJS({ filePath: absoluteFilePath })
-    context.response.type = 'application/javascript'
+    context.response.type = mimeType
     await next()
   }
 
-export const renderFileAsJSModule = ({ filePath, basePath }) =>
+export const renderFileAsJSModule = ({ filePath, basePath, mimeType = 'application/javascript' }) =>
   async function renderFileAsJSModule(context, next) {
     assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
@@ -96,7 +111,7 @@ export const renderFileAsJSModule = ({ filePath, basePath }) =>
       filePath_,
     )
     context.body = await covertTextFileToJSModule({ filePath: absoluteFilePath })
-    context.response.type = 'application/javascript'
+    context.response.type = mimeType
     await next()
   }
 
