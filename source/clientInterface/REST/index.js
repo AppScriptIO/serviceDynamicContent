@@ -5,7 +5,7 @@ import * as assetContentDeliveryGraph from '../../../resource/assetContentDelive
 import * as rootContentRenderingGraph from '../../../resource/rootContentRendering.graph.json'
 import { initializeGraph } from '../../utility/graphInitialization.js'
 import * as graphEvaluationFunction from './graphEvaluationFunction.js'
-import { graphMiddlewareImmediatelyExecute } from './middleware/traverseGraph.js'
+import { graphMiddlewareImmediatelyExecute } from './middleware/traverseMiddlewareGraph.js'
 import { functionReferenceList, fileReferenceList } from './graphReferenceContext.js'
 
 /** Assets, different components of the site, and static files, intended to be requested from a subdomain.
@@ -16,11 +16,12 @@ import { functionReferenceList, fileReferenceList } from './graphReferenceContex
 */
 export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
   // Create a grpah instance with middleware references and load graph data.
-  let { configuredGraph } = await initializeGraph({
+  let configuredGraph
+  ;({ configuredGraph } = await initializeGraph({
     targetProjectConfig,
-    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig }), fileContext: await fileReferenceList({ targetProjectConfig }) },
+    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig, configuredGraph }), fileContext: await fileReferenceList({ targetProjectConfig, configuredGraph }) },
     graphDataArray: [assetContentDeliveryGraph],
-  }) // returns a configuredGraph element.
+  })) // returns a configuredGraph element.
 
   let middlewareArray = [
     await graphMiddlewareImmediatelyExecute({ entrypointKey: '293097b9-3522-4f2b-b557-8380ff3e96e3', configuredGraph }),

@@ -182,36 +182,3 @@ export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
       await next()
     } else await next()
   }
-
-/**
- * Use graph traversal module to render document - Render document using template graph traversal.
- Documents are represented by templates graph (as template File nodes only reference a template, while the Stage nodes relates different templats together, defining a document).
- - in case underscore is used through koa-views: Using 'context.render' using koa-views that uses consolidate.js as an underlying module.
- @dependency `graphTraversal` module - instance of Graph class.
-
- General steps specifying the relationship between Middleware subgraph & Template subgraph:  
- In the middleware graph: 
-  - Parse request.
-  - Select/Match document (collection of templates & configs).
-  - Render document (Template subgraph)
-  - serve.
- */
-export const graphRenderedTemplateDocument = ({ middlewareNode, graphInstance }) => {
-  // resolve document node of template subgraph:
-  let documentNode = middlewareNode.properties.documentKey // get the enrypoint node of template subgraph
-
-  return async function graphRenderedTemplateDocument(context, next) {
-    console.log(context.path)
-
-    let renderedContent = await graphInstance.traverse({
-      nodeKey: documentNode,
-      implementationKey: {
-        processNode: 'requestDependentTemplateRenderingWithInseritonPosition',
-        traversalInterception: 'traverseThenProcess',
-        aggregator: 'AggregatorObjectOfArray',
-      },
-    })
-    context.body = renderedContent
-    await next()
-  }
-}

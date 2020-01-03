@@ -10,11 +10,11 @@ import { debugMiddlewareProxy } from '../../utility/debugMiddlewareProxy.js'
 import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middleware/contextManipulation.js'
 import { setFrontendSetting } from './middleware/languageContent.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
-import { graphRenderedTemplateDocument } from './middleware/serveFile.js'
+import { graphDocumentRenderingMiddlewareAdapter } from './middleware/traverseTemplateGraph.js'
 import { wrapWithJsTag } from './pipeFunction/wrapString.js'
 
 // list of function used in the context of graph traversal.
-export const functionReferenceList = async ({ targetProjectConfig }) =>
+export const functionReferenceList = async ({ targetProjectConfig, configuredGraph }) =>
   /** 
     context that will be used by the graph traversal during execution.
     functions registered in this object must comply (use adapter - wrapper function) with the graph middleware implementation - i.e. a function wrapped middleware.
@@ -40,7 +40,8 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
       transformJavascriptMiddleware: () => transformJavascriptMiddleware(),
       expandAtSignPath: () => expandAtSignPath(),
       templateRenderingMiddleware: () => templateRenderingMiddleware(),
-      graphRenderedTemplateDocument: ({ node, graph }) => graphRenderedTemplateDocument({ middlewareNode: node, graphInstance: graph }),
+      graphDocumentRenderingMiddlewareAdapter: ({ node, graph /*Instance of graph*/ }) =>
+        graphDocumentRenderingMiddlewareAdapter({ middlewareNode: node, graphInstance: graph, configuredGraph /*Graph Class*/ }),
     },
     /**  conditions
      * @return {any} value for condition comparison. Could return boolean, string, array.
@@ -62,7 +63,7 @@ export const functionReferenceList = async ({ targetProjectConfig }) =>
   )
 
 // list of files used in the context of graph traversal.
-export const fileReferenceList = async ({ targetProjectConfig }) =>
+export const fileReferenceList = async ({ targetProjectConfig, configuredGraph }) =>
   Object.assign(
     /** Template files */
     {
