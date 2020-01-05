@@ -1,3 +1,5 @@
+import assert from 'assert'
+import path from 'path'
 import { curryNamed } from '@dependency/namedCurry'
 import { curry } from 'ramda'
 import * as symbol from './symbol.reference.js'
@@ -31,7 +33,7 @@ let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, m
    */
   ({
     nodeDebug: traverserState => (async next => console.log(`• executed middleware in node: ${JSON.stringify(traverserState.node.properties)}`)) |> debugMiddlewareProxy, // debug
-    bodyParser: traverserState => (bodyParserMiddleware() |> curry)(middlewareContext),
+    bodyParser: traverserState => (bodyParserMiddleware |> curry)(middlewareContext),
     serveStaticFile: traverserState =>
       curry(serveStaticFile({ targetProjectConfig, filePath: traverserState.node.properties.filePath, basePath: traverserState.node.properties.basePath }))(middlewareContext),
     serveServerSideRenderedFile: traverserState =>
@@ -52,11 +54,11 @@ let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, m
     transformJavascriptMiddleware: traverserState => (transformJavascriptMiddleware() |> curry)(middlewareContext),
     expandAtSignPath: traverserState => (expandAtSignPath() |> curry)(middlewareContext),
     templateRenderingMiddleware: () => (templateRenderingMiddleware() |> curry)(middlewareContext),
-    graphDocumentRenderingMiddlewareAdapter: traverserState => {
+    graphRenderedTemplateDocument: async traverserState => {
       let curriedFileReferenceList = fileReferenceList({ targetProjectConfig, configuredGraph }),
         curriedPipeFunctionReferenceList = pipeFunctionReferenceList({ targetProjectConfig, configuredGraph })
       return (
-        graphDocumentRenderingMiddlewareAdapter({
+        (await graphDocumentRenderingMiddlewareAdapter({
           middlewareNode: traverserState.node,
           graphInstance: traverserState.graph,
           configuredGraph /*Graph Class*/,
@@ -64,7 +66,7 @@ let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, m
             functionReferenceContext: curriedPipeFunctionReferenceList({ middlewareContext }),
             fileContext: curriedFileReferenceList({ middlewareContext }),
           }),
-        }) |> curry
+        })) |> curry
       )(middlewareContext)
     },
   })
@@ -95,6 +97,46 @@ let fileReferenceList = ({ targetProjectConfig, configuredGraph, middlewareConte
   /** Template files */
   ({
     entrypointHTML: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    systemjsSetting: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    webcomponentPolyfill: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    entrypointScript: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    babelTranspiler: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    metadata: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    webScoket: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    googleAnalytics: traverserState => {
+      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
+      return path.join(clientSidePath, `./template/entrypoint.html`)
+    },
+    serviceWorker: traverserState => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./template/entrypoint.html`)

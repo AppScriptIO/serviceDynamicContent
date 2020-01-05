@@ -85,19 +85,19 @@ suite('Service components:', () => {
     })
   })
 
-  suite('Root content rendering: REST API - Http server', () => {
+  suite.only('Root content rendering: REST API - Http server', () => {
     const port = 9992
     const url = `http://localhost:${port}`
     test('Should respond to requests', async () => {
       await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
 
-      try {
-        await new Promise((resolve, reject) => {
+      {
+        let stream = await new Promise((resolve, reject) => {
           let urlPath = `/`
-          http.get(`${url}${urlPath}`, response => resolve())
+          http.get(`${url}${urlPath}`, response => resolve(response))
         })
-      } catch (error) {
-        throw error
+        // let content = await streamToString(stream)
+        // assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
     })
   })

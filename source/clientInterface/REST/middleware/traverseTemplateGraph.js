@@ -1,3 +1,4 @@
+import assert from 'assert'
 import { Context, Entity } from '@dependency/graphTraversal'
 
 /**
@@ -13,12 +14,14 @@ import { Context, Entity } from '@dependency/graphTraversal'
   - Render document (Template subgraph)
   - serve.
  */
-export const graphDocumentRendering = ({ entrypoint, configuredGraph, referenceList }: { entrypoint: Node | NodeKey }) => {
+export const graphDocumentRendering = ({ entrypoint = 'g98232-h823-bm3oi98n3', configuredGraph, referenceList }: { entrypoint: Node | NodeKey }) => {
+  assert(entrypoint, `• Document/Template graph entrypoint node/key must be provided: entrypoint = ${entrypoint}`)
+
   return async function graphDocumentRendering(middlewareContext, next) {
     let graph = new configuredGraph.clientInterface({
       concreteBehaviorList: [
         new Context.clientInterface({
-          data: Object.assing(
+          data: Object.assign(
             {
               // create unique context for traversal - add middleware context object to graph through the graph context instance.
               templateParameter: {},
@@ -40,17 +43,23 @@ export const graphDocumentRendering = ({ entrypoint, configuredGraph, referenceL
       },
     })
 
-    context.body = renderedContent
+    middlewareContext.body = renderedContent
     await next()
   }
 }
 
 // Adapter for usage from Middleware Graph processNode implementation, extracting nodeKey to use from the Middleware node.
-export const graphDocumentRenderingMiddlewareAdapter = ({ middlewareNode, graphInstance, configuredGraph, referenceList }) => {
-  // get key
-  let documentKey = middlewareNode.properties.documentKey // get the enrypoint node of template subgraph
-  // resolve document node of template subgraph:
-  let documentNode = graphInstance.databaseWrapper.getDocument() // resolve reference to node
+// Logic of docuent key retrieval stays this way separate from the function envoking the traversal.
+export const graphDocumentRenderingMiddlewareAdapter = async ({ middlewareNode, graphInstance, configuredGraph, referenceList }) => {
+  let documentNode, documentKey
 
-  return graphDocumentRendering({ entrypoint: documentNode, configuredGraph, referenceList })
+  // resolve document node of direct property or subgraph template reference
+  documentKey = middlewareNode.properties.documentKey // get the enrypoint node of template subgraph
+  let { subgraphArray } = await graphInstance.databaseWrapper.getSubgraph({ concreteDatabase: graphInstance.database, nodeID: middlewareNode.identity }) // resolve reference to node
+  if (subgraphArray) {
+    assert(subgraphArray.length <= 1, `• Multiple SUBGRAPH connections is not supported.`)
+    documentNode = subgraphArray[0]
+  }
+
+  return await graphDocumentRendering({ entrypoint: documentKey || documentNode, configuredGraph, referenceList })
 }
