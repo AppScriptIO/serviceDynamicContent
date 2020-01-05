@@ -1,18 +1,10 @@
 import { Graph, Context, Database, Traversal, Entity, schemeReference } from '@dependency/graphTraversal'
 import { database, traversal as traversalImplementation } from '@dependency/graphTraversal-implementation'
 
-export async function initializeGraph({ targetProjectConfig, graphDataArray = [], contextData = {} /** object to be merged with context data */ }) {
+export async function initializeGraph({ graphDataArray = [], contextData = {} /** object to be merged with context data */ }) {
   // context
   let context = new Context.clientInterface({
-    data: Object.assign(
-      {
-        targetProjectConfig,
-        implementationKey: {
-          traversalInterception: 'handleMiddlewareNextCall',
-        },
-      },
-      contextData,
-    ),
+    data: contextData,
   })
 
   // database

@@ -16,23 +16,34 @@ import { functionReferenceList, fileReferenceList } from './graphReferenceContex
 */
 export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
   // Create a grpah instance with middleware references and load graph data.
-  let configuredGraph
-  ;({ configuredGraph } = await initializeGraph({
-    targetProjectConfig,
-    contextData: { functionReferenceContext: await functionReferenceList({ targetProjectConfig, configuredGraph }), fileContext: await fileReferenceList({ targetProjectConfig, configuredGraph }) },
+  let { configuredGraph } = await initializeGraph({
+    contextData: { targetProjectConfig },
     graphDataArray: [assetContentDeliveryGraph],
-  })) // returns a configuredGraph element.
+  }) // returns a configuredGraph element.
 
+  // set server middlewares
+  let curriedMiddlewareFunctionReferenceList = middlewareFunctionReferenceList({ targetProjectConfig, configuredGraph }),
+    curriedConditionFunctionReferenceList = conditionFunctionReferenceList({ targetProjectConfig, configuredGraph })
   let middlewareArray = [
-    await graphMiddlewareImmediatelyExecute({ entrypointKey: '293097b9-3522-4f2b-b557-8380ff3e96e3', configuredGraph }),
-    async (context, next) => {
-      console.log('Last Middleware reached.')
-      await next()
-    },
+    await graphMiddlewareImmediatelyExecute({
+      entrypointKey: '293097b9-3522-4f2b-b557-8380ff3e96e3',
+      configuredGraph,
+      referenceList: middlewareContext => ({
+        functionReferenceContext: Object.assign(curriedMiddlewareFunctionReferenceList({ middlewareContext }), curriedConditionFunctionReferenceList({ middlewareContext })),
+      }),
+    }),
+    // async (context, next) => {
+    //   console.log('Last Middleware reached.')
+    //   await next()
+    // },
   ]
 
   // create http server
-  await createHttpServer({ label: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
+  await createHttpServer({
+    label: `${serviceConfig.contentDelivery.serviceName}`,
+    port,
+    middlewareArray,
+  })
 }
 
 /** Root domain content Mainly user interface related
@@ -49,14 +60,16 @@ export async function initializeRootContentRendering({ targetProjectConfig, entr
     graphDataArray: [rootContentRenderingGraph],
   }) // returns a configuredGraph element.
 
-  let middlewareArray = [
-    await graphMiddlewareImmediatelyExecute({ entrypointKey: '928efj94-29034jg90248-g2390jg823', configuredGraph }),
-    async (context, next) => {
-      console.log('Last Middleware reached.')
-      await next()
-    },
-  ]
-
   // create http server
-  await createHttpServer({ label: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+  await createHttpServer({
+    label: `${serviceConfig.contentRendering.serviceName}`,
+    port,
+    middlewareArray: [
+      await graphMiddlewareImmediatelyExecute({ entrypointKey: '928efj94-29034jg90248-g2390jg823', configuredGraph }),
+      // async (context, next) => {
+      //   console.log('Last Middleware reached.')
+      //   await next()
+      // },
+    ],
+  })
 }

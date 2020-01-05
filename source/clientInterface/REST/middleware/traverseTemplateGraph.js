@@ -13,18 +13,22 @@ import { Context, Entity } from '@dependency/graphTraversal'
   - Render document (Template subgraph)
   - serve.
  */
-export const graphDocumentRendering = ({ entrypoint, configuredGraph }: { entrypoint: Node | NodeKey }) => {
+export const graphDocumentRendering = ({ entrypoint, configuredGraph, referenceList }: { entrypoint: Node | NodeKey }) => {
   return async function graphDocumentRendering(middlewareContext, next) {
-    let contextInstance = new Context.clientInterface({
-      data: {
-        // create unique context for traversal - add middleware context object to graph through the graph context instance.
-        templateArgument: {
-          // context is one of the required arguments in templates used in the service. NOTE; context is not asserted in the code, i.e. won't throw till a template tries to use it.
-          context: middlewareContext,
-        },
-      },
+    let graph = new configuredGraph.clientInterface({
+      concreteBehaviorList: [
+        new Context.clientInterface({
+          data: Object.assing(
+            {
+              // create unique context for traversal - add middleware context object to graph through the graph context instance.
+              templateParameter: {},
+            },
+            // returns an object with `functionReferenceContext` property
+            referenceList(middlewareContext),
+          ),
+        }),
+      ],
     })
-    let graph = new configuredGraph.clientInterface({ concreteBehaviorList: [contextInstance] })
 
     /** @return String - rendered document */
     let renderedContent = await graph.traverse({
@@ -36,17 +40,17 @@ export const graphDocumentRendering = ({ entrypoint, configuredGraph }: { entryp
       },
     })
 
-    console.log(context.path)
-
     context.body = renderedContent
     await next()
   }
 }
 
 // Adapter for usage from Middleware Graph processNode implementation, extracting nodeKey to use from the Middleware node.
-export const graphDocumentRenderingMiddlewareAdapter = ({ middlewareNode, graphInstance, configuredGraph }) => {
+export const graphDocumentRenderingMiddlewareAdapter = ({ middlewareNode, graphInstance, configuredGraph, referenceList }) => {
+  // get key
+  let documentKey = middlewareNode.properties.documentKey // get the enrypoint node of template subgraph
   // resolve document node of template subgraph:
-  let documentNode = middlewareNode.properties.documentKey // get the enrypoint node of template subgraph
+  let documentNode = graphInstance.databaseWrapper.getDocument() // resolve reference to node
 
-  return graphDocumentRendering({ entrypoint: documentNode, configuredGraph })
+  return graphDocumentRendering({ entrypoint: documentNode, configuredGraph, referenceList })
 }
