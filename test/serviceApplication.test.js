@@ -91,12 +91,16 @@ suite('Service components:', () => {
     test('Should respond to requests', async () => {
       await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
 
+      // const underscore = require('underscore')
+      // const underscoreTemplateInterpolationSetting = { evaluate: /\{\%(.+?)\%\}/g, interpolate: /\{\%=(.+?)\%\}/g, escape: /\{\%-(.+?)\%\}/g } // initial underscore template settings on first import gets applied on the rest.
+      // underscore.templateSettings = underscoreTemplateInterpolationSetting
+
       {
         let stream = await new Promise((resolve, reject) => {
           let urlPath = `/`
           http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        // let content = await streamToString(stream)
+        let content = await streamToString(stream)
         // assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
     })
