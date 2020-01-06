@@ -1,0 +1,25 @@
+<html lang="en">
+  <head>
+    <base href="" target="_top">
+
+    
+      <script type="application/javascript" src="/asset/webcomponent/component.package/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    
+
+    
+      <script>console.info('☕ Analytics is disabled for development.');</script>
+    
+    <script>jspm.initialization.js
+</script><script>polymerPolyfill.js
+</script>entrypointScript.htmlmetadata.html<script></script>
+  </head>
+  <body>
+    <script>serviceWorker.js
+</script><script>websocket.js
+</script><script></script>
+    
+    <document-element>
+      <span id="loader" style="direction: ltr; text-align: center; width: 100%; display: block; margin: auto;">⫷ 𝕃𝕠𝕒𝕕𝕚𝕟𝕘... ⫸</span>
+    </document-element>
+  </body>
+</html>
