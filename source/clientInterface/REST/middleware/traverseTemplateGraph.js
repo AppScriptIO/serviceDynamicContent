@@ -14,7 +14,7 @@ import { Context, Entity } from '@dependency/graphTraversal'
   - Render document (Template subgraph)
   - serve.
  */
-export const graphDocumentRendering = ({ entrypoint = 'g98232-h823-bm3oi98n3', configuredGraph, referenceList }: { entrypoint: Node | NodeKey }) => {
+export const graphDocumentRendering = ({ entrypoint, configuredGraph, referenceList }: { entrypoint: Node | NodeKey }) => {
   assert(entrypoint, `• Document/Template graph entrypoint node/key must be provided: entrypoint = ${entrypoint}`)
 
   return async function graphDocumentRendering(middlewareContext, next) {
@@ -35,7 +35,8 @@ export const graphDocumentRendering = ({ entrypoint = 'g98232-h823-bm3oi98n3', c
 
     /** @return String - rendered document */
     let renderedContent = await graph.traverse({
-      nodeKey: entrypoint,
+      nodeKey: typeof entrypoint == 'string' ? entrypoint : undefined,
+      nodeInstance: typeof entrypoint == 'object' ? entrypoint : undefined,
       implementationKey: {
         processNode: 'templateRenderingWithInseritonPosition',
         traversalInterception: 'traverseThenProcess',
@@ -58,7 +59,7 @@ export const graphDocumentRenderingMiddlewareAdapter = async ({ middlewareNode, 
   let { subgraphArray } = await graphInstance.databaseWrapper.getSubgraph({ concreteDatabase: graphInstance.database, nodeID: middlewareNode.identity }) // resolve reference to node
   if (subgraphArray) {
     assert(subgraphArray.length <= 1, `• Multiple SUBGRAPH connections is not supported.`)
-    documentNode = subgraphArray[0]
+    documentNode = subgraphArray[0].source
   }
 
   return await graphDocumentRendering({ entrypoint: documentKey || documentNode, configuredGraph, referenceList })
