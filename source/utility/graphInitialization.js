@@ -1,37 +1,44 @@
-import { Graph, Context, Database, Traversal, Entity, schemeReference } from '@dependency/graphTraversal'
-import { database, traversal as traversalImplementation } from '@dependency/graphTraversal-implementation'
+import { Graph, Context, Database, Traverser, Entity } from '@dependency/graphTraversal'
+import { database, traversal } from '@dependency/graphTraversal-implementation'
 
 export async function initializeGraph({ graphDataArray = [], contextData = {} /** object to be merged with context data */ }) {
   // context
-  let context = new Context.clientInterface({
+  let contextInstance = new Context.clientInterface({
     data: contextData,
   })
 
   // database
   let concreteDatabaseBehavior = new Database.clientInterface({
-    implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ schemeReference, url: { protocol: 'bolt', hostname: 'localhost', port: 7687 } }) },
+    implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ url: { protocol: 'bolt', hostname: 'localhost', port: 7687 } }) },
     defaultImplementation: 'boltCypherModelAdapter',
   })
 
-  // traversal implementation
-  let implementationList =
-    traversalImplementation
-    |> (list => {
-      // add specific graph dependent implementations
-      // list.processNode['someCustomImplementation'] = function() {}
-      return list
-    })
-  let concreteGraphTraversalBehavior = new Traversal.clientInterface({ implementationList: { middlewareGraph: implementationList }, defaultImplementation: 'middlewareGraph' })
+  /** traversal implementation
+      add specific graph dependent implementations
+      list.processNode['someCustomImplementation'] = function() {}
+  */
+  // traversal = traversal |> (list => list)
+
+  let configuredTraverser = Traverser.clientInterface({
+    parameter: [
+      {
+        concreteBehaviorList: [contextInstance],
+        implementationList: {
+          middlewareGraph: {
+            portNode: traversal.portNode, // Port
+            traversalInterception: traversal.traversalInterception, // Stage
+            aggregator: traversal.aggregator,
+            processNode: traversal.processNode, // Process
+          },
+        },
+        defaultImplementation: 'middlewareGraph',
+      },
+    ],
+  })
 
   // configured graph
   let configuredGraph = Graph.clientInterface({
-    parameter: [
-      {
-        traversal: concreteGraphTraversalBehavior,
-        database: concreteDatabaseBehavior,
-        concreteBehaviorList: [context],
-      },
-    ],
+    parameter: [{ configuredTraverser, database: concreteDatabaseBehavior, concreteBehaviorList: [] }],
   })
 
   // load graph data:
