@@ -1,16 +1,17 @@
-import path from 'path'
-import assert from 'assert'
-import * as symbol from '../symbol.reference.js'
-import { pickClientSideConfiguration } from '../../../functionality/pickClientSideConfiguration.js'
-const useragentParser = require('useragent') // https://www.npmjs.com/package/useragent
-require('useragent/features')
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.pickClientSideProjectConfig = void 0;
 
-// USAGE: localhost/?distribution="<clientSide folder name"
-// This module defines context.instance.config.clientBasePath to be later used in template composition.
-export const pickClientSideProjectConfig = ({ targetProjectConfig }) =>
-  async function pickClientSideProjectConfig(context, next) {
-    let agent = useragentParser.lookup(context.request.headers['user-agent'])
-    // set resolved clientSide config object
-    context[symbol.context.clientSideProjectConfig] = pickClientSideConfiguration({ clientSideProjectConfigList: targetProjectConfig.clientSideProjectConfigList, agentInstance: agent })
-    await next()
-  }
+var symbol = _interopRequireWildcard(require("../symbol.reference.js"));
+var _pickClientSideConfiguration = require("../../../functionality/pickClientSideConfiguration.js");
+const useragentParser = require('useragent');
+require('useragent/features');
+
+
+
+const pickClientSideProjectConfig = ({ targetProjectConfig }) =>
+async function pickClientSideProjectConfig(context, next) {
+  let agent = useragentParser.lookup(context.request.headers['user-agent']);
+
+  context[symbol.context.clientSideProjectConfig] = (0, _pickClientSideConfiguration.pickClientSideConfiguration)({ clientSideProjectConfigList: targetProjectConfig.clientSideProjectConfigList, agentInstance: agent });
+  await next();
+};exports.pickClientSideProjectConfig = pickClientSideProjectConfig;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL3VzZXJhZ2VudERldGVjdGlvbi5qcyJdLCJuYW1lcyI6WyJ1c2VyYWdlbnRQYXJzZXIiLCJyZXF1aXJlIiwicGlja0NsaWVudFNpZGVQcm9qZWN0Q29uZmlnIiwidGFyZ2V0UHJvamVjdENvbmZpZyIsImNvbnRleHQiLCJuZXh0IiwiYWdlbnQiLCJsb29rdXAiLCJyZXF1ZXN0IiwiaGVhZGVycyIsInN5bWJvbCIsImNsaWVudFNpZGVQcm9qZWN0Q29uZmlnIiwiY2xpZW50U2lkZVByb2plY3RDb25maWdMaXN0IiwiYWdlbnRJbnN0YW5jZSJdLCJtYXBwaW5ncyI6Ijs7QUFFQTtBQUNBO0FBQ0EsTUFBTUEsZUFBZSxHQUFHQyxPQUFPLENBQUMsV0FBRCxDQUEvQjtBQUNBQSxPQUFPLENBQUMsb0JBQUQsQ0FBUDs7OztBQUlPLE1BQU1DLDJCQUEyQixHQUFHLENBQUMsRUFBRUMsbUJBQUYsRUFBRDtBQUN6QyxlQUFlRCwyQkFBZixDQUEyQ0UsT0FBM0MsRUFBb0RDLElBQXBELEVBQTBEO0FBQ3hELE1BQUlDLEtBQUssR0FBR04sZUFBZSxDQUFDTyxNQUFoQixDQUF1QkgsT0FBTyxDQUFDSSxPQUFSLENBQWdCQyxPQUFoQixDQUF3QixZQUF4QixDQUF2QixDQUFaOztBQUVBTCxFQUFBQSxPQUFPLENBQUNNLE1BQU0sQ0FBQ04sT0FBUCxDQUFlTyx1QkFBaEIsQ0FBUCxHQUFrRCw4REFBNEIsRUFBRUMsMkJBQTJCLEVBQUVULG1CQUFtQixDQUFDUywyQkFBbkQsRUFBZ0ZDLGFBQWEsRUFBRVAsS0FBL0YsRUFBNUIsQ0FBbEQ7QUFDQSxRQUFNRCxJQUFJLEVBQVY7QUFDRCxDQU5JLEMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuaW1wb3J0IGFzc2VydCBmcm9tICdhc3NlcnQnXG5pbXBvcnQgKiBhcyBzeW1ib2wgZnJvbSAnLi4vc3ltYm9sLnJlZmVyZW5jZS5qcydcbmltcG9ydCB7IHBpY2tDbGllbnRTaWRlQ29uZmlndXJhdGlvbiB9IGZyb20gJy4uLy4uLy4uL2Z1bmN0aW9uYWxpdHkvcGlja0NsaWVudFNpZGVDb25maWd1cmF0aW9uLmpzJ1xuY29uc3QgdXNlcmFnZW50UGFyc2VyID0gcmVxdWlyZSgndXNlcmFnZW50JykgLy8gaHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvdXNlcmFnZW50XG5yZXF1aXJlKCd1c2VyYWdlbnQvZmVhdHVyZXMnKVxuXG4vLyBVU0FHRTogbG9jYWxob3N0Lz9kaXN0cmlidXRpb249XCI8Y2xpZW50U2lkZSBmb2xkZXIgbmFtZVwiXG4vLyBUaGlzIG1vZHVsZSBkZWZpbmVzIGNvbnRleHQuaW5zdGFuY2UuY29uZmlnLmNsaWVudEJhc2VQYXRoIHRvIGJlIGxhdGVyIHVzZWQgaW4gdGVtcGxhdGUgY29tcG9zaXRpb24uXG5leHBvcnQgY29uc3QgcGlja0NsaWVudFNpZGVQcm9qZWN0Q29uZmlnID0gKHsgdGFyZ2V0UHJvamVjdENvbmZpZyB9KSA9PlxuICBhc3luYyBmdW5jdGlvbiBwaWNrQ2xpZW50U2lkZVByb2plY3RDb25maWcoY29udGV4dCwgbmV4dCkge1xuICAgIGxldCBhZ2VudCA9IHVzZXJhZ2VudFBhcnNlci5sb29rdXAoY29udGV4dC5yZXF1ZXN0LmhlYWRlcnNbJ3VzZXItYWdlbnQnXSlcbiAgICAvLyBzZXQgcmVzb2x2ZWQgY2xpZW50U2lkZSBjb25maWcgb2JqZWN0XG4gICAgY29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10gPSBwaWNrQ2xpZW50U2lkZUNvbmZpZ3VyYXRpb24oeyBjbGllbnRTaWRlUHJvamVjdENvbmZpZ0xpc3Q6IHRhcmdldFByb2plY3RDb25maWcuY2xpZW50U2lkZVByb2plY3RDb25maWdMaXN0LCBhZ2VudEluc3RhbmNlOiBhZ2VudCB9KVxuICAgIGF3YWl0IG5leHQoKVxuICB9XG4iXX0=
