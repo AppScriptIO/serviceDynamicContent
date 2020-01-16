@@ -39,11 +39,7 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
   ]
 
   // create http server
-  await createHttpServer({
-    label: `${serviceConfig.contentDelivery.serviceName}`,
-    port,
-    middlewareArray,
-  })
+  await createHttpServer({ label: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
 }
 
 /** Root domain content Mainly user interface related
@@ -77,9 +73,5 @@ export async function initializeRootContentRendering({ targetProjectConfig, entr
   ]
 
   // create http server
-  await createHttpServer({
-    label: `${serviceConfig.contentRendering.serviceName}`,
-    port,
-    middlewareArray,
-  })
+  await createHttpServer({ label: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
 }
