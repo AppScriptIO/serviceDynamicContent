@@ -91,6 +91,10 @@ suite('Service components:', () => {
     test('Should respond to requests', async () => {
       await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
 
+      // const underscore = require('underscore')
+      // const underscoreTemplateInterpolationSetting = { evaluate: /\{\%(.+?)\%\}/g, interpolate: /\{\%=(.+?)\%\}/g, escape: /\{\%-(.+?)\%\}/g } // initial underscore template settings on first import gets applied on the rest.
+      // underscore.templateSettings = underscoreTemplateInterpolationSetting
+
       {
         let stream = await new Promise((resolve, reject) => {
           let urlPath = `/`
