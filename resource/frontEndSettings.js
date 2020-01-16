@@ -1,103 +1,104 @@
-// This data is rendered in server-side and used in the frontend application
+"use strict";
 async function loadFrontendData({ targetConfig }) {
-  let defaultLanguage = 'English'
+  let defaultLanguage = 'English';
   targetConfig.frontendStatic = {
-    // Configurations passed to frontend
+
     config: targetConfig,
     setting: {
       location: {
         routeBasePath: `${targetConfig.PROTOCOL}${targetConfig.HOST}`,
-        cdnBasePath: instnace['StaticContent'].url,
-      },
+        cdnBasePath: instnace['StaticContent'].url },
+
       mode: {
-        // version / mode of app
-        language: defaultLanguage, // default language
-      },
-    },
+
+        language: defaultLanguage } },
+
+
     route: 'route',
-    // documentFrontendData
+
     document: [
-      {
-        key: 'registration-single',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'registration-single',
-          file: 'registration-single.html',
-        },
-      },
-      {
-        key: 'registration-agency',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'registration-agency',
-          file: 'registration-agency.html',
-        },
-      },
-      {
-        key: 'view-state404',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'viewState404',
-          file: 'view-state404/view-state404.html$',
-        },
-      },
-      {
-        key: 'universityPage',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'universityPage',
-          file: 'view-underconstruction.html',
-        },
-      },
-      {
-        key: 'studyfieldPage',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'studyfieldPage',
-          file: 'view-underconstruction.html',
-        },
-      },
-      {
-        key: 'countryPage',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'countryPage',
-          file: 'view-list-item.html',
-        },
-      },
-      {
-        key: 'bucharest',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'studyfieldSingleArticle',
-          file: 'view-article.html',
-        },
-      },
-      {
-        key: 'medicine',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'studyfieldSingleArticle',
-          file: 'view-article.html',
-        },
-      },
-      {
-        key: 'frontpage',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'frontPage',
-          file: 'view-frontpage.html',
-        },
-      },
-      {
-        key: 'about',
-        layout: 'webapp-layout-toolbar',
-        page: {
-          selectorName: 'about',
-          file: 'view-about.html',
-        },
-      },
-    ],
-    uiContent: await queryPatternImplementation({ languageDocumentKey: defaultLanguage }),
-  }
+    {
+      key: 'registration-single',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'registration-single',
+        file: 'registration-single.html' } },
+
+
+    {
+      key: 'registration-agency',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'registration-agency',
+        file: 'registration-agency.html' } },
+
+
+    {
+      key: 'view-state404',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'viewState404',
+        file: 'view-state404/view-state404.html$' } },
+
+
+    {
+      key: 'universityPage',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'universityPage',
+        file: 'view-underconstruction.html' } },
+
+
+    {
+      key: 'studyfieldPage',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'studyfieldPage',
+        file: 'view-underconstruction.html' } },
+
+
+    {
+      key: 'countryPage',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'countryPage',
+        file: 'view-list-item.html' } },
+
+
+    {
+      key: 'bucharest',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'studyfieldSingleArticle',
+        file: 'view-article.html' } },
+
+
+    {
+      key: 'medicine',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'studyfieldSingleArticle',
+        file: 'view-article.html' } },
+
+
+    {
+      key: 'frontpage',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'frontPage',
+        file: 'view-frontpage.html' } },
+
+
+    {
+      key: 'about',
+      layout: 'webapp-layout-toolbar',
+      page: {
+        selectorName: 'about',
+        file: 'view-about.html' } }],
+
+
+
+    uiContent: await queryPatternImplementation({ languageDocumentKey: defaultLanguage }) };
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3Jlc291cmNlL2Zyb250RW5kU2V0dGluZ3MuanMiXSwibmFtZXMiOlsibG9hZEZyb250ZW5kRGF0YSIsInRhcmdldENvbmZpZyIsImRlZmF1bHRMYW5ndWFnZSIsImZyb250ZW5kU3RhdGljIiwiY29uZmlnIiwic2V0dGluZyIsImxvY2F0aW9uIiwicm91dGVCYXNlUGF0aCIsIlBST1RPQ09MIiwiSE9TVCIsImNkbkJhc2VQYXRoIiwiaW5zdG5hY2UiLCJ1cmwiLCJtb2RlIiwibGFuZ3VhZ2UiLCJyb3V0ZSIsImRvY3VtZW50Iiwia2V5IiwibGF5b3V0IiwicGFnZSIsInNlbGVjdG9yTmFtZSIsImZpbGUiLCJ1aUNvbnRlbnQiLCJxdWVyeVBhdHRlcm5JbXBsZW1lbnRhdGlvbiIsImxhbmd1YWdlRG9jdW1lbnRLZXkiXSwibWFwcGluZ3MiOiI7QUFDQSxlQUFlQSxnQkFBZixDQUFnQyxFQUFFQyxZQUFGLEVBQWhDLEVBQWtEO0FBQ2hELE1BQUlDLGVBQWUsR0FBRyxTQUF0QjtBQUNBRCxFQUFBQSxZQUFZLENBQUNFLGNBQWIsR0FBOEI7O0FBRTVCQyxJQUFBQSxNQUFNLEVBQUVILFlBRm9CO0FBRzVCSSxJQUFBQSxPQUFPLEVBQUU7QUFDUEMsTUFBQUEsUUFBUSxFQUFFO0FBQ1JDLFFBQUFBLGFBQWEsRUFBRyxHQUFFTixZQUFZLENBQUNPLFFBQVMsR0FBRVAsWUFBWSxDQUFDUSxJQUFLLEVBRHBEO0FBRVJDLFFBQUFBLFdBQVcsRUFBRUMsUUFBUSxDQUFDLGVBQUQsQ0FBUixDQUEwQkMsR0FGL0IsRUFESDs7QUFLUEMsTUFBQUEsSUFBSSxFQUFFOztBQUVKQyxRQUFBQSxRQUFRLEVBQUVaLGVBRk4sRUFMQyxFQUhtQjs7O0FBYTVCYSxJQUFBQSxLQUFLLEVBQUUsT0FicUI7O0FBZTVCQyxJQUFBQSxRQUFRLEVBQUU7QUFDUjtBQUNFQyxNQUFBQSxHQUFHLEVBQUUscUJBRFA7QUFFRUMsTUFBQUEsTUFBTSxFQUFFLHVCQUZWO0FBR0VDLE1BQUFBLElBQUksRUFBRTtBQUNKQyxRQUFBQSxZQUFZLEVBQUUscUJBRFY7QUFFSkMsUUFBQUEsSUFBSSxFQUFFLDBCQUZGLEVBSFIsRUFEUTs7O0FBU1I7QUFDRUosTUFBQUEsR0FBRyxFQUFFLHFCQURQO0FBRUVDLE1BQUFBLE1BQU0sRUFBRSx1QkFGVjtBQUdFQyxNQUFBQSxJQUFJLEVBQUU7QUFDSkMsUUFBQUEsWUFBWSxFQUFFLHFCQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSwwQkFGRixFQUhSLEVBVFE7OztBQWlCUjtBQUNFSixNQUFBQSxHQUFHLEVBQUUsZUFEUDtBQUVFQyxNQUFBQSxNQUFNLEVBQUUsdUJBRlY7QUFHRUMsTUFBQUEsSUFBSSxFQUFFO0FBQ0pDLFFBQUFBLFlBQVksRUFBRSxjQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSxtQ0FGRixFQUhSLEVBakJROzs7QUF5QlI7QUFDRUosTUFBQUEsR0FBRyxFQUFFLGdCQURQO0FBRUVDLE1BQUFBLE1BQU0sRUFBRSx1QkFGVjtBQUdFQyxNQUFBQSxJQUFJLEVBQUU7QUFDSkMsUUFBQUEsWUFBWSxFQUFFLGdCQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSw2QkFGRixFQUhSLEVBekJROzs7QUFpQ1I7QUFDRUosTUFBQUEsR0FBRyxFQUFFLGdCQURQO0FBRUVDLE1BQUFBLE1BQU0sRUFBRSx1QkFGVjtBQUdFQyxNQUFBQSxJQUFJLEVBQUU7QUFDSkMsUUFBQUEsWUFBWSxFQUFFLGdCQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSw2QkFGRixFQUhSLEVBakNROzs7QUF5Q1I7QUFDRUosTUFBQUEsR0FBRyxFQUFFLGFBRFA7QUFFRUMsTUFBQUEsTUFBTSxFQUFFLHVCQUZWO0FBR0VDLE1BQUFBLElBQUksRUFBRTtBQUNKQyxRQUFBQSxZQUFZLEVBQUUsYUFEVjtBQUVKQyxRQUFBQSxJQUFJLEVBQUUscUJBRkYsRUFIUixFQXpDUTs7O0FBaURSO0FBQ0VKLE1BQUFBLEdBQUcsRUFBRSxXQURQO0FBRUVDLE1BQUFBLE1BQU0sRUFBRSx1QkFGVjtBQUdFQyxNQUFBQSxJQUFJLEVBQUU7QUFDSkMsUUFBQUEsWUFBWSxFQUFFLHlCQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSxtQkFGRixFQUhSLEVBakRROzs7QUF5RFI7QUFDRUosTUFBQUEsR0FBRyxFQUFFLFVBRFA7QUFFRUMsTUFBQUEsTUFBTSxFQUFFLHVCQUZWO0FBR0VDLE1BQUFBLElBQUksRUFBRTtBQUNKQyxRQUFBQSxZQUFZLEVBQUUseUJBRFY7QUFFSkMsUUFBQUEsSUFBSSxFQUFFLG1CQUZGLEVBSFIsRUF6RFE7OztBQWlFUjtBQUNFSixNQUFBQSxHQUFHLEVBQUUsV0FEUDtBQUVFQyxNQUFBQSxNQUFNLEVBQUUsdUJBRlY7QUFHRUMsTUFBQUEsSUFBSSxFQUFFO0FBQ0pDLFFBQUFBLFlBQVksRUFBRSxXQURWO0FBRUpDLFFBQUFBLElBQUksRUFBRSxxQkFGRixFQUhSLEVBakVROzs7QUF5RVI7QUFDRUosTUFBQUEsR0FBRyxFQUFFLE9BRFA7QUFFRUMsTUFBQUEsTUFBTSxFQUFFLHVCQUZWO0FBR0VDLE1BQUFBLElBQUksRUFBRTtBQUNKQyxRQUFBQSxZQUFZLEVBQUUsT0FEVjtBQUVKQyxRQUFBQSxJQUFJLEVBQUUsaUJBRkYsRUFIUixFQXpFUSxDQWZrQjs7OztBQWlHNUJDLElBQUFBLFNBQVMsRUFBRSxNQUFNQywwQkFBMEIsQ0FBQyxFQUFFQyxtQkFBbUIsRUFBRXRCLGVBQXZCLEVBQUQsQ0FqR2YsRUFBOUI7O0FBbUdEIiwic291cmNlc0NvbnRlbnQiOlsiLy8gVGhpcyBkYXRhIGlzIHJlbmRlcmVkIGluIHNlcnZlci1zaWRlIGFuZCB1c2VkIGluIHRoZSBmcm9udGVuZCBhcHBsaWNhdGlvblxuYXN5bmMgZnVuY3Rpb24gbG9hZEZyb250ZW5kRGF0YSh7IHRhcmdldENvbmZpZyB9KSB7XG4gIGxldCBkZWZhdWx0TGFuZ3VhZ2UgPSAnRW5nbGlzaCdcbiAgdGFyZ2V0Q29uZmlnLmZyb250ZW5kU3RhdGljID0ge1xuICAgIC8vIENvbmZpZ3VyYXRpb25zIHBhc3NlZCB0byBmcm9udGVuZFxuICAgIGNvbmZpZzogdGFyZ2V0Q29uZmlnLFxuICAgIHNldHRpbmc6IHtcbiAgICAgIGxvY2F0aW9uOiB7XG4gICAgICAgIHJvdXRlQmFzZVBhdGg6IGAke3RhcmdldENvbmZpZy5QUk9UT0NPTH0ke3RhcmdldENvbmZpZy5IT1NUfWAsXG4gICAgICAgIGNkbkJhc2VQYXRoOiBpbnN0bmFjZVsnU3RhdGljQ29udGVudCddLnVybCxcbiAgICAgIH0sXG4gICAgICBtb2RlOiB7XG4gICAgICAgIC8vIHZlcnNpb24gLyBtb2RlIG9mIGFwcFxuICAgICAgICBsYW5ndWFnZTogZGVmYXVsdExhbmd1YWdlLCAvLyBkZWZhdWx0IGxhbmd1YWdlXG4gICAgICB9LFxuICAgIH0sXG4gICAgcm91dGU6ICdyb3V0ZScsXG4gICAgLy8gZG9jdW1lbnRGcm9udGVuZERhdGFcbiAgICBkb2N1bWVudDogW1xuICAgICAge1xuICAgICAgICBrZXk6ICdyZWdpc3RyYXRpb24tc2luZ2xlJyxcbiAgICAgICAgbGF5b3V0OiAnd2ViYXBwLWxheW91dC10b29sYmFyJyxcbiAgICAgICAgcGFnZToge1xuICAgICAgICAgIHNlbGVjdG9yTmFtZTogJ3JlZ2lzdHJhdGlvbi1zaW5nbGUnLFxuICAgICAgICAgIGZpbGU6ICdyZWdpc3RyYXRpb24tc2luZ2xlLmh0bWwnLFxuICAgICAgICB9LFxuICAgICAgfSxcbiAgICAgIHtcbiAgICAgICAga2V5OiAncmVnaXN0cmF0aW9uLWFnZW5jeScsXG4gICAgICAgIGxheW91dDogJ3dlYmFwcC1sYXlvdXQtdG9vbGJhcicsXG4gICAgICAgIHBhZ2U6IHtcbiAgICAgICAgICBzZWxlY3Rvck5hbWU6ICdyZWdpc3RyYXRpb24tYWdlbmN5JyxcbiAgICAgICAgICBmaWxlOiAncmVnaXN0cmF0aW9uLWFnZW5jeS5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ3ZpZXctc3RhdGU0MDQnLFxuICAgICAgICBsYXlvdXQ6ICd3ZWJhcHAtbGF5b3V0LXRvb2xiYXInLFxuICAgICAgICBwYWdlOiB7XG4gICAgICAgICAgc2VsZWN0b3JOYW1lOiAndmlld1N0YXRlNDA0JyxcbiAgICAgICAgICBmaWxlOiAndmlldy1zdGF0ZTQwNC92aWV3LXN0YXRlNDA0Lmh0bWwkJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ3VuaXZlcnNpdHlQYWdlJyxcbiAgICAgICAgbGF5b3V0OiAnd2ViYXBwLWxheW91dC10b29sYmFyJyxcbiAgICAgICAgcGFnZToge1xuICAgICAgICAgIHNlbGVjdG9yTmFtZTogJ3VuaXZlcnNpdHlQYWdlJyxcbiAgICAgICAgICBmaWxlOiAndmlldy11bmRlcmNvbnN0cnVjdGlvbi5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ3N0dWR5ZmllbGRQYWdlJyxcbiAgICAgICAgbGF5b3V0OiAnd2ViYXBwLWxheW91dC10b29sYmFyJyxcbiAgICAgICAgcGFnZToge1xuICAgICAgICAgIHNlbGVjdG9yTmFtZTogJ3N0dWR5ZmllbGRQYWdlJyxcbiAgICAgICAgICBmaWxlOiAndmlldy11bmRlcmNvbnN0cnVjdGlvbi5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ2NvdW50cnlQYWdlJyxcbiAgICAgICAgbGF5b3V0OiAnd2ViYXBwLWxheW91dC10b29sYmFyJyxcbiAgICAgICAgcGFnZToge1xuICAgICAgICAgIHNlbGVjdG9yTmFtZTogJ2NvdW50cnlQYWdlJyxcbiAgICAgICAgICBmaWxlOiAndmlldy1saXN0LWl0ZW0uaHRtbCcsXG4gICAgICAgIH0sXG4gICAgICB9LFxuICAgICAge1xuICAgICAgICBrZXk6ICdidWNoYXJlc3QnLFxuICAgICAgICBsYXlvdXQ6ICd3ZWJhcHAtbGF5b3V0LXRvb2xiYXInLFxuICAgICAgICBwYWdlOiB7XG4gICAgICAgICAgc2VsZWN0b3JOYW1lOiAnc3R1ZHlmaWVsZFNpbmdsZUFydGljbGUnLFxuICAgICAgICAgIGZpbGU6ICd2aWV3LWFydGljbGUuaHRtbCcsXG4gICAgICAgIH0sXG4gICAgICB9LFxuICAgICAge1xuICAgICAgICBrZXk6ICdtZWRpY2luZScsXG4gICAgICAgIGxheW91dDogJ3dlYmFwcC1sYXlvdXQtdG9vbGJhcicsXG4gICAgICAgIHBhZ2U6IHtcbiAgICAgICAgICBzZWxlY3Rvck5hbWU6ICdzdHVkeWZpZWxkU2luZ2xlQXJ0aWNsZScsXG4gICAgICAgICAgZmlsZTogJ3ZpZXctYXJ0aWNsZS5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ2Zyb250cGFnZScsXG4gICAgICAgIGxheW91dDogJ3dlYmFwcC1sYXlvdXQtdG9vbGJhcicsXG4gICAgICAgIHBhZ2U6IHtcbiAgICAgICAgICBzZWxlY3Rvck5hbWU6ICdmcm9udFBhZ2UnLFxuICAgICAgICAgIGZpbGU6ICd2aWV3LWZyb250cGFnZS5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgICB7XG4gICAgICAgIGtleTogJ2Fib3V0JyxcbiAgICAgICAgbGF5b3V0OiAnd2ViYXBwLWxheW91dC10b29sYmFyJyxcbiAgICAgICAgcGFnZToge1xuICAgICAgICAgIHNlbGVjdG9yTmFtZTogJ2Fib3V0JyxcbiAgICAgICAgICBmaWxlOiAndmlldy1hYm91dC5odG1sJyxcbiAgICAgICAgfSxcbiAgICAgIH0sXG4gICAgXSxcbiAgICB1aUNvbnRlbnQ6IGF3YWl0IHF1ZXJ5UGF0dGVybkltcGxlbWVudGF0aW9uKHsgbGFuZ3VhZ2VEb2N1bWVudEtleTogZGVmYXVsdExhbmd1YWdlIH0pLFxuICB9XG59XG4iXX0=
