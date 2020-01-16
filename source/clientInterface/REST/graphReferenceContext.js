@@ -32,35 +32,35 @@ let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, m
    * @return {Function (context, next)=>{} } functions that return a middleware.
    */
   ({
-    nodeDebug: traverserState => (async next => console.log(`• executed middleware in node: ${JSON.stringify(traverserState.node.properties)}`)) |> debugMiddlewareProxy, // debug
-    bodyParser: traverserState => (bodyParserMiddleware |> curry)(middlewareContext),
-    serveStaticFile: traverserState =>
-      curry(serveStaticFile({ targetProjectConfig, filePath: traverserState.node.properties.filePath, basePath: traverserState.node.properties.basePath }))(middlewareContext),
-    serveServerSideRenderedFile: traverserState =>
+    nodeDebug: ({ node, traverser }) => (async next => console.log(`• executed middleware in node: ${JSON.stringify(node.properties)}`)) |> debugMiddlewareProxy, // debug
+    bodyParser: ({ node, traverser }) => (bodyParserMiddleware |> curry)(middlewareContext),
+    serveStaticFile: ({ node, traverser }) => curry(serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }))(middlewareContext),
+    serveServerSideRenderedFile: ({ node, traverser }) =>
       (
         serveServerSideRenderedFile({
-          filePath: traverserState.node.properties.filePath,
-          basePath: traverserState.node.properties.basePath,
-          renderType: traverserState.node.properties.renderType,
-          mimeType: traverserState.node.properties.mimeType,
+          filePath: node.properties.filePath,
+          basePath: node.properties.basePath,
+          renderType: node.properties.renderType,
+          mimeType: node.properties.mimeType,
         }) |> curry
       )(middlewareContext),
-    setResponseHeaders: traverserState => (setResponseHeaders() |> curry)(middlewareContext),
-    setFrontendSetting: traverserState => (setFrontendSetting() |> curry)(middlewareContext),
-    pickClientSideProjectConfig: traverserState => (pickClientSideProjectConfig({ targetProjectConfig }) |> curry)(middlewareContext),
-    commonFunctionality: traverserState => (commonFunctionality({ middlewareContext }) |> curry)(middlewareContext),
-    notFound: traverserState => (notFound() |> curry)(middlewareContext),
-    cacheControl: traverserState => (cacheControl() |> curry)(middlewareContext),
-    transformJavascriptMiddleware: traverserState => (transformJavascriptMiddleware() |> curry)(middlewareContext),
-    expandAtSignPath: traverserState => (expandAtSignPath() |> curry)(middlewareContext),
-    templateRenderingMiddleware: () => (templateRenderingMiddleware() |> curry)(middlewareContext),
-    graphRenderedTemplateDocument: async traverserState => {
+    setResponseHeaders: ({ node, traverser }) => (setResponseHeaders() |> curry)(middlewareContext),
+    setFrontendSetting: ({ node, traverser }) => (setFrontendSetting() |> curry)(middlewareContext),
+    pickClientSideProjectConfig: ({ node, traverser }) => (pickClientSideProjectConfig({ targetProjectConfig }) |> curry)(middlewareContext),
+    commonFunctionality: ({ node, traverser }) => (commonFunctionality({ middlewareContext }) |> curry)(middlewareContext),
+    notFound: ({ node, traverser }) => (notFound() |> curry)(middlewareContext),
+    cacheControl: ({ node, traverser }) => (cacheControl() |> curry)(middlewareContext),
+    transformJavascriptMiddleware: ({ node, traverser }) => (transformJavascriptMiddleware() |> curry)(middlewareContext),
+    expandAtSignPath: ({ node, traverser }) => (expandAtSignPath() |> curry)(middlewareContext),
+    templateRenderingMiddleware: ({ node, traverser }) => (templateRenderingMiddleware() |> curry)(middlewareContext),
+    graphRenderedTemplateDocument: async function({ node, traverser }) {
       let curriedFileReferenceList = fileReferenceList({ targetProjectConfig, configuredGraph }),
         curriedPipeFunctionReferenceList = pipeFunctionReferenceList({ targetProjectConfig, configuredGraph })
+
       return (
         (await graphDocumentRenderingMiddlewareAdapter({
-          middlewareNode: traverserState.node,
-          graphInstance: traverserState.graph,
+          middlewareNode: node,
+          graphInstance: traverser.graph,
           configuredGraph /*Graph Class*/,
           referenceList: middlewareContext => ({
             functionReferenceContext: curriedPipeFunctionReferenceList({ middlewareContext }),
@@ -76,12 +76,12 @@ let conditionFunctionReferenceList = ({ targetProjectConfig, configuredGraph, mi
    * @return {any} value for condition comparison. Could return boolean, string, array.
    */
   ({
-    getUrlPathLevel: traverserState => getUrlPathLevel({ middlewareContext, level: traverserState.node.properties.level }),
-    isExistUrlPathLevel: traverserState => isExistUrlPathLevel({ middlewareContext, level: traverserState.node.properties.level }),
-    ifLevel1IncludesAt: async traverserState => await ifLevel1IncludesAt(middlewareContext),
-    ifLastUrlPathtIncludesFunction: traverserState => ifLastUrlPathtIncludesFunction(middlewareContext),
-    getRequestMethod: traverserState => getRequestMethod(middlewareContext),
-    getUrlPathAsArray: traverserState => getUrlPathAsArray(middlewareContext),
+    getUrlPathLevel: ({ node, traverser }) => getUrlPathLevel({ middlewareContext, level: node.properties.level }),
+    isExistUrlPathLevel: ({ node, traverser }) => isExistUrlPathLevel({ middlewareContext, level: node.properties.level }),
+    ifLevel1IncludesAt: async ({ node, traverser }) => await ifLevel1IncludesAt(middlewareContext),
+    ifLastUrlPathtIncludesFunction: ({ node, traverser }) => ifLastUrlPathtIncludesFunction(middlewareContext),
+    getRequestMethod: ({ node, traverser }) => getRequestMethod(middlewareContext),
+    getUrlPathAsArray: ({ node, traverser }) => getUrlPathAsArray(middlewareContext),
   })
 
 let pipeFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
@@ -89,54 +89,54 @@ let pipeFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlew
    * @return {Function (input)=>output } functions that return a pipe function - receiving an input and returning a processed output.
    */
   ({
-    wrapWithJsTag: traverserState => wrapWithJsTag(),
+    wrapWithJsTag: ({ node, traverser }) => wrapWithJsTag(),
   })
 
 // list of files used in the context of graph traversal.
 let fileReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
   /** Template files */
   ({
-    entrypointHTML: traverserState => {
+    entrypointHTML: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./template/entrypoint.html`)
     },
-    systemjsSetting: traverserState => {
+    systemjsSetting: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/jspm.initialization.js`)
     },
-    webcomponentPolyfill: traverserState => {
+    webcomponentPolyfill: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/polymerPolyfill.js`)
     },
-    entrypointScript: traverserState => {
+    entrypointScript: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./template/entrypointScript.html`)
     },
-    babelTranspiler: traverserState => {
+    babelTranspiler: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/babelTranspiler.js`)
     },
-    metadata: traverserState => {
+    metadata: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./metadata/metadata.html`)
     },
-    webScoket: traverserState => {
+    webScoket: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/websocket.js`)
     },
-    googleAnalytics: traverserState => {
+    googleAnalytics: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/googleAnalytics.js`)
     },
-    serviceWorker: traverserState => {
+    serviceWorker: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
       return path.join(clientSidePath, `./javascript/serviceWorker/serviceWorker.js`)

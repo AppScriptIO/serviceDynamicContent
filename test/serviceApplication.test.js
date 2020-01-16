@@ -42,44 +42,54 @@ suite('Service components:', () => {
       await service.restApi.initializeAssetContentDelivery({ port, targetProjectConfig }).catch(error => throw error)
 
       {
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/upload/file.txt`
           http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
       {
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/@javascript/file.js`
           let content = http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/javascript/file.js'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
       {
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/asset/file.css`
           http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/file.css'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
       {
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/asset/file.txt$covertTextFileToJSModule`
           let content = http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'fixture', 'covertTextFileToJSModule'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
       {
         // test explicitely mentioned paths in the graph:
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/javascript/jspm.config.js`
           http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/javascript/file.js'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
     })
@@ -91,12 +101,18 @@ suite('Service components:', () => {
     test('Should respond to requests', async () => {
       await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
 
+      // const underscore = require('underscore')
+      // const underscoreTemplateInterpolationSetting = { evaluate: /\{\%(.+?)\%\}/g, interpolate: /\{\%=(.+?)\%\}/g, escape: /\{\%-(.+?)\%\}/g } // initial underscore template settings on first import gets applied on the rest.
+      // underscore.templateSettings = underscoreTemplateInterpolationSetting
+
       {
-        let stream = await new Promise((resolve, reject) => {
+        let responseStream = await new Promise((resolve, reject) => {
           let urlPath = `/`
           http.get(`${url}${urlPath}`, response => resolve(response))
         })
-        let content = await streamToString(stream)
+
+        assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
+        let content = await streamToString(responseStream)
         // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'graphDocumentRendering'), content)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'fixture', 'graphDocumentRendering'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
