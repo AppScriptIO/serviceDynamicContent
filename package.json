@@ -1,7 +1,7 @@
 {
 	"name": "@dependency/serviceDynamicContent",
 	"main": "./entrypoint/programmaticAPI",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"scripts": {
 		"test": "yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'] })\"",
 		"test-inspect": "export NODE_OPTIONS='--inspect-brk' && yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
