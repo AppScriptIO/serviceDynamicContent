@@ -99,47 +99,47 @@ let fileReferenceList = ({ targetProjectConfig, configuredGraph, middlewareConte
     entrypointHTML: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./template/entrypoint.html`)
+      return path.join(clientSidePath, `./asset/template/entrypoint.html`)
     },
     systemjsSetting: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/jspm.initialization.js`)
+      return path.join(clientSidePath, `./asset/javascript/jspm.initialization.js`)
     },
     webcomponentPolyfill: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/polymerPolyfill.js`)
+      return path.join(clientSidePath, `./asset/javascript/polymerPolyfill.js`)
     },
     entrypointScript: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./template/entrypointScript.html`)
+      return path.join(clientSidePath, `./asset/template/entrypointScript.html`)
     },
     babelTranspiler: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/babelTranspiler.js`)
+      return path.join(clientSidePath, `./asset/javascript/babelTranspiler.js`)
     },
     metadata: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./metadata/metadata.html`)
+      return path.join(clientSidePath, `./asset/metadata/metadata.html`)
     },
     webScoket: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/websocket.js`)
+      return path.join(clientSidePath, `./asset/javascript/websocket.js`)
     },
     googleAnalytics: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/googleAnalytics.js`)
+      return path.join(clientSidePath, `./asset/javascript/googleAnalytics.js`)
     },
     serviceWorker: ({ node, traverser }) => {
       assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
       let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./javascript/serviceWorker/serviceWorker.js`)
+      return path.join(clientSidePath, `./asset/javascript/serviceWorker/serviceWorker.js`)
     },
   })
 
