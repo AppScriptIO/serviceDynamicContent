@@ -1,62 +1,63 @@
-import filesystem from 'fs'
-import { wrapStringStream } from '@dependency/wrapStringStream'
-// Note: Every function dependent on underscore will be affected by the configuration of the template string of the underscore imported instance.
-import underscore from 'underscore'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.convertSharedStylesToJS = convertSharedStylesToJS;exports.covertTextFileToJSModule = covertTextFileToJSModule;exports.renderTemplateEvaluatingJs = renderTemplateEvaluatingJs;exports.renderTemplateInsertionPosition = renderTemplateInsertionPosition;exports.combineJSImportWebcomponent = combineJSImportWebcomponent;exports.combineHTMLImportWebcomponent = combineHTMLImportWebcomponent;var _fs = _interopRequireDefault(require("fs"));
+var _wrapStringStream = require("@dependency/wrapStringStream");
 
-/** Wrap css style in a tag (created using javascript) - to support shared styles in Polymer 3 javascript imports
- * Polyfill from https://github.com/Polymer/polymer-modulizer/blob/f1ef5dea3978a9601248d73f4d23dc033382286c/fixtures/packages/polymer/expected/test/unit/styling-import-shared-styles.js
- */
-export async function convertSharedStylesToJS({ filePath }) {
-  return await wrapStringStream({
-    stream: filesystem.createReadStream(filePath),
+var _underscore = _interopRequireDefault(require("underscore"));
+
+
+
+
+async function convertSharedStylesToJS({ filePath }) {
+  return await (0, _wrapStringStream.wrapStringStream)({
+    stream: _fs.default.createReadStream(filePath),
     beforeString: "const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `",
-    afterString: '`;document.head.appendChild($_documentContainer);',
-  })
+    afterString: '`;document.head.appendChild($_documentContainer);' });
+
 }
 
-/** Wrap text file with export default - converting it to js module */
-export async function covertTextFileToJSModule({ filePath }) {
-  let fileStream = filesystem.createReadStream(filePath)
-  return await wrapStringStream({ stream: fileStream, beforeString: 'export default `', afterString: '`' })
+
+async function covertTextFileToJSModule({ filePath }) {
+  let fileStream = _fs.default.createReadStream(filePath);
+  return await (0, _wrapStringStream.wrapStringStream)({ stream: fileStream, beforeString: 'export default `', afterString: '`' });
 }
 
-// render template using underscore - evaluating js code.
-export function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
-  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ argument }) // Koa handles the stream and send it to the client.
+
+function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
+  return _underscore.default.template(_fs.default.readFileSync(filePath, 'utf8'))({ argument });
 }
 
-// render template using underscore with insertion positions concept
-export function renderTemplateInsertionPosition({ filePath, insert = {}, argument = {} }) {
-  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ insert, argument }) // Koa handles the stream and send it to the client.
+
+function renderTemplateInsertionPosition({ filePath, insert = {}, argument = {} }) {
+  return _underscore.default.template(_fs.default.readFileSync(filePath, 'utf8'))({ insert, argument });
 }
 
-/**
- * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
- */
-export function combineJSImportWebcomponent({ filePath, argument = {} }) {
-  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/')) // directory base path of file
+
+
+
+function combineJSImportWebcomponent({ filePath, argument = {} }) {
+  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'));
   return renderTemplateInsertionPosition({
     filePath,
     insert: {
-      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
-    },
-    argument,
-  })
+      css: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      html: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }) },
+
+    argument });
+
 }
 
-/**
- * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
- */
-export function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
-  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
+
+
+
+function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
+  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'));
   return renderTemplateInsertionPosition({
     filePath,
     insert: {
-      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      js: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
-      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
-    },
-    argument,
-  })
+      css: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      js: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
+      html: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }) },
+
+    argument });
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9mdW5jdGlvbmFsaXR5L3JlbmRlckZpbGUuanMiXSwibmFtZXMiOlsiY29udmVydFNoYXJlZFN0eWxlc1RvSlMiLCJmaWxlUGF0aCIsInN0cmVhbSIsImZpbGVzeXN0ZW0iLCJjcmVhdGVSZWFkU3RyZWFtIiwiYmVmb3JlU3RyaW5nIiwiYWZ0ZXJTdHJpbmciLCJjb3ZlcnRUZXh0RmlsZVRvSlNNb2R1bGUiLCJmaWxlU3RyZWFtIiwicmVuZGVyVGVtcGxhdGVFdmFsdWF0aW5nSnMiLCJhcmd1bWVudCIsInVuZGVyc2NvcmUiLCJ0ZW1wbGF0ZSIsInJlYWRGaWxlU3luYyIsInJlbmRlclRlbXBsYXRlSW5zZXJ0aW9uUG9zaXRpb24iLCJpbnNlcnQiLCJjb21iaW5lSlNJbXBvcnRXZWJjb21wb25lbnQiLCJmaWxlRGlyZWN0b3J5UGF0aCIsInN1YnN0ciIsImxhc3RJbmRleE9mIiwiY3NzIiwiaHRtbCIsImNvbWJpbmVIVE1MSW1wb3J0V2ViY29tcG9uZW50IiwianMiXSwibWFwcGluZ3MiOiJ3aUJBQUE7QUFDQTs7QUFFQTs7Ozs7QUFLTyxlQUFlQSx1QkFBZixDQUF1QyxFQUFFQyxRQUFGLEVBQXZDLEVBQXFEO0FBQzFELFNBQU8sTUFBTSx3Q0FBaUI7QUFDNUJDLElBQUFBLE1BQU0sRUFBRUMsWUFBV0MsZ0JBQVgsQ0FBNEJILFFBQTVCLENBRG9CO0FBRTVCSSxJQUFBQSxZQUFZLEVBQUUsMkpBRmM7QUFHNUJDLElBQUFBLFdBQVcsRUFBRSxtREFIZSxFQUFqQixDQUFiOztBQUtEOzs7QUFHTSxlQUFlQyx3QkFBZixDQUF3QyxFQUFFTixRQUFGLEVBQXhDLEVBQXNEO0FBQzNELE1BQUlPLFVBQVUsR0FBR0wsWUFBV0MsZ0JBQVgsQ0FBNEJILFFBQTVCLENBQWpCO0FBQ0EsU0FBTyxNQUFNLHdDQUFpQixFQUFFQyxNQUFNLEVBQUVNLFVBQVYsRUFBc0JILFlBQVksRUFBRSxrQkFBcEMsRUFBd0RDLFdBQVcsRUFBRSxHQUFyRSxFQUFqQixDQUFiO0FBQ0Q7OztBQUdNLFNBQVNHLDBCQUFULENBQW9DLEVBQUVSLFFBQUYsRUFBWVMsUUFBUSxHQUFHLEVBQXZCLEVBQXBDLEVBQWlFO0FBQ3RFLFNBQU9DLG9CQUFXQyxRQUFYLENBQW9CVCxZQUFXVSxZQUFYLENBQXdCWixRQUF4QixFQUFrQyxNQUFsQyxDQUFwQixFQUErRCxFQUFFUyxRQUFGLEVBQS9ELENBQVA7QUFDRDs7O0FBR00sU0FBU0ksK0JBQVQsQ0FBeUMsRUFBRWIsUUFBRixFQUFZYyxNQUFNLEdBQUcsRUFBckIsRUFBeUJMLFFBQVEsR0FBRyxFQUFwQyxFQUF6QyxFQUFtRjtBQUN4RixTQUFPQyxvQkFBV0MsUUFBWCxDQUFvQlQsWUFBV1UsWUFBWCxDQUF3QlosUUFBeEIsRUFBa0MsTUFBbEMsQ0FBcEIsRUFBK0QsRUFBRWMsTUFBRixFQUFVTCxRQUFWLEVBQS9ELENBQVA7QUFDRDs7Ozs7QUFLTSxTQUFTTSwyQkFBVCxDQUFxQyxFQUFFZixRQUFGLEVBQVlTLFFBQVEsR0FBRyxFQUF2QixFQUFyQyxFQUFrRTtBQUN2RSxNQUFJTyxpQkFBaUIsR0FBR2hCLFFBQVEsQ0FBQ2lCLE1BQVQsQ0FBZ0IsQ0FBaEIsRUFBbUJqQixRQUFRLENBQUNrQixXQUFULENBQXFCLEdBQXJCLENBQW5CLENBQXhCO0FBQ0EsU0FBT0wsK0JBQStCLENBQUM7QUFDckNiLElBQUFBLFFBRHFDO0FBRXJDYyxJQUFBQSxNQUFNLEVBQUU7QUFDTkssTUFBQUEsR0FBRyxFQUFFLE1BQU1ULG9CQUFXQyxRQUFYLENBQW9CVCxZQUFXVSxZQUFYLENBQXlCLEdBQUVJLGlCQUFrQixnQkFBN0MsRUFBOEQsTUFBOUQsQ0FBcEIsRUFBMkYsRUFBRVAsUUFBRixFQUEzRixDQURMO0FBRU5XLE1BQUFBLElBQUksRUFBRSxNQUFNVixvQkFBV0MsUUFBWCxDQUFvQlQsWUFBV1UsWUFBWCxDQUF5QixHQUFFSSxpQkFBa0IsaUJBQTdDLEVBQStELE1BQS9ELENBQXBCLEVBQTRGLEVBQUVQLFFBQUYsRUFBNUYsQ0FGTixFQUY2Qjs7QUFNckNBLElBQUFBLFFBTnFDLEVBQUQsQ0FBdEM7O0FBUUQ7Ozs7O0FBS00sU0FBU1ksNkJBQVQsQ0FBdUMsRUFBRXJCLFFBQUYsRUFBWVMsUUFBUSxHQUFHLEVBQXZCLEVBQXZDLEVBQW9FO0FBQ3pFLE1BQUlPLGlCQUFpQixHQUFHaEIsUUFBUSxDQUFDaUIsTUFBVCxDQUFnQixDQUFoQixFQUFtQmpCLFFBQVEsQ0FBQ2tCLFdBQVQsQ0FBcUIsR0FBckIsQ0FBbkIsQ0FBeEI7QUFDQSxTQUFPTCwrQkFBK0IsQ0FBQztBQUNyQ2IsSUFBQUEsUUFEcUM7QUFFckNjLElBQUFBLE1BQU0sRUFBRTtBQUNOSyxNQUFBQSxHQUFHLEVBQUUsTUFBTVQsb0JBQVdDLFFBQVgsQ0FBb0JULFlBQVdVLFlBQVgsQ0FBeUIsR0FBRUksaUJBQWtCLGdCQUE3QyxFQUE4RCxNQUE5RCxDQUFwQixFQUEyRixFQUFFUCxRQUFGLEVBQTNGLENBREw7QUFFTmEsTUFBQUEsRUFBRSxFQUFFLE1BQU1aLG9CQUFXQyxRQUFYLENBQW9CVCxZQUFXVSxZQUFYLENBQXlCLEdBQUVJLGlCQUFrQixlQUE3QyxFQUE2RCxNQUE3RCxDQUFwQixFQUEwRixFQUFFUCxRQUFGLEVBQTFGLENBRko7QUFHTlcsTUFBQUEsSUFBSSxFQUFFLE1BQU1WLG9CQUFXQyxRQUFYLENBQW9CVCxZQUFXVSxZQUFYLENBQXlCLEdBQUVJLGlCQUFrQixpQkFBN0MsRUFBK0QsTUFBL0QsQ0FBcEIsRUFBNEYsRUFBRVAsUUFBRixFQUE1RixDQUhOLEVBRjZCOztBQU9yQ0EsSUFBQUEsUUFQcUMsRUFBRCxDQUF0Qzs7QUFTRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBmaWxlc3lzdGVtIGZyb20gJ2ZzJ1xuaW1wb3J0IHsgd3JhcFN0cmluZ1N0cmVhbSB9IGZyb20gJ0BkZXBlbmRlbmN5L3dyYXBTdHJpbmdTdHJlYW0nXG4vLyBOb3RlOiBFdmVyeSBmdW5jdGlvbiBkZXBlbmRlbnQgb24gdW5kZXJzY29yZSB3aWxsIGJlIGFmZmVjdGVkIGJ5IHRoZSBjb25maWd1cmF0aW9uIG9mIHRoZSB0ZW1wbGF0ZSBzdHJpbmcgb2YgdGhlIHVuZGVyc2NvcmUgaW1wb3J0ZWQgaW5zdGFuY2UuXG5pbXBvcnQgdW5kZXJzY29yZSBmcm9tICd1bmRlcnNjb3JlJ1xuXG4vKiogV3JhcCBjc3Mgc3R5bGUgaW4gYSB0YWcgKGNyZWF0ZWQgdXNpbmcgamF2YXNjcmlwdCkgLSB0byBzdXBwb3J0IHNoYXJlZCBzdHlsZXMgaW4gUG9seW1lciAzIGphdmFzY3JpcHQgaW1wb3J0c1xuICogUG9seWZpbGwgZnJvbSBodHRwczovL2dpdGh1Yi5jb20vUG9seW1lci9wb2x5bWVyLW1vZHVsaXplci9ibG9iL2YxZWY1ZGVhMzk3OGE5NjAxMjQ4ZDczZjRkMjNkYzAzMzM4MjI4NmMvZml4dHVyZXMvcGFja2FnZXMvcG9seW1lci9leHBlY3RlZC90ZXN0L3VuaXQvc3R5bGluZy1pbXBvcnQtc2hhcmVkLXN0eWxlcy5qc1xuICovXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gY29udmVydFNoYXJlZFN0eWxlc1RvSlMoeyBmaWxlUGF0aCB9KSB7XG4gIHJldHVybiBhd2FpdCB3cmFwU3RyaW5nU3RyZWFtKHtcbiAgICBzdHJlYW06IGZpbGVzeXN0ZW0uY3JlYXRlUmVhZFN0cmVhbShmaWxlUGF0aCksXG4gICAgYmVmb3JlU3RyaW5nOiBcImNvbnN0ICRfZG9jdW1lbnRDb250YWluZXIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsgJF9kb2N1bWVudENvbnRhaW5lci5zZXRBdHRyaWJ1dGUoJ3N0eWxlJywgJ2Rpc3BsYXk6IG5vbmU7Jyk7ICRfZG9jdW1lbnRDb250YWluZXIuaW5uZXJIVE1MID0gYFwiLFxuICAgIGFmdGVyU3RyaW5nOiAnYDtkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKCRfZG9jdW1lbnRDb250YWluZXIpOycsXG4gIH0pXG59XG5cbi8qKiBXcmFwIHRleHQgZmlsZSB3aXRoIGV4cG9ydCBkZWZhdWx0IC0gY29udmVydGluZyBpdCB0byBqcyBtb2R1bGUgKi9cbmV4cG9ydCBhc3luYyBmdW5jdGlvbiBjb3ZlcnRUZXh0RmlsZVRvSlNNb2R1bGUoeyBmaWxlUGF0aCB9KSB7XG4gIGxldCBmaWxlU3RyZWFtID0gZmlsZXN5c3RlbS5jcmVhdGVSZWFkU3RyZWFtKGZpbGVQYXRoKVxuICByZXR1cm4gYXdhaXQgd3JhcFN0cmluZ1N0cmVhbSh7IHN0cmVhbTogZmlsZVN0cmVhbSwgYmVmb3JlU3RyaW5nOiAnZXhwb3J0IGRlZmF1bHQgYCcsIGFmdGVyU3RyaW5nOiAnYCcgfSlcbn1cblxuLy8gcmVuZGVyIHRlbXBsYXRlIHVzaW5nIHVuZGVyc2NvcmUgLSBldmFsdWF0aW5nIGpzIGNvZGUuXG5leHBvcnQgZnVuY3Rpb24gcmVuZGVyVGVtcGxhdGVFdmFsdWF0aW5nSnMoeyBmaWxlUGF0aCwgYXJndW1lbnQgPSB7fSB9KSB7XG4gIHJldHVybiB1bmRlcnNjb3JlLnRlbXBsYXRlKGZpbGVzeXN0ZW0ucmVhZEZpbGVTeW5jKGZpbGVQYXRoLCAndXRmOCcpKSh7IGFyZ3VtZW50IH0pIC8vIEtvYSBoYW5kbGVzIHRoZSBzdHJlYW0gYW5kIHNlbmQgaXQgdG8gdGhlIGNsaWVudC5cbn1cblxuLy8gcmVuZGVyIHRlbXBsYXRlIHVzaW5nIHVuZGVyc2NvcmUgd2l0aCBpbnNlcnRpb24gcG9zaXRpb25zIGNvbmNlcHRcbmV4cG9ydCBmdW5jdGlvbiByZW5kZXJUZW1wbGF0ZUluc2VydGlvblBvc2l0aW9uKHsgZmlsZVBhdGgsIGluc2VydCA9IHt9LCBhcmd1bWVudCA9IHt9IH0pIHtcbiAgcmV0dXJuIHVuZGVyc2NvcmUudGVtcGxhdGUoZmlsZXN5c3RlbS5yZWFkRmlsZVN5bmMoZmlsZVBhdGgsICd1dGY4JykpKHsgaW5zZXJ0LCBhcmd1bWVudCB9KSAvLyBLb2EgaGFuZGxlcyB0aGUgc3RyZWFtIGFuZCBzZW5kIGl0IHRvIHRoZSBjbGllbnQuXG59XG5cbi8qKlxuICogV2ViY29tcG9uZW50IHVzaW5nIEpTIGltcG9ydHMgLSBDb21iaW5lIHdlYmNvbXBvbmVudCBmaWxlcyBhY2NvcmRpbmcgdG8gcHJlZGVmaW5lZCBjb21wb25lbnQgcGFydHMgbG9jYXRpb25zIHJlbGF0aXZlIHRvIHRoZSBmaWxlIHBhdGggcmVjZWl2ZWQuXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBjb21iaW5lSlNJbXBvcnRXZWJjb21wb25lbnQoeyBmaWxlUGF0aCwgYXJndW1lbnQgPSB7fSB9KSB7XG4gIGxldCBmaWxlRGlyZWN0b3J5UGF0aCA9IGZpbGVQYXRoLnN1YnN0cigwLCBmaWxlUGF0aC5sYXN0SW5kZXhPZignLycpKSAvLyBkaXJlY3RvcnkgYmFzZSBwYXRoIG9mIGZpbGVcbiAgcmV0dXJuIHJlbmRlclRlbXBsYXRlSW5zZXJ0aW9uUG9zaXRpb24oe1xuICAgIGZpbGVQYXRoLFxuICAgIGluc2VydDoge1xuICAgICAgY3NzOiAoKSA9PiB1bmRlcnNjb3JlLnRlbXBsYXRlKGZpbGVzeXN0ZW0ucmVhZEZpbGVTeW5jKGAke2ZpbGVEaXJlY3RvcnlQYXRofS9jb21wb25lbnQuY3NzYCwgJ3V0ZjgnKSkoeyBhcmd1bWVudCB9KSxcbiAgICAgIGh0bWw6ICgpID0+IHVuZGVyc2NvcmUudGVtcGxhdGUoZmlsZXN5c3RlbS5yZWFkRmlsZVN5bmMoYCR7ZmlsZURpcmVjdG9yeVBhdGh9L2NvbXBvbmVudC5odG1sYCwgJ3V0ZjgnKSkoeyBhcmd1bWVudCB9KSxcbiAgICB9LFxuICAgIGFyZ3VtZW50LFxuICB9KVxufVxuXG4vKipcbiAqIFdlYmNvbXBvbmVudCB1c2luZyBIVE1MIEltcG9ydHMgLSBDb21iaW5lIHdlYmNvbXBvbmVudCBmaWxlcyBhY2NvcmRpbmcgdG8gcHJlZGVmaW5lZCBjb21wb25lbnQgcGFydHMgbG9jYXRpb25zIHJlbGF0aXZlIHRvIHRoZSBmaWxlIHBhdGggcmVjZWl2ZWQuXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBjb21iaW5lSFRNTEltcG9ydFdlYmNvbXBvbmVudCh7IGZpbGVQYXRoLCBhcmd1bWVudCA9IHt9IH0pIHtcbiAgbGV0IGZpbGVEaXJlY3RvcnlQYXRoID0gZmlsZVBhdGguc3Vic3RyKDAsIGZpbGVQYXRoLmxhc3RJbmRleE9mKCcvJykpXG4gIHJldHVybiByZW5kZXJUZW1wbGF0ZUluc2VydGlvblBvc2l0aW9uKHtcbiAgICBmaWxlUGF0aCxcbiAgICBpbnNlcnQ6IHtcbiAgICAgIGNzczogKCkgPT4gdW5kZXJzY29yZS50ZW1wbGF0ZShmaWxlc3lzdGVtLnJlYWRGaWxlU3luYyhgJHtmaWxlRGlyZWN0b3J5UGF0aH0vY29tcG9uZW50LmNzc2AsICd1dGY4JykpKHsgYXJndW1lbnQgfSksXG4gICAgICBqczogKCkgPT4gdW5kZXJzY29yZS50ZW1wbGF0ZShmaWxlc3lzdGVtLnJlYWRGaWxlU3luYyhgJHtmaWxlRGlyZWN0b3J5UGF0aH0vY29tcG9uZW50LmpzYCwgJ3V0ZjgnKSkoeyBhcmd1bWVudCB9KSxcbiAgICAgIGh0bWw6ICgpID0+IHVuZGVyc2NvcmUudGVtcGxhdGUoZmlsZXN5c3RlbS5yZWFkRmlsZVN5bmMoYCR7ZmlsZURpcmVjdG9yeVBhdGh9L2NvbXBvbmVudC5odG1sYCwgJ3V0ZjgnKSkoeyBhcmd1bWVudCB9KSxcbiAgICB9LFxuICAgIGFyZ3VtZW50LFxuICB9KVxufVxuIl19

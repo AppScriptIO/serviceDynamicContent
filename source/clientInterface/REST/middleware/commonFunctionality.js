@@ -1,29 +1,30 @@
-import compose from 'koa-compose'
-import responseTime from 'koa-response-time'
-import logger from 'koa-logger'
-import bodyParser from 'koa-bodyparser'
-import cors from 'kcors'
-// import helmet from 'koa-helmet'
-import error from 'koa-json-error'
-// import enforceHTTPS from 'koa-sslify'
-import koaCompress from 'koa-compress'
-import zlib from 'zlib'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.commonFunctionality = void 0;var _koaCompose = _interopRequireDefault(require("koa-compose"));
+var _koaResponseTime = _interopRequireDefault(require("koa-response-time"));
+var _koaLogger = _interopRequireDefault(require("koa-logger"));
 
-export const commonFunctionality = ({ ssl = false } = {}) => {
+
+
+var _koaJsonError = _interopRequireDefault(require("koa-json-error"));
+
+var _koaCompress = _interopRequireDefault(require("koa-compress"));
+var _zlib = _interopRequireDefault(require("zlib"));
+
+const commonFunctionality = ({ ssl = false } = {}) => {
   let middlewareArray = [
-    responseTime(), // Response time x-response-time
-    logger(), // Console logger
-    // bodyParser(),
-    // cors(), // Cross-Origin Resource Sharing(CORS)
-    error(), // Error handler for pure-JSON Koa apps
-    koaCompress({ flush: zlib.Z_SYNC_FLUSH }),
-  ]
-  if (!ssl)
-    middlewareArray = [
-      ...middlewareArray,
-      // enforceHTTPS(),
-      // helmet()
-    ]
+  (0, _koaResponseTime.default)(),
+  (0, _koaLogger.default)(),
 
-  return compose(middlewareArray)
-}
+
+  (0, _koaJsonError.default)(),
+  (0, _koaCompress.default)({ flush: _zlib.default.Z_SYNC_FLUSH })];
+
+  if (!ssl)
+  middlewareArray = [
+  ...middlewareArray];
+
+
+
+
+  return (0, _koaCompose.default)(middlewareArray);
+};exports.commonFunctionality = commonFunctionality;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2NvbW1vbkZ1bmN0aW9uYWxpdHkuanMiXSwibmFtZXMiOlsiY29tbW9uRnVuY3Rpb25hbGl0eSIsInNzbCIsIm1pZGRsZXdhcmVBcnJheSIsImZsdXNoIiwiemxpYiIsIlpfU1lOQ19GTFVTSCJdLCJtYXBwaW5ncyI6InFNQUFBO0FBQ0E7QUFDQTs7OztBQUlBOztBQUVBO0FBQ0E7O0FBRU8sTUFBTUEsbUJBQW1CLEdBQUcsQ0FBQyxFQUFFQyxHQUFHLEdBQUcsS0FBUixLQUFrQixFQUFuQixLQUEwQjtBQUMzRCxNQUFJQyxlQUFlLEdBQUc7QUFDcEIsaUNBRG9CO0FBRXBCLDJCQUZvQjs7O0FBS3BCLDhCQUxvQjtBQU1wQiw0QkFBWSxFQUFFQyxLQUFLLEVBQUVDLGNBQUtDLFlBQWQsRUFBWixDQU5vQixDQUF0Qjs7QUFRQSxNQUFJLENBQUNKLEdBQUw7QUFDRUMsRUFBQUEsZUFBZSxHQUFHO0FBQ2hCLEtBQUdBLGVBRGEsQ0FBbEI7Ozs7O0FBTUYsU0FBTyx5QkFBUUEsZUFBUixDQUFQO0FBQ0QsQ0FqQk0sQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBjb21wb3NlIGZyb20gJ2tvYS1jb21wb3NlJ1xuaW1wb3J0IHJlc3BvbnNlVGltZSBmcm9tICdrb2EtcmVzcG9uc2UtdGltZSdcbmltcG9ydCBsb2dnZXIgZnJvbSAna29hLWxvZ2dlcidcbmltcG9ydCBib2R5UGFyc2VyIGZyb20gJ2tvYS1ib2R5cGFyc2VyJ1xuaW1wb3J0IGNvcnMgZnJvbSAna2NvcnMnXG4vLyBpbXBvcnQgaGVsbWV0IGZyb20gJ2tvYS1oZWxtZXQnXG5pbXBvcnQgZXJyb3IgZnJvbSAna29hLWpzb24tZXJyb3InXG4vLyBpbXBvcnQgZW5mb3JjZUhUVFBTIGZyb20gJ2tvYS1zc2xpZnknXG5pbXBvcnQga29hQ29tcHJlc3MgZnJvbSAna29hLWNvbXByZXNzJ1xuaW1wb3J0IHpsaWIgZnJvbSAnemxpYidcblxuZXhwb3J0IGNvbnN0IGNvbW1vbkZ1bmN0aW9uYWxpdHkgPSAoeyBzc2wgPSBmYWxzZSB9ID0ge30pID0+IHtcbiAgbGV0IG1pZGRsZXdhcmVBcnJheSA9IFtcbiAgICByZXNwb25zZVRpbWUoKSwgLy8gUmVzcG9uc2UgdGltZSB4LXJlc3BvbnNlLXRpbWVcbiAgICBsb2dnZXIoKSwgLy8gQ29uc29sZSBsb2dnZXJcbiAgICAvLyBib2R5UGFyc2VyKCksXG4gICAgLy8gY29ycygpLCAvLyBDcm9zcy1PcmlnaW4gUmVzb3VyY2UgU2hhcmluZyhDT1JTKVxuICAgIGVycm9yKCksIC8vIEVycm9yIGhhbmRsZXIgZm9yIHB1cmUtSlNPTiBLb2EgYXBwc1xuICAgIGtvYUNvbXByZXNzKHsgZmx1c2g6IHpsaWIuWl9TWU5DX0ZMVVNIIH0pLFxuICBdXG4gIGlmICghc3NsKVxuICAgIG1pZGRsZXdhcmVBcnJheSA9IFtcbiAgICAgIC4uLm1pZGRsZXdhcmVBcnJheSxcbiAgICAgIC8vIGVuZm9yY2VIVFRQUygpLFxuICAgICAgLy8gaGVsbWV0KClcbiAgICBdXG5cbiAgcmV0dXJuIGNvbXBvc2UobWlkZGxld2FyZUFycmF5KVxufVxuIl19
