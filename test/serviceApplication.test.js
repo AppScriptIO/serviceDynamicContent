@@ -49,7 +49,7 @@ suite('Service components:', () => {
 
         assert(responseStream.statusCode == 200, `• Response return non successful statusCode.`)
         let content = await streamToString(responseStream)
-        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
+        assert(content === filesystem.readFileSync(path.join(__dirname, 'asset', 'clientSide/asset/upload/file.txt'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
       {
         let responseStream = await new Promise((resolve, reject) => {
