@@ -1,7 +1,8 @@
-import koaViews from 'koa-views'
-import { setUnderscoreTemplateSetting } from '../../../functionality/underscoreTemplateInterpolation.js'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.templateRenderingMiddleware = templateRenderingMiddleware;var _koaViews = _interopRequireDefault(require("koa-views"));
+var _underscoreTemplateInterpolation = require("../../../functionality/underscoreTemplateInterpolation.js");
 
-export function templateRenderingMiddleware() {
-  setUnderscoreTemplateSetting()
-  return koaViews('/', { map: { html: 'underscore', js: 'underscore' } })
+function templateRenderingMiddleware() {
+  (0, _underscoreTemplateInterpolation.setUnderscoreTemplateSetting)();
+  return (0, _koaViews.default)('/', { map: { html: 'underscore', js: 'underscore' } });
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL3RlbXBsYXRlUmVuZGVyaW5nLmpzIl0sIm5hbWVzIjpbInRlbXBsYXRlUmVuZGVyaW5nTWlkZGxld2FyZSIsIm1hcCIsImh0bWwiLCJqcyJdLCJtYXBwaW5ncyI6ImtPQUFBO0FBQ0E7O0FBRU8sU0FBU0EsMkJBQVQsR0FBdUM7QUFDNUM7QUFDQSxTQUFPLHVCQUFTLEdBQVQsRUFBYyxFQUFFQyxHQUFHLEVBQUUsRUFBRUMsSUFBSSxFQUFFLFlBQVIsRUFBc0JDLEVBQUUsRUFBRSxZQUExQixFQUFQLEVBQWQsQ0FBUDtBQUNEIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGtvYVZpZXdzIGZyb20gJ2tvYS12aWV3cydcbmltcG9ydCB7IHNldFVuZGVyc2NvcmVUZW1wbGF0ZVNldHRpbmcgfSBmcm9tICcuLi8uLi8uLi9mdW5jdGlvbmFsaXR5L3VuZGVyc2NvcmVUZW1wbGF0ZUludGVycG9sYXRpb24uanMnXG5cbmV4cG9ydCBmdW5jdGlvbiB0ZW1wbGF0ZVJlbmRlcmluZ01pZGRsZXdhcmUoKSB7XG4gIHNldFVuZGVyc2NvcmVUZW1wbGF0ZVNldHRpbmcoKVxuICByZXR1cm4ga29hVmlld3MoJy8nLCB7IG1hcDogeyBodG1sOiAndW5kZXJzY29yZScsIGpzOiAndW5kZXJzY29yZScgfSB9KVxufVxuIl19
