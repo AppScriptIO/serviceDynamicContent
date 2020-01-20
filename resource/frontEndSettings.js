@@ -23,6 +23,7 @@ async function loadFrontendData({ targetConfig }) {
         page: {
           selectorName: 'registration-single',
           file: 'registration-single.html',
+          // file: 'registration-single/entrypoint.js$renderJSImportWebcomponent'
         },
       },
       {

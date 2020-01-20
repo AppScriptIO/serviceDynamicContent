@@ -8,6 +8,6 @@ let isUnderscoreConfigured = false // execute initialization of underscore only 
 export function setUnderscoreTemplateSetting(templateInterpolationSetting = underscoreTemplateInterpolationSetting) {
   if (isUnderscoreConfigured) return
   underscore.templateSettings = templateInterpolationSetting
-  console.info(`• Underscore template setting set as ${underscore.templateSettings.evaluate} ${underscore.templateSettings.interpolate} ${underscore.templateSettings.escape}`)
+  // console.info(`• Underscore template setting set as ${underscore.templateSettings.evaluate} ${underscore.templateSettings.interpolate} ${underscore.templateSettings.escape}`)
   isUnderscoreConfigured = true
 }
