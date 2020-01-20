@@ -2,7 +2,7 @@ import http from 'http'
 import https from 'https'
 import Koa from 'koa' // Koa applicaiton server
 
-export async function createHttpServer({ label, port, middlewareArray }) {
+export async function createHttpServer({ serviceName, port, middlewareArray }) {
   const serverKoa = new Koa() // create Koa server
   serverKoa.subdomainOffset = 1 // for localhost domain.
   // register middleware
@@ -11,9 +11,9 @@ export async function createHttpServer({ label, port, middlewareArray }) {
     http
       .createServer(serverKoa.callback())
       .listen(port, () => {
-        if (process.send !== undefined) process.send({ message: 'Server listening' }) // if process is a forked child process.
+        if (process.send !== undefined) process.send({ level: 'service', serviceName, port, status: 'ready', description: 'Server listening' }) // if process is a forked child process.
         process.emit('listening')
-        console.log(`☕ ${label} server listening on port ${port}`)
+        console.log(`☕ ${serviceName} server listening on port ${port}`)
         resolve()
       })
       .on('connection', socket => {
@@ -30,5 +30,5 @@ export async function createHttpServer({ label, port, middlewareArray }) {
   // https
   //   .createServer({ key: serviceConfig.ssl.key, cert: serviceConfig.ssl.cert }, serverKoa.callback())
   //   .on('connection', socket => socket.setTimeout(120))
-  //   .listen(443, () => console.log(`☕ ${label} listening on port 443`))
+  //   .listen(443, () => console.log(`☕ ${serviceName} listening on port 443`))
 }
