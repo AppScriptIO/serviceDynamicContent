@@ -7,7 +7,7 @@ import filesystem from 'fs'
 import { service } from '..'
 import ownProjectConfig from '../configuration'
 const boltProtocolDriver = require('neo4j-driver').v1
-import { streamToString } from '@dependency/streamToStringConvertion'
+import { streamToString } from '@dependency/handleJSNativeDataStructure'
 import { memgraphContainer } from '@dependency/deploymentProvisioning'
 async function clearGraphData() {
   console.groupCollapsed('• Run prerequisite containers:')

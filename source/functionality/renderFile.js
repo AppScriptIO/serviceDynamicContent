@@ -1,5 +1,5 @@
 import filesystem from 'fs'
-import { wrapStringStream } from '@dependency/wrapStringStream'
+import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 // Note: Every function dependent on underscore will be affected by the configuration of the template string of the underscore imported instance.
 import underscore from 'underscore'
 

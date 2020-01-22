@@ -1,5 +1,5 @@
 import { getMergedMultipleDocumentOfSpecificLanguage as queryPatternImplementation } from '@dependency/databaseUtility/source/patternImplementation.js'
-import { mergeDeep } from '@dependency/deepObjectMerge'
+import { mergeDeep } from '@dependency/handleJSNativeDataStructure'
 
 export const setFrontendSetting = () =>
   async function setFrontendSetting(context, next) {

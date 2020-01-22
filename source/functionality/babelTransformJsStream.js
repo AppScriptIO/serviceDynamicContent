@@ -1,7 +1,7 @@
 import path from 'path'
 import filesystem from 'fs'
 import stream from 'stream'
-import { streamToString } from '@dependency/streamToStringConvertion'
+import { streamToString } from '@dependency/handleJSNativeDataStructure'
 
 let babel, getBabelConfig // as in production appDeploymentLifecycle dependency doesn't exist.
 try {

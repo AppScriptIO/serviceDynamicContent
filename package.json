@@ -1,7 +1,7 @@
 {
-	"name": "@dependency/serviceDynamicContent",
+	"name": "@service/serviceDynamicContent",
 	"main": "./entrypoint/programmaticAPI",
-	"version": "1.0.5",
+	"version": "1.1.1",
 	"scripts": {
 		"test": "yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'] })\"",
 		"test-inspect": "export NODE_OPTIONS='--inspect-brk' && yarn run scriptManager @dependency/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
@@ -17,8 +17,7 @@
 		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^4.x.x",
 		"@dependency/graphTraversal-implementation": "https://github.com/AppScriptIO/graphTraversal-implementation#semver:^4.x.x",
 		"@dependency/namedCurry": "https://github.com/AppScriptIO/namedCurry#semver:^1.x.x",
-		"@dependency/streamToStringConvertion": "https://github.com/AppScriptIO/streamToStringConvertion#semver:^1.x.x",
-		"@dependency/wrapStringStream": "https://github.com/AppScriptIO/wrapStringStream#semver:^1.x.x",
+		"@dependency/handleJSNativeDataStructure": "https://github.com/AppScriptIO/handleJSNativeDataStructure#semver:^2.x.x",
 		"co-body": "*",
 		"koa": "*",
 		"koa-bodyparser": "^4.2.1",
@@ -41,7 +40,7 @@
 	"devDependencies": {
 		"@dependency/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^2.x.x",
 		"@dependency/javascriptStaticAnalysis": "https://github.com/AppScriptIO/javascriptStaticAnalysis#semver:^1.x.x",
-		"@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x",
+		"@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^2.x.x",
 		"@dependency/scriptManager": "https://github.com/AppScriptIO/scriptManager#semver:^1.x.x",
 		"typescript": "^3.3.3333",
 		"user-agents": "^1.0.469"

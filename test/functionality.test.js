@@ -5,7 +5,7 @@ import utility from 'util'
 import path from 'path'
 import filesystem from 'fs'
 import ownProjectConfig from '../configuration'
-import { streamToString } from '@dependency/streamToStringConvertion'
+import { streamToString } from '@dependency/handleJSNativeDataStructure'
 import mockUserAgent from 'user-agents'
 const useragentParser = require('useragent')
 import { setUnderscoreTemplateSetting } from '../source/functionality/underscoreTemplateInterpolation.js'

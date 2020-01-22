@@ -5,7 +5,7 @@ import Stream from 'stream'
 import multistream from 'multistream'
 import underscore from 'underscore'
 import send from 'koa-sendfile' // Static files.
-import { wrapStringStream } from '@dependency/wrapStringStream'
+import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 import * as symbol from '../symbol.reference.js'
 import {
   convertSharedStylesToJS,
