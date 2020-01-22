@@ -6,7 +6,7 @@ import { streamToString } from '@dependency/handleJSNativeDataStructure'
 let babel, getBabelConfig // as in production appDeploymentLifecycle dependency doesn't exist.
 try {
   babel = require('@babel/core')
-  getBabelConfig = require('@dependency/javascriptTranspilation').getBabelConfig
+  getBabelConfig = require('@deployment/javascriptTranspilation').getBabelConfig
 } catch (error) {
   if (DEVELOPMENT) throw error
 }
