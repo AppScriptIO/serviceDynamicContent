@@ -1,10 +1,9 @@
-export const contentDelivery = {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.contentRendering = exports.contentDelivery = void 0;const contentDelivery = {
   serviceName: 'contentDelivery',
-  port: 12,
-}
+  port: 12 };exports.contentDelivery = contentDelivery;
 
-export const contentRendering = {
+
+const contentRendering = {
   serviceName: 'contentRendering',
-  port: 11,
-}
-
+  port: 11 };exports.contentRendering = contentRendering;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9jb25maWd1cmF0aW9uL2NvbmZpZ3VyYXRpb24uanMiXSwibmFtZXMiOlsiY29udGVudERlbGl2ZXJ5Iiwic2VydmljZU5hbWUiLCJwb3J0IiwiY29udGVudFJlbmRlcmluZyJdLCJtYXBwaW5ncyI6InVJQUFPLE1BQU1BLGVBQWUsR0FBRztBQUM3QkMsRUFBQUEsV0FBVyxFQUFFLGlCQURnQjtBQUU3QkMsRUFBQUEsSUFBSSxFQUFFLEVBRnVCLEVBQXhCLEM7OztBQUtBLE1BQU1DLGdCQUFnQixHQUFHO0FBQzlCRixFQUFBQSxXQUFXLEVBQUUsa0JBRGlCO0FBRTlCQyxFQUFBQSxJQUFJLEVBQUUsRUFGd0IsRUFBekIsQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBjb25zdCBjb250ZW50RGVsaXZlcnkgPSB7XG4gIHNlcnZpY2VOYW1lOiAnY29udGVudERlbGl2ZXJ5JyxcbiAgcG9ydDogMTIsXG59XG5cbmV4cG9ydCBjb25zdCBjb250ZW50UmVuZGVyaW5nID0ge1xuICBzZXJ2aWNlTmFtZTogJ2NvbnRlbnRSZW5kZXJpbmcnLFxuICBwb3J0OiAxMSxcbn1cblxuIl19
