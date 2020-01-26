@@ -3,12 +3,14 @@ import http from 'http'
 import { assert as chaiAssertion } from 'chai'
 import utility from 'util'
 import path from 'path'
+import loadtest from 'loadtest'
 import filesystem from 'fs'
 import { service } from '..'
 import ownProjectConfig from '../configuration'
 const boltProtocolDriver = require('neo4j-driver').v1
 import { streamToString } from '@dependency/handleJSNativeDataStructure'
 import { memgraphContainer } from '@deployment/deploymentProvisioning'
+
 async function clearGraphData() {
   console.groupCollapsed('• Run prerequisite containers:')
   memgraphContainer.runDockerContainer() // temporary solution
@@ -116,6 +118,70 @@ suite('Service components:', () => {
         // filesystem.writeFileSync(path.join(__dirname, 'fixture', 'graphDocumentRendering'), content)
         assert(content === filesystem.readFileSync(path.join(__dirname, 'fixture', 'graphDocumentRendering'), { encoding: 'utf-8' }), `• Correct content must be served.`)
       }
+    })
+  })
+})
+
+// https://medium.com/@rishikesh.dhokare/performance-testing-for-your-nodejs-api-20471cd045e0
+suite('Performance measure:', () => {
+  const port = 9992
+  const url = `http://localhost:${port}`
+
+  const noRequestPerHour = 10000, // goal: 100,000
+    avgRequestTime = 4000 // goal: 1000
+
+  suite('service root delivery:', () => {
+    suiteSetup(async () => {
+      await clearGraphData()
+      await service.restApi.initializeRootContentRendering({ port, targetProjectConfig }).catch(error => throw error)
+    })
+
+    test('Performance measure:', function(done) {
+      let gLatency
+      this.timeout(1000 * 60)
+
+      let operation = loadtest.loadTest(
+        {
+          url,
+          maxRequests: 20, // 100
+          maxSeconds: 30,
+          concurrency: 25,
+          statusCallback: function(error, result, latency) {
+            gLatency = latency
+            // console.log('Current latency %j, result %j, error %j', latency, result, error)
+            console.log(`#${result.requestIndex} - Request elapsed milliseconds: `, result.requestElapsed)
+            // console.log('Request loadtest() instance index: ', result.instanceIndex)
+          },
+        },
+        error => {
+          // timeout to finish any request and console.log after active requests
+          setTimeout(() => {
+            if (error) console.error('Got an error: %s', error)
+            else if (operation.running == false) {
+              console.info('\n==============================\n')
+              console.info('Target measures to achieve:')
+              console.info('Requests per hour: ' + noRequestPerHour)
+              console.info('Avg request time(Millis): ' + avgRequestTime)
+              console.info('\n==============================\n')
+              console.info('Total Requests :', gLatency.totalRequests)
+              console.info('Total Failures :', gLatency.totalErrors)
+              console.info('Requests/Second :', gLatency.rps)
+              console.info('Requests/Hour :', gLatency.rps * 3600)
+              console.info('Avg Request Time:', gLatency.meanLatencyMs)
+              console.info('Min Request Time:', gLatency.minLatencyMs)
+              console.info('Max Request Time:', gLatency.maxLatencyMs)
+              console.info('Percentiles :', gLatency.percentiles)
+              console.info('\n===============================\n')
+              assert(gLatency.totalErrors == 0, `• No errors should be thrown.`)
+              assert(gLatency.rps * 3600 > noRequestPerHour, `• Calculated request per hour (${gLatency.rps * 3600}) must be greater than ${noRequestPerHour}`)
+              assert(gLatency.meanLatencyMs < avgRequestTime, `• Calculated average request time (${gLatency.meanLatencyMs}) must be under ${avgRequestTime}`)
+              console.log('✔ Tests run successfully')
+
+              done()
+            }
+          }, 300)
+        },
+      )
     })
   })
 })

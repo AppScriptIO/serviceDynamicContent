@@ -16,8 +16,8 @@
 		"@babel/core": "*",
 		"@dependency/graphTraversal": "https://github.com/AppScriptIO/graphTraversal#semver:^4.x.x",
 		"@dependency/graphTraversal-implementation": "https://github.com/AppScriptIO/graphTraversal-implementation#semver:^4.x.x",
-		"@dependency/namedCurry": "https://github.com/AppScriptIO/namedCurry#semver:^1.x.x",
 		"@dependency/handleJSNativeDataStructure": "https://github.com/AppScriptIO/handleJSNativeDataStructure#semver:^2.x.x",
+		"@dependency/namedCurry": "https://github.com/AppScriptIO/namedCurry#semver:^1.x.x",
 		"co-body": "*",
 		"koa": "*",
 		"koa-bodyparser": "^4.2.1",
@@ -42,6 +42,7 @@
 		"@deployment/javascriptStaticAnalysis": "https://github.com/AppScriptIO/javascriptStaticAnalysis#semver:^2.x.x",
 		"@deployment/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^2.x.x",
 		"@deployment/scriptManager": "https://github.com/AppScriptIO/scriptManager#semver:^2.x.x",
+		"loadtest": "^4.1.0",
 		"typescript": "^3.3.3333",
 		"user-agents": "^1.0.469"
 	}
