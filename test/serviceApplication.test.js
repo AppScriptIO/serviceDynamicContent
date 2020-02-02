@@ -9,11 +9,11 @@ import { service } from '..'
 import ownProjectConfig from '../configuration'
 const boltProtocolDriver = require('neo4j-driver').v1
 import { streamToString } from '@dependency/handleJSNativeDataStructure'
-import { memgraphContainer } from '@deployment/deploymentProvisioning'
+import { container } from '@deployment/deploymentScript'
 
 async function clearGraphData() {
   console.groupCollapsed('• Run prerequisite containers:')
-  memgraphContainer.runDockerContainer() // temporary solution
+  container.memgraph.runDockerContainer() // temporary solution
   console.groupEnd()
   // Delete all nodes in the in-memory database
   console.log('• Cleared graph database.')
