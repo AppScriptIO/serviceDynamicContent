@@ -6,6 +6,7 @@ import Koa from 'koa' // Koa applicaiton server
 // checks if port is in use, to verify proper working of server
 const isPortTaken = port =>
   new Promise((resolve, reject) => {
+    // checks in 0.0.0.0:<port>
     const tester = Net.createServer()
       .once('error', err => (err.code == 'EADDRINUSE' ? resolve(false) : reject(err)))
       .once('listening', () => tester.once('close', () => resolve(true)).close())
