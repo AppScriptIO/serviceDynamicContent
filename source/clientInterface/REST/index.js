@@ -8,17 +8,26 @@ import * as graphEvaluationFunction from './graphEvaluationFunction.js'
 import { graphMiddlewareImmediatelyExecute } from './middleware/traverseMiddlewareGraph.js'
 import { middlewareFunctionReferenceList, conditionFunctionReferenceList } from './graphReferenceContext.js'
 
-/** Assets, different components of the site, and static files, intended to be requested from a subdomain.
+/** 
+@param#1  service configurations
+@param#2  dependency services configurations
+
+Assets, different components of the site, and static files, intended to be requested from a subdomain.
   - Serves static files
   - Rendered files
 
   Architecture: REST + Custom concepts, Protocol: HTTP
 */
-export async function initializeAssetContentDelivery({ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port }) {
+export async function initializeAssetContentDelivery(
+  { targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port },
+  { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
+) {
   // Create a grpah instance with middleware references and load graph data.
   let { configuredGraph } = await initializeGraph({
     contextData: { targetProjectConfig },
     graphDataArray: [assetContentDeliveryGraph],
+    host: memgraph?.host,
+    port: memgraph?.port,
   }) // returns a configuredGraph element.
 
   // set server middlewares
@@ -42,17 +51,26 @@ export async function initializeAssetContentDelivery({ targetProjectConfig, entr
   await createHttpServer({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
 }
 
-/** Root domain content Mainly user interface related
+/** 
+@param#1  service configurations
+@param#2  dependency services configurations
+
+Root domain content Mainly user interface related
  *  - servers template rendered files for webapp interface (manipulated files using nodejs rendering).
  *  - serves some static files required in the root domain.
  * 
  Architecture: REST + Custom concepts, Protocol: HTTP
  */
-export async function initializeRootContentRendering({ targetProjectConfig, entrypointKey, port = serviceConfig.contentRendering.port }) {
+export async function initializeRootContentRendering(
+  { targetProjectConfig, entrypointKey, port = serviceConfig.contentRendering.port },
+  { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
+) {
   // Create a grpah instance with middleware references and load graph data.
   let { configuredGraph } = await initializeGraph({
     contextData: { targetProjectConfig },
     graphDataArray: [rootContentRenderingGraph],
+    host: memgraph?.host,
+    port: memgraph?.port,
   }) // returns a configuredGraph element.
 
   // set server middlewares

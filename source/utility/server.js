@@ -2,7 +2,7 @@ import http from 'http'
 import https from 'https'
 import Koa from 'koa' // Koa applicaiton server
 
-export async function createHttpServer({ serviceName, port, middlewareArray }) {
+export async function createHttpServer({ serviceName, port, host = 'localhost', middlewareArray }) {
   const serverKoa = new Koa() // create Koa server
   serverKoa.subdomainOffset = 1 // for localhost domain.
   // register middleware
@@ -11,7 +11,7 @@ export async function createHttpServer({ serviceName, port, middlewareArray }) {
     (resolve, reject) =>
       http
         .createServer(serverKoa.callback())
-        .listen(port, () => {
+        .listen({ port, host }, () => {
           process.emit('service', { serviceName, port, status: 'ready', description: 'Server listening' })
           resolve()
         })

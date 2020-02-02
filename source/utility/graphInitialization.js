@@ -1,7 +1,7 @@
 import { Graph, Context, Database, Traverser, Entity } from '@dependency/graphTraversal'
 import { database, traversal } from '@dependency/graphTraversal-implementation'
 
-export async function initializeGraph({ graphDataArray = [], contextData = {} /** object to be merged with context data */ }) {
+export async function initializeGraph({ graphDataArray = [], contextData = {} /** object to be merged with context data */, host = 'localhost', port = 7687 }) {
   // context
   let contextInstance = new Context.clientInterface({
     data: contextData,
@@ -9,7 +9,7 @@ export async function initializeGraph({ graphDataArray = [], contextData = {} /*
 
   // database
   let concreteDatabaseBehavior = new Database.clientInterface({
-    implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ url: { protocol: 'bolt', hostname: 'localhost', port: 7687 } }) },
+    implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ url: { protocol: 'bolt', hostname: host, port } }) },
     defaultImplementation: 'boltCypherModelAdapter',
   })
 
