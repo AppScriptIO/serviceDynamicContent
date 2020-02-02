@@ -1,1 +1,2 @@
-export const wrapWithJsTag = () => string => `<script>${string}</script>`
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.wrapWithJsTag = void 0;const wrapWithJsTag = () => string => `<script>${string}</script>`;exports.wrapWithJsTag = wrapWithJsTag;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9waXBlRnVuY3Rpb24vd3JhcFN0cmluZy5qcyJdLCJuYW1lcyI6WyJ3cmFwV2l0aEpzVGFnIiwic3RyaW5nIl0sIm1hcHBpbmdzIjoiMEdBQU8sTUFBTUEsYUFBYSxHQUFHLE1BQU1DLE1BQU0sSUFBSyxXQUFVQSxNQUFPLFdBQXhELEMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgY29uc3Qgd3JhcFdpdGhKc1RhZyA9ICgpID0+IHN0cmluZyA9PiBgPHNjcmlwdD4ke3N0cmluZ308L3NjcmlwdD5gXG4iXX0=

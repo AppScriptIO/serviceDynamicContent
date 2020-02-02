@@ -1,9 +1,9 @@
-export const debugMiddlewareProxy = targetMiddleware =>
-  new Proxy(targetMiddleware, {
-    apply: function(target, thisArg, argumentsList) {
-      console.log(target.name, ' Openning.')
-      let result = Reflect.apply(...arguments)
-      console.log(target.name, ' Closing.')
-      return result
-    },
-  })
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.debugMiddlewareProxy = void 0;const debugMiddlewareProxy = (targetMiddleware) =>
+new Proxy(targetMiddleware, {
+  apply: function (target, thisArg, argumentsList) {
+    console.log(target.name, ' Openning.');
+    let result = Reflect.apply(...arguments);
+    console.log(target.name, ' Closing.');
+    return result;
+  } });exports.debugMiddlewareProxy = debugMiddlewareProxy;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS91dGlsaXR5L2RlYnVnTWlkZGxld2FyZVByb3h5LmpzIl0sIm5hbWVzIjpbImRlYnVnTWlkZGxld2FyZVByb3h5IiwidGFyZ2V0TWlkZGxld2FyZSIsIlByb3h5IiwiYXBwbHkiLCJ0YXJnZXQiLCJ0aGlzQXJnIiwiYXJndW1lbnRzTGlzdCIsImNvbnNvbGUiLCJsb2ciLCJuYW1lIiwicmVzdWx0IiwiUmVmbGVjdCIsImFyZ3VtZW50cyJdLCJtYXBwaW5ncyI6ImlIQUFPLE1BQU1BLG9CQUFvQixHQUFHLENBQUFDLGdCQUFnQjtBQUNsRCxJQUFJQyxLQUFKLENBQVVELGdCQUFWLEVBQTRCO0FBQzFCRSxFQUFBQSxLQUFLLEVBQUUsVUFBU0MsTUFBVCxFQUFpQkMsT0FBakIsRUFBMEJDLGFBQTFCLEVBQXlDO0FBQzlDQyxJQUFBQSxPQUFPLENBQUNDLEdBQVIsQ0FBWUosTUFBTSxDQUFDSyxJQUFuQixFQUF5QixZQUF6QjtBQUNBLFFBQUlDLE1BQU0sR0FBR0MsT0FBTyxDQUFDUixLQUFSLENBQWMsR0FBR1MsU0FBakIsQ0FBYjtBQUNBTCxJQUFBQSxPQUFPLENBQUNDLEdBQVIsQ0FBWUosTUFBTSxDQUFDSyxJQUFuQixFQUF5QixXQUF6QjtBQUNBLFdBQU9DLE1BQVA7QUFDRCxHQU55QixFQUE1QixDQURLLEMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgY29uc3QgZGVidWdNaWRkbGV3YXJlUHJveHkgPSB0YXJnZXRNaWRkbGV3YXJlID0+XG4gIG5ldyBQcm94eSh0YXJnZXRNaWRkbGV3YXJlLCB7XG4gICAgYXBwbHk6IGZ1bmN0aW9uKHRhcmdldCwgdGhpc0FyZywgYXJndW1lbnRzTGlzdCkge1xuICAgICAgY29uc29sZS5sb2codGFyZ2V0Lm5hbWUsICcgT3Blbm5pbmcuJylcbiAgICAgIGxldCByZXN1bHQgPSBSZWZsZWN0LmFwcGx5KC4uLmFyZ3VtZW50cylcbiAgICAgIGNvbnNvbGUubG9nKHRhcmdldC5uYW1lLCAnIENsb3NpbmcuJylcbiAgICAgIHJldHVybiByZXN1bHRcbiAgICB9LFxuICB9KVxuIl19

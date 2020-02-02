@@ -1,50 +1,51 @@
-import { Graph, Context, Database, Traverser, Entity } from '@dependency/graphTraversal'
-import { database, traversal } from '@dependency/graphTraversal-implementation'
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.initializeGraph = initializeGraph;var _graphTraversal = require("@dependency/graphTraversal");
+var _graphTraversalImplementation = require("@dependency/graphTraversal-implementation");
 
-export async function initializeGraph({ graphDataArray = [], contextData = {} /** object to be merged with context data */, host = 'localhost', port = 7687 }) {
-  // context
-  let contextInstance = new Context.clientInterface({
-    data: contextData,
-  })
+async function initializeGraph({ graphDataArray = [], contextData = {}, host = 'localhost', port = 7687 }) {
 
-  // database
-  let concreteDatabaseBehavior = new Database.clientInterface({
-    implementationList: { boltCypherModelAdapter: database.boltCypherModelAdapterFunction({ url: { protocol: 'bolt', hostname: host, port } }) },
-    defaultImplementation: 'boltCypherModelAdapter',
-  })
+  let contextInstance = new _graphTraversal.Context.clientInterface({
+    data: contextData });
 
-  /** traversal implementation
-      add specific graph dependent implementations
-      list.processNode['someCustomImplementation'] = function() {}
-  */
-  // traversal = traversal |> (list => list)
 
-  let configuredTraverser = Traverser.clientInterface({
+
+  let concreteDatabaseBehavior = new _graphTraversal.Database.clientInterface({
+    implementationList: { boltCypherModelAdapter: _graphTraversalImplementation.database.boltCypherModelAdapterFunction({ url: { protocol: 'bolt', hostname: host, port } }) },
+    defaultImplementation: 'boltCypherModelAdapter' });
+
+
+
+
+
+
+
+
+  let configuredTraverser = _graphTraversal.Traverser.clientInterface({
     parameter: [
-      {
-        concreteBehaviorList: [contextInstance],
-        implementationList: {
-          middlewareGraph: {
-            portNode: traversal.portNode, // Port
-            traversalInterception: traversal.traversalInterception, // Stage
-            aggregator: traversal.aggregator,
-            processNode: traversal.processNode, // Process
-          },
-        },
-        defaultImplementation: 'middlewareGraph',
-      },
-    ],
-  })
+    {
+      concreteBehaviorList: [contextInstance],
+      implementationList: {
+        middlewareGraph: {
+          portNode: _graphTraversalImplementation.traversal.portNode,
+          traversalInterception: _graphTraversalImplementation.traversal.traversalInterception,
+          aggregator: _graphTraversalImplementation.traversal.aggregator,
+          processNode: _graphTraversalImplementation.traversal.processNode } },
 
-  // configured graph
-  let configuredGraph = Graph.clientInterface({
-    parameter: [{ configuredTraverser, database: concreteDatabaseBehavior, concreteBehaviorList: [] }],
-  })
 
-  // load graph data:
-  console.log(`• loading service graph data...`)
-  let concereteDatabase = concreteDatabaseBehavior[Database.$.key.getter]()
-  for (let graphData of graphDataArray) await concereteDatabase.loadGraphData({ nodeEntryData: graphData.node, connectionEntryData: graphData.edge })
+      defaultImplementation: 'middlewareGraph' }] });
 
-  return { configuredGraph }
+
+
+
+
+  let configuredGraph = _graphTraversal.Graph.clientInterface({
+    parameter: [{ configuredTraverser, database: concreteDatabaseBehavior, concreteBehaviorList: [] }] });
+
+
+
+  console.log(`• loading service graph data...`);
+  let concereteDatabase = concreteDatabaseBehavior[_graphTraversal.Database.$.key.getter]();
+  for (let graphData of graphDataArray) await concereteDatabase.loadGraphData({ nodeEntryData: graphData.node, connectionEntryData: graphData.edge });
+
+  return { configuredGraph };
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS91dGlsaXR5L2dyYXBoSW5pdGlhbGl6YXRpb24uanMiXSwibmFtZXMiOlsiaW5pdGlhbGl6ZUdyYXBoIiwiZ3JhcGhEYXRhQXJyYXkiLCJjb250ZXh0RGF0YSIsImhvc3QiLCJwb3J0IiwiY29udGV4dEluc3RhbmNlIiwiQ29udGV4dCIsImNsaWVudEludGVyZmFjZSIsImRhdGEiLCJjb25jcmV0ZURhdGFiYXNlQmVoYXZpb3IiLCJEYXRhYmFzZSIsImltcGxlbWVudGF0aW9uTGlzdCIsImJvbHRDeXBoZXJNb2RlbEFkYXB0ZXIiLCJkYXRhYmFzZSIsImJvbHRDeXBoZXJNb2RlbEFkYXB0ZXJGdW5jdGlvbiIsInVybCIsInByb3RvY29sIiwiaG9zdG5hbWUiLCJkZWZhdWx0SW1wbGVtZW50YXRpb24iLCJjb25maWd1cmVkVHJhdmVyc2VyIiwiVHJhdmVyc2VyIiwicGFyYW1ldGVyIiwiY29uY3JldGVCZWhhdmlvckxpc3QiLCJtaWRkbGV3YXJlR3JhcGgiLCJwb3J0Tm9kZSIsInRyYXZlcnNhbCIsInRyYXZlcnNhbEludGVyY2VwdGlvbiIsImFnZ3JlZ2F0b3IiLCJwcm9jZXNzTm9kZSIsImNvbmZpZ3VyZWRHcmFwaCIsIkdyYXBoIiwiY29uc29sZSIsImxvZyIsImNvbmNlcmV0ZURhdGFiYXNlIiwiJCIsImtleSIsImdldHRlciIsImdyYXBoRGF0YSIsImxvYWRHcmFwaERhdGEiLCJub2RlRW50cnlEYXRhIiwibm9kZSIsImNvbm5lY3Rpb25FbnRyeURhdGEiLCJlZGdlIl0sIm1hcHBpbmdzIjoicUhBQUE7QUFDQTs7QUFFTyxlQUFlQSxlQUFmLENBQStCLEVBQUVDLGNBQWMsR0FBRyxFQUFuQixFQUF1QkMsV0FBVyxHQUFHLEVBQXJDLEVBQXNGQyxJQUFJLEdBQUcsV0FBN0YsRUFBMEdDLElBQUksR0FBRyxJQUFqSCxFQUEvQixFQUF3Sjs7QUFFN0osTUFBSUMsZUFBZSxHQUFHLElBQUlDLHdCQUFRQyxlQUFaLENBQTRCO0FBQ2hEQyxJQUFBQSxJQUFJLEVBQUVOLFdBRDBDLEVBQTVCLENBQXRCOzs7O0FBS0EsTUFBSU8sd0JBQXdCLEdBQUcsSUFBSUMseUJBQVNILGVBQWIsQ0FBNkI7QUFDMURJLElBQUFBLGtCQUFrQixFQUFFLEVBQUVDLHNCQUFzQixFQUFFQyx1Q0FBU0MsOEJBQVQsQ0FBd0MsRUFBRUMsR0FBRyxFQUFFLEVBQUVDLFFBQVEsRUFBRSxNQUFaLEVBQW9CQyxRQUFRLEVBQUVkLElBQTlCLEVBQW9DQyxJQUFwQyxFQUFQLEVBQXhDLENBQTFCLEVBRHNDO0FBRTFEYyxJQUFBQSxxQkFBcUIsRUFBRSx3QkFGbUMsRUFBN0IsQ0FBL0I7Ozs7Ozs7OztBQVdBLE1BQUlDLG1CQUFtQixHQUFHQywwQkFBVWIsZUFBVixDQUEwQjtBQUNsRGMsSUFBQUEsU0FBUyxFQUFFO0FBQ1Q7QUFDRUMsTUFBQUEsb0JBQW9CLEVBQUUsQ0FBQ2pCLGVBQUQsQ0FEeEI7QUFFRU0sTUFBQUEsa0JBQWtCLEVBQUU7QUFDbEJZLFFBQUFBLGVBQWUsRUFBRTtBQUNmQyxVQUFBQSxRQUFRLEVBQUVDLHdDQUFVRCxRQURMO0FBRWZFLFVBQUFBLHFCQUFxQixFQUFFRCx3Q0FBVUMscUJBRmxCO0FBR2ZDLFVBQUFBLFVBQVUsRUFBRUYsd0NBQVVFLFVBSFA7QUFJZkMsVUFBQUEsV0FBVyxFQUFFSCx3Q0FBVUcsV0FKUixFQURDLEVBRnRCOzs7QUFVRVYsTUFBQUEscUJBQXFCLEVBQUUsaUJBVnpCLEVBRFMsQ0FEdUMsRUFBMUIsQ0FBMUI7Ozs7OztBQWtCQSxNQUFJVyxlQUFlLEdBQUdDLHNCQUFNdkIsZUFBTixDQUFzQjtBQUMxQ2MsSUFBQUEsU0FBUyxFQUFFLENBQUMsRUFBRUYsbUJBQUYsRUFBdUJOLFFBQVEsRUFBRUosd0JBQWpDLEVBQTJEYSxvQkFBb0IsRUFBRSxFQUFqRixFQUFELENBRCtCLEVBQXRCLENBQXRCOzs7O0FBS0FTLEVBQUFBLE9BQU8sQ0FBQ0MsR0FBUixDQUFhLGlDQUFiO0FBQ0EsTUFBSUMsaUJBQWlCLEdBQUd4Qix3QkFBd0IsQ0FBQ0MseUJBQVN3QixDQUFULENBQVdDLEdBQVgsQ0FBZUMsTUFBaEIsQ0FBeEIsRUFBeEI7QUFDQSxPQUFLLElBQUlDLFNBQVQsSUFBc0JwQyxjQUF0QixFQUFzQyxNQUFNZ0MsaUJBQWlCLENBQUNLLGFBQWxCLENBQWdDLEVBQUVDLGFBQWEsRUFBRUYsU0FBUyxDQUFDRyxJQUEzQixFQUFpQ0MsbUJBQW1CLEVBQUVKLFNBQVMsQ0FBQ0ssSUFBaEUsRUFBaEMsQ0FBTjs7QUFFdEMsU0FBTyxFQUFFYixlQUFGLEVBQVA7QUFDRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEdyYXBoLCBDb250ZXh0LCBEYXRhYmFzZSwgVHJhdmVyc2VyLCBFbnRpdHkgfSBmcm9tICdAZGVwZW5kZW5jeS9ncmFwaFRyYXZlcnNhbCdcbmltcG9ydCB7IGRhdGFiYXNlLCB0cmF2ZXJzYWwgfSBmcm9tICdAZGVwZW5kZW5jeS9ncmFwaFRyYXZlcnNhbC1pbXBsZW1lbnRhdGlvbidcblxuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGluaXRpYWxpemVHcmFwaCh7IGdyYXBoRGF0YUFycmF5ID0gW10sIGNvbnRleHREYXRhID0ge30gLyoqIG9iamVjdCB0byBiZSBtZXJnZWQgd2l0aCBjb250ZXh0IGRhdGEgKi8sIGhvc3QgPSAnbG9jYWxob3N0JywgcG9ydCA9IDc2ODcgfSkge1xuICAvLyBjb250ZXh0XG4gIGxldCBjb250ZXh0SW5zdGFuY2UgPSBuZXcgQ29udGV4dC5jbGllbnRJbnRlcmZhY2Uoe1xuICAgIGRhdGE6IGNvbnRleHREYXRhLFxuICB9KVxuXG4gIC8vIGRhdGFiYXNlXG4gIGxldCBjb25jcmV0ZURhdGFiYXNlQmVoYXZpb3IgPSBuZXcgRGF0YWJhc2UuY2xpZW50SW50ZXJmYWNlKHtcbiAgICBpbXBsZW1lbnRhdGlvbkxpc3Q6IHsgYm9sdEN5cGhlck1vZGVsQWRhcHRlcjogZGF0YWJhc2UuYm9sdEN5cGhlck1vZGVsQWRhcHRlckZ1bmN0aW9uKHsgdXJsOiB7IHByb3RvY29sOiAnYm9sdCcsIGhvc3RuYW1lOiBob3N0LCBwb3J0IH0gfSkgfSxcbiAgICBkZWZhdWx0SW1wbGVtZW50YXRpb246ICdib2x0Q3lwaGVyTW9kZWxBZGFwdGVyJyxcbiAgfSlcblxuICAvKiogdHJhdmVyc2FsIGltcGxlbWVudGF0aW9uXG4gICAgICBhZGQgc3BlY2lmaWMgZ3JhcGggZGVwZW5kZW50IGltcGxlbWVudGF0aW9uc1xuICAgICAgbGlzdC5wcm9jZXNzTm9kZVsnc29tZUN1c3RvbUltcGxlbWVudGF0aW9uJ10gPSBmdW5jdGlvbigpIHt9XG4gICovXG4gIC8vIHRyYXZlcnNhbCA9IHRyYXZlcnNhbCB8PiAobGlzdCA9PiBsaXN0KVxuXG4gIGxldCBjb25maWd1cmVkVHJhdmVyc2VyID0gVHJhdmVyc2VyLmNsaWVudEludGVyZmFjZSh7XG4gICAgcGFyYW1ldGVyOiBbXG4gICAgICB7XG4gICAgICAgIGNvbmNyZXRlQmVoYXZpb3JMaXN0OiBbY29udGV4dEluc3RhbmNlXSxcbiAgICAgICAgaW1wbGVtZW50YXRpb25MaXN0OiB7XG4gICAgICAgICAgbWlkZGxld2FyZUdyYXBoOiB7XG4gICAgICAgICAgICBwb3J0Tm9kZTogdHJhdmVyc2FsLnBvcnROb2RlLCAvLyBQb3J0XG4gICAgICAgICAgICB0cmF2ZXJzYWxJbnRlcmNlcHRpb246IHRyYXZlcnNhbC50cmF2ZXJzYWxJbnRlcmNlcHRpb24sIC8vIFN0YWdlXG4gICAgICAgICAgICBhZ2dyZWdhdG9yOiB0cmF2ZXJzYWwuYWdncmVnYXRvcixcbiAgICAgICAgICAgIHByb2Nlc3NOb2RlOiB0cmF2ZXJzYWwucHJvY2Vzc05vZGUsIC8vIFByb2Nlc3NcbiAgICAgICAgICB9LFxuICAgICAgICB9LFxuICAgICAgICBkZWZhdWx0SW1wbGVtZW50YXRpb246ICdtaWRkbGV3YXJlR3JhcGgnLFxuICAgICAgfSxcbiAgICBdLFxuICB9KVxuXG4gIC8vIGNvbmZpZ3VyZWQgZ3JhcGhcbiAgbGV0IGNvbmZpZ3VyZWRHcmFwaCA9IEdyYXBoLmNsaWVudEludGVyZmFjZSh7XG4gICAgcGFyYW1ldGVyOiBbeyBjb25maWd1cmVkVHJhdmVyc2VyLCBkYXRhYmFzZTogY29uY3JldGVEYXRhYmFzZUJlaGF2aW9yLCBjb25jcmV0ZUJlaGF2aW9yTGlzdDogW10gfV0sXG4gIH0pXG5cbiAgLy8gbG9hZCBncmFwaCBkYXRhOlxuICBjb25zb2xlLmxvZyhg4oCiIGxvYWRpbmcgc2VydmljZSBncmFwaCBkYXRhLi4uYClcbiAgbGV0IGNvbmNlcmV0ZURhdGFiYXNlID0gY29uY3JldGVEYXRhYmFzZUJlaGF2aW9yW0RhdGFiYXNlLiQua2V5LmdldHRlcl0oKVxuICBmb3IgKGxldCBncmFwaERhdGEgb2YgZ3JhcGhEYXRhQXJyYXkpIGF3YWl0IGNvbmNlcmV0ZURhdGFiYXNlLmxvYWRHcmFwaERhdGEoeyBub2RlRW50cnlEYXRhOiBncmFwaERhdGEubm9kZSwgY29ubmVjdGlvbkVudHJ5RGF0YTogZ3JhcGhEYXRhLmVkZ2UgfSlcblxuICByZXR1cm4geyBjb25maWd1cmVkR3JhcGggfVxufVxuIl19
