@@ -1,13 +1,14 @@
-import underscore from 'underscore'
-export const underscoreTemplateInterpolationSetting = { evaluate: /\{\%(.+?)\%\}/g, interpolate: /\{\%=(.+?)\%\}/g, escape: /\{\%-(.+?)\%\}/g } // initial underscore template settings on first import gets applied on the rest.
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.setUnderscoreTemplateSetting = setUnderscoreTemplateSetting;exports.underscoreTemplateInterpolationSetting = void 0;var _underscore = _interopRequireDefault(require("underscore"));
+const underscoreTemplateInterpolationSetting = { evaluate: /\{\%(.+?)\%\}/g, interpolate: /\{\%=(.+?)\%\}/g, escape: /\{\%-(.+?)\%\}/g };exports.underscoreTemplateInterpolationSetting = underscoreTemplateInterpolationSetting;
 
-/**
-  Intended to be executed only once, as it affect the underscore module globally.
-*/
-let isUnderscoreConfigured = false // execute initialization of underscore only once.
-export function setUnderscoreTemplateSetting(templateInterpolationSetting = underscoreTemplateInterpolationSetting) {
-  if (isUnderscoreConfigured) return
-  underscore.templateSettings = templateInterpolationSetting
-  // console.info(`• Underscore template setting set as ${underscore.templateSettings.evaluate} ${underscore.templateSettings.interpolate} ${underscore.templateSettings.escape}`)
-  isUnderscoreConfigured = true
+
+
+
+let isUnderscoreConfigured = false;
+function setUnderscoreTemplateSetting(templateInterpolationSetting = underscoreTemplateInterpolationSetting) {
+  if (isUnderscoreConfigured) return;
+  _underscore.default.templateSettings = templateInterpolationSetting;
+
+  isUnderscoreConfigured = true;
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9mdW5jdGlvbmFsaXR5L3VuZGVyc2NvcmVUZW1wbGF0ZUludGVycG9sYXRpb24uanMiXSwibmFtZXMiOlsidW5kZXJzY29yZVRlbXBsYXRlSW50ZXJwb2xhdGlvblNldHRpbmciLCJldmFsdWF0ZSIsImludGVycG9sYXRlIiwiZXNjYXBlIiwiaXNVbmRlcnNjb3JlQ29uZmlndXJlZCIsInNldFVuZGVyc2NvcmVUZW1wbGF0ZVNldHRpbmciLCJ0ZW1wbGF0ZUludGVycG9sYXRpb25TZXR0aW5nIiwidW5kZXJzY29yZSIsInRlbXBsYXRlU2V0dGluZ3MiXSwibWFwcGluZ3MiOiI0UkFBQTtBQUNPLE1BQU1BLHNDQUFzQyxHQUFHLEVBQUVDLFFBQVEsRUFBRSxnQkFBWixFQUE4QkMsV0FBVyxFQUFFLGlCQUEzQyxFQUE4REMsTUFBTSxFQUFFLGlCQUF0RSxFQUEvQyxDOzs7OztBQUtQLElBQUlDLHNCQUFzQixHQUFHLEtBQTdCO0FBQ08sU0FBU0MsNEJBQVQsQ0FBc0NDLDRCQUE0QixHQUFHTixzQ0FBckUsRUFBNkc7QUFDbEgsTUFBSUksc0JBQUosRUFBNEI7QUFDNUJHLHNCQUFXQyxnQkFBWCxHQUE4QkYsNEJBQTlCOztBQUVBRixFQUFBQSxzQkFBc0IsR0FBRyxJQUF6QjtBQUNEIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHVuZGVyc2NvcmUgZnJvbSAndW5kZXJzY29yZSdcbmV4cG9ydCBjb25zdCB1bmRlcnNjb3JlVGVtcGxhdGVJbnRlcnBvbGF0aW9uU2V0dGluZyA9IHsgZXZhbHVhdGU6IC9cXHtcXCUoLis/KVxcJVxcfS9nLCBpbnRlcnBvbGF0ZTogL1xce1xcJT0oLis/KVxcJVxcfS9nLCBlc2NhcGU6IC9cXHtcXCUtKC4rPylcXCVcXH0vZyB9IC8vIGluaXRpYWwgdW5kZXJzY29yZSB0ZW1wbGF0ZSBzZXR0aW5ncyBvbiBmaXJzdCBpbXBvcnQgZ2V0cyBhcHBsaWVkIG9uIHRoZSByZXN0LlxuXG4vKipcbiAgSW50ZW5kZWQgdG8gYmUgZXhlY3V0ZWQgb25seSBvbmNlLCBhcyBpdCBhZmZlY3QgdGhlIHVuZGVyc2NvcmUgbW9kdWxlIGdsb2JhbGx5LlxuKi9cbmxldCBpc1VuZGVyc2NvcmVDb25maWd1cmVkID0gZmFsc2UgLy8gZXhlY3V0ZSBpbml0aWFsaXphdGlvbiBvZiB1bmRlcnNjb3JlIG9ubHkgb25jZS5cbmV4cG9ydCBmdW5jdGlvbiBzZXRVbmRlcnNjb3JlVGVtcGxhdGVTZXR0aW5nKHRlbXBsYXRlSW50ZXJwb2xhdGlvblNldHRpbmcgPSB1bmRlcnNjb3JlVGVtcGxhdGVJbnRlcnBvbGF0aW9uU2V0dGluZykge1xuICBpZiAoaXNVbmRlcnNjb3JlQ29uZmlndXJlZCkgcmV0dXJuXG4gIHVuZGVyc2NvcmUudGVtcGxhdGVTZXR0aW5ncyA9IHRlbXBsYXRlSW50ZXJwb2xhdGlvblNldHRpbmdcbiAgLy8gY29uc29sZS5pbmZvKGDigKIgVW5kZXJzY29yZSB0ZW1wbGF0ZSBzZXR0aW5nIHNldCBhcyAke3VuZGVyc2NvcmUudGVtcGxhdGVTZXR0aW5ncy5ldmFsdWF0ZX0gJHt1bmRlcnNjb3JlLnRlbXBsYXRlU2V0dGluZ3MuaW50ZXJwb2xhdGV9ICR7dW5kZXJzY29yZS50ZW1wbGF0ZVNldHRpbmdzLmVzY2FwZX1gKVxuICBpc1VuZGVyc2NvcmVDb25maWd1cmVkID0gdHJ1ZVxufVxuIl19

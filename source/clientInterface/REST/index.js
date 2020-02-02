@@ -1,95 +1,96 @@
-import filesystem from 'fs'
-import * as serviceConfig from '../../configuration/configuration.js'
-import { createHttpServer } from '../../utility/server.js'
-import * as assetContentDeliveryGraph from '../../../resource/assetContentDelivery.graph.json'
-import * as rootContentRenderingGraph from '../../../resource/rootContentRendering.graph.json'
-import { initializeGraph } from '../../utility/graphInitialization.js'
-import * as graphEvaluationFunction from './graphEvaluationFunction.js'
-import { graphMiddlewareImmediatelyExecute } from './middleware/traverseMiddlewareGraph.js'
-import { middlewareFunctionReferenceList, conditionFunctionReferenceList } from './graphReferenceContext.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.initializeAssetContentDelivery = initializeAssetContentDelivery;exports.initializeRootContentRendering = initializeRootContentRendering;
+var serviceConfig = _interopRequireWildcard(require("../../configuration/configuration.js"));
+var _server = require("../../utility/server.js");
+var assetContentDeliveryGraph = _interopRequireWildcard(require("../../../resource/assetContentDelivery.graph.json"));
+var rootContentRenderingGraph = _interopRequireWildcard(require("../../../resource/rootContentRendering.graph.json"));
+var _graphInitialization = require("../../utility/graphInitialization.js");
 
-/** 
-@param#1  service configurations
-@param#2  dependency services configurations
+var _traverseMiddlewareGraph = require("./middleware/traverseMiddlewareGraph.js");
+var _graphReferenceContext = require("./graphReferenceContext.js");
 
-Assets, different components of the site, and static files, intended to be requested from a subdomain.
-  - Serves static files
-  - Rendered files
 
-  Architecture: REST + Custom concepts, Protocol: HTTP
-*/
-export async function initializeAssetContentDelivery(
-  { targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port },
-  { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
-) {
-  // Create a grpah instance with middleware references and load graph data.
-  let { configuredGraph } = await initializeGraph({
+
+
+
+
+
+
+
+
+
+async function initializeAssetContentDelivery(
+{ targetProjectConfig, entrypointKey, port = serviceConfig.contentDelivery.port },
+{ memgraph = {} } = {})
+{
+
+  let { configuredGraph } = await (0, _graphInitialization.initializeGraph)({
     contextData: { targetProjectConfig },
     graphDataArray: [assetContentDeliveryGraph],
-    host: memgraph?.host,
-    port: memgraph?.port,
-  }) // returns a configuredGraph element.
+    host: memgraph === null || memgraph === void 0 ? void 0 : memgraph.host,
+    port: memgraph === null || memgraph === void 0 ? void 0 : memgraph.port });
 
-  // set server middlewares
-  let curriedMiddlewareFunctionReferenceList = middlewareFunctionReferenceList({ targetProjectConfig, configuredGraph }),
-    curriedConditionFunctionReferenceList = conditionFunctionReferenceList({ targetProjectConfig, configuredGraph })
+
+
+  let curriedMiddlewareFunctionReferenceList = (0, _graphReferenceContext.middlewareFunctionReferenceList)({ targetProjectConfig, configuredGraph }),
+  curriedConditionFunctionReferenceList = (0, _graphReferenceContext.conditionFunctionReferenceList)({ targetProjectConfig, configuredGraph });
   let middlewareArray = [
-    await graphMiddlewareImmediatelyExecute({
-      entrypointKey: '293097b9-3522-4f2b-b557-8380ff3e96e3',
-      configuredGraph,
-      referenceList: middlewareContext => ({
-        functionReferenceContext: Object.assign(curriedMiddlewareFunctionReferenceList({ middlewareContext }), curriedConditionFunctionReferenceList({ middlewareContext })),
-      }),
-    }),
-    // async (context, next) => {
-    //   console.log('Last Middleware reached.')
-    //   await next()
-    // },
-  ]
+  await (0, _traverseMiddlewareGraph.graphMiddlewareImmediatelyExecute)({
+    entrypointKey: '293097b9-3522-4f2b-b557-8380ff3e96e3',
+    configuredGraph,
+    referenceList: middlewareContext => ({
+      functionReferenceContext: Object.assign(curriedMiddlewareFunctionReferenceList({ middlewareContext }), curriedConditionFunctionReferenceList({ middlewareContext })) }) })];
 
-  // create http server
-  await createHttpServer({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
+
+
+
+
+
+
+
+
+  await (0, _server.createHttpServer)({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray });
 }
 
-/** 
-@param#1  service configurations
-@param#2  dependency services configurations
 
-Root domain content Mainly user interface related
- *  - servers template rendered files for webapp interface (manipulated files using nodejs rendering).
- *  - serves some static files required in the root domain.
- * 
- Architecture: REST + Custom concepts, Protocol: HTTP
- */
-export async function initializeRootContentRendering(
-  { targetProjectConfig, entrypointKey, port = serviceConfig.contentRendering.port },
-  { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
-) {
-  // Create a grpah instance with middleware references and load graph data.
-  let { configuredGraph } = await initializeGraph({
+
+
+
+
+
+
+
+
+
+async function initializeRootContentRendering(
+{ targetProjectConfig, entrypointKey, port = serviceConfig.contentRendering.port },
+{ memgraph = {} } = {})
+{
+
+  let { configuredGraph } = await (0, _graphInitialization.initializeGraph)({
     contextData: { targetProjectConfig },
     graphDataArray: [rootContentRenderingGraph],
-    host: memgraph?.host,
-    port: memgraph?.port,
-  }) // returns a configuredGraph element.
+    host: memgraph === null || memgraph === void 0 ? void 0 : memgraph.host,
+    port: memgraph === null || memgraph === void 0 ? void 0 : memgraph.port });
 
-  // set server middlewares
-  let curriedMiddlewareFunctionReferenceList = middlewareFunctionReferenceList({ targetProjectConfig, configuredGraph }),
-    curriedConditionFunctionReferenceList = conditionFunctionReferenceList({ targetProjectConfig, configuredGraph })
+
+
+  let curriedMiddlewareFunctionReferenceList = (0, _graphReferenceContext.middlewareFunctionReferenceList)({ targetProjectConfig, configuredGraph }),
+  curriedConditionFunctionReferenceList = (0, _graphReferenceContext.conditionFunctionReferenceList)({ targetProjectConfig, configuredGraph });
   let middlewareArray = [
-    await graphMiddlewareImmediatelyExecute({
-      entrypointKey: '928efj94-29034jg90248-g2390jg823',
-      configuredGraph,
-      referenceList: middlewareContext => ({
-        functionReferenceContext: Object.assign(curriedMiddlewareFunctionReferenceList({ middlewareContext }), curriedConditionFunctionReferenceList({ middlewareContext })),
-      }),
-    }),
-    // async (context, next) => {
-    //   console.log('Last Middleware reached.')
-    //   await next()
-    // },
-  ]
+  await (0, _traverseMiddlewareGraph.graphMiddlewareImmediatelyExecute)({
+    entrypointKey: '928efj94-29034jg90248-g2390jg823',
+    configuredGraph,
+    referenceList: middlewareContext => ({
+      functionReferenceContext: Object.assign(curriedMiddlewareFunctionReferenceList({ middlewareContext }), curriedConditionFunctionReferenceList({ middlewareContext })) }) })];
 
-  // create http server
-  await createHttpServer({ serviceName: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+
+
+
+
+
+
+
+
+  await (0, _server.createHttpServer)({ serviceName: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray });
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9pbmRleC5qcyJdLCJuYW1lcyI6WyJpbml0aWFsaXplQXNzZXRDb250ZW50RGVsaXZlcnkiLCJ0YXJnZXRQcm9qZWN0Q29uZmlnIiwiZW50cnlwb2ludEtleSIsInBvcnQiLCJzZXJ2aWNlQ29uZmlnIiwiY29udGVudERlbGl2ZXJ5IiwibWVtZ3JhcGgiLCJjb25maWd1cmVkR3JhcGgiLCJjb250ZXh0RGF0YSIsImdyYXBoRGF0YUFycmF5IiwiYXNzZXRDb250ZW50RGVsaXZlcnlHcmFwaCIsImhvc3QiLCJjdXJyaWVkTWlkZGxld2FyZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCIsImN1cnJpZWRDb25kaXRpb25GdW5jdGlvblJlZmVyZW5jZUxpc3QiLCJtaWRkbGV3YXJlQXJyYXkiLCJyZWZlcmVuY2VMaXN0IiwibWlkZGxld2FyZUNvbnRleHQiLCJmdW5jdGlvblJlZmVyZW5jZUNvbnRleHQiLCJPYmplY3QiLCJhc3NpZ24iLCJzZXJ2aWNlTmFtZSIsImluaXRpYWxpemVSb290Q29udGVudFJlbmRlcmluZyIsImNvbnRlbnRSZW5kZXJpbmciLCJyb290Q29udGVudFJlbmRlcmluZ0dyYXBoIl0sIm1hcHBpbmdzIjoiO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOzs7Ozs7Ozs7Ozs7QUFZTyxlQUFlQSw4QkFBZjtBQUNMLEVBQUVDLG1CQUFGLEVBQXVCQyxhQUF2QixFQUFzQ0MsSUFBSSxHQUFHQyxhQUFhLENBQUNDLGVBQWQsQ0FBOEJGLElBQTNFLEVBREs7QUFFTCxFQUFFRyxRQUFRLEdBQUcsRUFBYixLQUFrRSxFQUY3RDtBQUdMOztBQUVBLE1BQUksRUFBRUMsZUFBRixLQUFzQixNQUFNLDBDQUFnQjtBQUM5Q0MsSUFBQUEsV0FBVyxFQUFFLEVBQUVQLG1CQUFGLEVBRGlDO0FBRTlDUSxJQUFBQSxjQUFjLEVBQUUsQ0FBQ0MseUJBQUQsQ0FGOEI7QUFHOUNDLElBQUFBLElBQUksRUFBRUwsUUFBRixhQUFFQSxRQUFGLHVCQUFFQSxRQUFRLENBQUVLLElBSDhCO0FBSTlDUixJQUFBQSxJQUFJLEVBQUVHLFFBQUYsYUFBRUEsUUFBRix1QkFBRUEsUUFBUSxDQUFFSCxJQUo4QixFQUFoQixDQUFoQzs7OztBQVFBLE1BQUlTLHNDQUFzQyxHQUFHLDREQUFnQyxFQUFFWCxtQkFBRixFQUF1Qk0sZUFBdkIsRUFBaEMsQ0FBN0M7QUFDRU0sRUFBQUEscUNBQXFDLEdBQUcsMkRBQStCLEVBQUVaLG1CQUFGLEVBQXVCTSxlQUF2QixFQUEvQixDQUQxQztBQUVBLE1BQUlPLGVBQWUsR0FBRztBQUNwQixRQUFNLGdFQUFrQztBQUN0Q1osSUFBQUEsYUFBYSxFQUFFLHNDQUR1QjtBQUV0Q0ssSUFBQUEsZUFGc0M7QUFHdENRLElBQUFBLGFBQWEsRUFBRUMsaUJBQWlCLEtBQUs7QUFDbkNDLE1BQUFBLHdCQUF3QixFQUFFQyxNQUFNLENBQUNDLE1BQVAsQ0FBY1Asc0NBQXNDLENBQUMsRUFBRUksaUJBQUYsRUFBRCxDQUFwRCxFQUE2RUgscUNBQXFDLENBQUMsRUFBRUcsaUJBQUYsRUFBRCxDQUFsSCxDQURTLEVBQUwsQ0FITSxFQUFsQyxDQURjLENBQXRCOzs7Ozs7Ozs7O0FBZUEsUUFBTSw4QkFBaUIsRUFBRUksV0FBVyxFQUFHLEdBQUVoQixhQUFhLENBQUNDLGVBQWQsQ0FBOEJlLFdBQVksRUFBNUQsRUFBK0RqQixJQUEvRCxFQUFxRVcsZUFBckUsRUFBakIsQ0FBTjtBQUNEOzs7Ozs7Ozs7Ozs7QUFZTSxlQUFlTyw4QkFBZjtBQUNMLEVBQUVwQixtQkFBRixFQUF1QkMsYUFBdkIsRUFBc0NDLElBQUksR0FBR0MsYUFBYSxDQUFDa0IsZ0JBQWQsQ0FBK0JuQixJQUE1RSxFQURLO0FBRUwsRUFBRUcsUUFBUSxHQUFHLEVBQWIsS0FBa0UsRUFGN0Q7QUFHTDs7QUFFQSxNQUFJLEVBQUVDLGVBQUYsS0FBc0IsTUFBTSwwQ0FBZ0I7QUFDOUNDLElBQUFBLFdBQVcsRUFBRSxFQUFFUCxtQkFBRixFQURpQztBQUU5Q1EsSUFBQUEsY0FBYyxFQUFFLENBQUNjLHlCQUFELENBRjhCO0FBRzlDWixJQUFBQSxJQUFJLEVBQUVMLFFBQUYsYUFBRUEsUUFBRix1QkFBRUEsUUFBUSxDQUFFSyxJQUg4QjtBQUk5Q1IsSUFBQUEsSUFBSSxFQUFFRyxRQUFGLGFBQUVBLFFBQUYsdUJBQUVBLFFBQVEsQ0FBRUgsSUFKOEIsRUFBaEIsQ0FBaEM7Ozs7QUFRQSxNQUFJUyxzQ0FBc0MsR0FBRyw0REFBZ0MsRUFBRVgsbUJBQUYsRUFBdUJNLGVBQXZCLEVBQWhDLENBQTdDO0FBQ0VNLEVBQUFBLHFDQUFxQyxHQUFHLDJEQUErQixFQUFFWixtQkFBRixFQUF1Qk0sZUFBdkIsRUFBL0IsQ0FEMUM7QUFFQSxNQUFJTyxlQUFlLEdBQUc7QUFDcEIsUUFBTSxnRUFBa0M7QUFDdENaLElBQUFBLGFBQWEsRUFBRSxrQ0FEdUI7QUFFdENLLElBQUFBLGVBRnNDO0FBR3RDUSxJQUFBQSxhQUFhLEVBQUVDLGlCQUFpQixLQUFLO0FBQ25DQyxNQUFBQSx3QkFBd0IsRUFBRUMsTUFBTSxDQUFDQyxNQUFQLENBQWNQLHNDQUFzQyxDQUFDLEVBQUVJLGlCQUFGLEVBQUQsQ0FBcEQsRUFBNkVILHFDQUFxQyxDQUFDLEVBQUVHLGlCQUFGLEVBQUQsQ0FBbEgsQ0FEUyxFQUFMLENBSE0sRUFBbEMsQ0FEYyxDQUF0Qjs7Ozs7Ozs7OztBQWVBLFFBQU0sOEJBQWlCLEVBQUVJLFdBQVcsRUFBRyxHQUFFaEIsYUFBYSxDQUFDa0IsZ0JBQWQsQ0FBK0JGLFdBQVksRUFBN0QsRUFBZ0VqQixJQUFoRSxFQUFzRVcsZUFBdEUsRUFBakIsQ0FBTjtBQUNEIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGZpbGVzeXN0ZW0gZnJvbSAnZnMnXG5pbXBvcnQgKiBhcyBzZXJ2aWNlQ29uZmlnIGZyb20gJy4uLy4uL2NvbmZpZ3VyYXRpb24vY29uZmlndXJhdGlvbi5qcydcbmltcG9ydCB7IGNyZWF0ZUh0dHBTZXJ2ZXIgfSBmcm9tICcuLi8uLi91dGlsaXR5L3NlcnZlci5qcydcbmltcG9ydCAqIGFzIGFzc2V0Q29udGVudERlbGl2ZXJ5R3JhcGggZnJvbSAnLi4vLi4vLi4vcmVzb3VyY2UvYXNzZXRDb250ZW50RGVsaXZlcnkuZ3JhcGguanNvbidcbmltcG9ydCAqIGFzIHJvb3RDb250ZW50UmVuZGVyaW5nR3JhcGggZnJvbSAnLi4vLi4vLi4vcmVzb3VyY2Uvcm9vdENvbnRlbnRSZW5kZXJpbmcuZ3JhcGguanNvbidcbmltcG9ydCB7IGluaXRpYWxpemVHcmFwaCB9IGZyb20gJy4uLy4uL3V0aWxpdHkvZ3JhcGhJbml0aWFsaXphdGlvbi5qcydcbmltcG9ydCAqIGFzIGdyYXBoRXZhbHVhdGlvbkZ1bmN0aW9uIGZyb20gJy4vZ3JhcGhFdmFsdWF0aW9uRnVuY3Rpb24uanMnXG5pbXBvcnQgeyBncmFwaE1pZGRsZXdhcmVJbW1lZGlhdGVseUV4ZWN1dGUgfSBmcm9tICcuL21pZGRsZXdhcmUvdHJhdmVyc2VNaWRkbGV3YXJlR3JhcGguanMnXG5pbXBvcnQgeyBtaWRkbGV3YXJlRnVuY3Rpb25SZWZlcmVuY2VMaXN0LCBjb25kaXRpb25GdW5jdGlvblJlZmVyZW5jZUxpc3QgfSBmcm9tICcuL2dyYXBoUmVmZXJlbmNlQ29udGV4dC5qcydcblxuLyoqIFxuQHBhcmFtIzEgIHNlcnZpY2UgY29uZmlndXJhdGlvbnNcbkBwYXJhbSMyICBkZXBlbmRlbmN5IHNlcnZpY2VzIGNvbmZpZ3VyYXRpb25zXG5cbkFzc2V0cywgZGlmZmVyZW50IGNvbXBvbmVudHMgb2YgdGhlIHNpdGUsIGFuZCBzdGF0aWMgZmlsZXMsIGludGVuZGVkIHRvIGJlIHJlcXVlc3RlZCBmcm9tIGEgc3ViZG9tYWluLlxuICAtIFNlcnZlcyBzdGF0aWMgZmlsZXNcbiAgLSBSZW5kZXJlZCBmaWxlc1xuXG4gIEFyY2hpdGVjdHVyZTogUkVTVCArIEN1c3RvbSBjb25jZXB0cywgUHJvdG9jb2w6IEhUVFBcbiovXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gaW5pdGlhbGl6ZUFzc2V0Q29udGVudERlbGl2ZXJ5KFxuICB7IHRhcmdldFByb2plY3RDb25maWcsIGVudHJ5cG9pbnRLZXksIHBvcnQgPSBzZXJ2aWNlQ29uZmlnLmNvbnRlbnREZWxpdmVyeS5wb3J0IH0sXG4gIHsgbWVtZ3JhcGggPSB7fSB9OiB7IG1lbWdyYXBoOiB7IHBvcnQ6IE51bWJlciwgaG9zdDogU3RyaW5nIH0gfSA9IHt9LFxuKSB7XG4gIC8vIENyZWF0ZSBhIGdycGFoIGluc3RhbmNlIHdpdGggbWlkZGxld2FyZSByZWZlcmVuY2VzIGFuZCBsb2FkIGdyYXBoIGRhdGEuXG4gIGxldCB7IGNvbmZpZ3VyZWRHcmFwaCB9ID0gYXdhaXQgaW5pdGlhbGl6ZUdyYXBoKHtcbiAgICBjb250ZXh0RGF0YTogeyB0YXJnZXRQcm9qZWN0Q29uZmlnIH0sXG4gICAgZ3JhcGhEYXRhQXJyYXk6IFthc3NldENvbnRlbnREZWxpdmVyeUdyYXBoXSxcbiAgICBob3N0OiBtZW1ncmFwaD8uaG9zdCxcbiAgICBwb3J0OiBtZW1ncmFwaD8ucG9ydCxcbiAgfSkgLy8gcmV0dXJucyBhIGNvbmZpZ3VyZWRHcmFwaCBlbGVtZW50LlxuXG4gIC8vIHNldCBzZXJ2ZXIgbWlkZGxld2FyZXNcbiAgbGV0IGN1cnJpZWRNaWRkbGV3YXJlRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gbWlkZGxld2FyZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCh7IHRhcmdldFByb2plY3RDb25maWcsIGNvbmZpZ3VyZWRHcmFwaCB9KSxcbiAgICBjdXJyaWVkQ29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gY29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0KHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoIH0pXG4gIGxldCBtaWRkbGV3YXJlQXJyYXkgPSBbXG4gICAgYXdhaXQgZ3JhcGhNaWRkbGV3YXJlSW1tZWRpYXRlbHlFeGVjdXRlKHtcbiAgICAgIGVudHJ5cG9pbnRLZXk6ICcyOTMwOTdiOS0zNTIyLTRmMmItYjU1Ny04MzgwZmYzZTk2ZTMnLFxuICAgICAgY29uZmlndXJlZEdyYXBoLFxuICAgICAgcmVmZXJlbmNlTGlzdDogbWlkZGxld2FyZUNvbnRleHQgPT4gKHtcbiAgICAgICAgZnVuY3Rpb25SZWZlcmVuY2VDb250ZXh0OiBPYmplY3QuYXNzaWduKGN1cnJpZWRNaWRkbGV3YXJlRnVuY3Rpb25SZWZlcmVuY2VMaXN0KHsgbWlkZGxld2FyZUNvbnRleHQgfSksIGN1cnJpZWRDb25kaXRpb25GdW5jdGlvblJlZmVyZW5jZUxpc3QoeyBtaWRkbGV3YXJlQ29udGV4dCB9KSksXG4gICAgICB9KSxcbiAgICB9KSxcbiAgICAvLyBhc3luYyAoY29udGV4dCwgbmV4dCkgPT4ge1xuICAgIC8vICAgY29uc29sZS5sb2coJ0xhc3QgTWlkZGxld2FyZSByZWFjaGVkLicpXG4gICAgLy8gICBhd2FpdCBuZXh0KClcbiAgICAvLyB9LFxuICBdXG5cbiAgLy8gY3JlYXRlIGh0dHAgc2VydmVyXG4gIGF3YWl0IGNyZWF0ZUh0dHBTZXJ2ZXIoeyBzZXJ2aWNlTmFtZTogYCR7c2VydmljZUNvbmZpZy5jb250ZW50RGVsaXZlcnkuc2VydmljZU5hbWV9YCwgcG9ydCwgbWlkZGxld2FyZUFycmF5IH0pXG59XG5cbi8qKiBcbkBwYXJhbSMxICBzZXJ2aWNlIGNvbmZpZ3VyYXRpb25zXG5AcGFyYW0jMiAgZGVwZW5kZW5jeSBzZXJ2aWNlcyBjb25maWd1cmF0aW9uc1xuXG5Sb290IGRvbWFpbiBjb250ZW50IE1haW5seSB1c2VyIGludGVyZmFjZSByZWxhdGVkXG4gKiAgLSBzZXJ2ZXJzIHRlbXBsYXRlIHJlbmRlcmVkIGZpbGVzIGZvciB3ZWJhcHAgaW50ZXJmYWNlIChtYW5pcHVsYXRlZCBmaWxlcyB1c2luZyBub2RlanMgcmVuZGVyaW5nKS5cbiAqICAtIHNlcnZlcyBzb21lIHN0YXRpYyBmaWxlcyByZXF1aXJlZCBpbiB0aGUgcm9vdCBkb21haW4uXG4gKiBcbiBBcmNoaXRlY3R1cmU6IFJFU1QgKyBDdXN0b20gY29uY2VwdHMsIFByb3RvY29sOiBIVFRQXG4gKi9cbmV4cG9ydCBhc3luYyBmdW5jdGlvbiBpbml0aWFsaXplUm9vdENvbnRlbnRSZW5kZXJpbmcoXG4gIHsgdGFyZ2V0UHJvamVjdENvbmZpZywgZW50cnlwb2ludEtleSwgcG9ydCA9IHNlcnZpY2VDb25maWcuY29udGVudFJlbmRlcmluZy5wb3J0IH0sXG4gIHsgbWVtZ3JhcGggPSB7fSB9OiB7IG1lbWdyYXBoOiB7IHBvcnQ6IE51bWJlciwgaG9zdDogU3RyaW5nIH0gfSA9IHt9LFxuKSB7XG4gIC8vIENyZWF0ZSBhIGdycGFoIGluc3RhbmNlIHdpdGggbWlkZGxld2FyZSByZWZlcmVuY2VzIGFuZCBsb2FkIGdyYXBoIGRhdGEuXG4gIGxldCB7IGNvbmZpZ3VyZWRHcmFwaCB9ID0gYXdhaXQgaW5pdGlhbGl6ZUdyYXBoKHtcbiAgICBjb250ZXh0RGF0YTogeyB0YXJnZXRQcm9qZWN0Q29uZmlnIH0sXG4gICAgZ3JhcGhEYXRhQXJyYXk6IFtyb290Q29udGVudFJlbmRlcmluZ0dyYXBoXSxcbiAgICBob3N0OiBtZW1ncmFwaD8uaG9zdCxcbiAgICBwb3J0OiBtZW1ncmFwaD8ucG9ydCxcbiAgfSkgLy8gcmV0dXJucyBhIGNvbmZpZ3VyZWRHcmFwaCBlbGVtZW50LlxuXG4gIC8vIHNldCBzZXJ2ZXIgbWlkZGxld2FyZXNcbiAgbGV0IGN1cnJpZWRNaWRkbGV3YXJlRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gbWlkZGxld2FyZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCh7IHRhcmdldFByb2plY3RDb25maWcsIGNvbmZpZ3VyZWRHcmFwaCB9KSxcbiAgICBjdXJyaWVkQ29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gY29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0KHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoIH0pXG4gIGxldCBtaWRkbGV3YXJlQXJyYXkgPSBbXG4gICAgYXdhaXQgZ3JhcGhNaWRkbGV3YXJlSW1tZWRpYXRlbHlFeGVjdXRlKHtcbiAgICAgIGVudHJ5cG9pbnRLZXk6ICc5MjhlZmo5NC0yOTAzNGpnOTAyNDgtZzIzOTBqZzgyMycsXG4gICAgICBjb25maWd1cmVkR3JhcGgsXG4gICAgICByZWZlcmVuY2VMaXN0OiBtaWRkbGV3YXJlQ29udGV4dCA9PiAoe1xuICAgICAgICBmdW5jdGlvblJlZmVyZW5jZUNvbnRleHQ6IE9iamVjdC5hc3NpZ24oY3VycmllZE1pZGRsZXdhcmVGdW5jdGlvblJlZmVyZW5jZUxpc3QoeyBtaWRkbGV3YXJlQ29udGV4dCB9KSwgY3VycmllZENvbmRpdGlvbkZ1bmN0aW9uUmVmZXJlbmNlTGlzdCh7IG1pZGRsZXdhcmVDb250ZXh0IH0pKSxcbiAgICAgIH0pLFxuICAgIH0pLFxuICAgIC8vIGFzeW5jIChjb250ZXh0LCBuZXh0KSA9PiB7XG4gICAgLy8gICBjb25zb2xlLmxvZygnTGFzdCBNaWRkbGV3YXJlIHJlYWNoZWQuJylcbiAgICAvLyAgIGF3YWl0IG5leHQoKVxuICAgIC8vIH0sXG4gIF1cblxuICAvLyBjcmVhdGUgaHR0cCBzZXJ2ZXJcbiAgYXdhaXQgY3JlYXRlSHR0cFNlcnZlcih7IHNlcnZpY2VOYW1lOiBgJHtzZXJ2aWNlQ29uZmlnLmNvbnRlbnRSZW5kZXJpbmcuc2VydmljZU5hbWV9YCwgcG9ydCwgbWlkZGxld2FyZUFycmF5IH0pXG59XG4iXX0=
