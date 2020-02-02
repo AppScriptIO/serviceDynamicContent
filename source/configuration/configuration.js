@@ -1,10 +1,9 @@
 export const contentDelivery = {
   serviceName: 'contentDelivery',
-  port: 12,
+  port: 81,
 }
 
 export const contentRendering = {
   serviceName: 'contentRendering',
-  port: 11,
+  port: 80,
 }
-
