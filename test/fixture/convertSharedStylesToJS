@@ -1,6 +1,0 @@
-const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `body {
-    font-family: 'Roboto', 'Noto', sans-serif;
-    line-height: 1.5;
-    margin: 0;
-    background-color: #eeeeee;
-}`;document.head.appendChild($_documentContainer);
