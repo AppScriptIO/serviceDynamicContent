@@ -23,7 +23,7 @@ export async function initializeAssetContentDelivery(
   { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
 ) {
   // Create a grpah instance with middleware references and load graph data.
-  let { configuredGraph } = await initializeGraph({
+  let { configuredGraph, service: graphDbService } = await initializeGraph({
     contextData: { targetProjectConfig },
     graphDataArray: [assetContentDeliveryGraph],
     host: memgraph?.host,
@@ -48,7 +48,9 @@ export async function initializeAssetContentDelivery(
   ]
 
   // create http server
-  await createHttpServer({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
+  let serverService = await createHttpServer({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
+
+  return { service: [serverService, graphDbService]}
 }
 
 /** 
@@ -66,7 +68,7 @@ export async function initializeRootContentRendering(
   { memgraph = {} }: { memgraph: { port: Number, host: String } } = {},
 ) {
   // Create a grpah instance with middleware references and load graph data.
-  let { configuredGraph } = await initializeGraph({
+  let { configuredGraph, service: graphDbService } = await initializeGraph({
     contextData: { targetProjectConfig },
     graphDataArray: [rootContentRenderingGraph],
     host: memgraph?.host,
@@ -91,5 +93,7 @@ export async function initializeRootContentRendering(
   ]
 
   // create http server
-  await createHttpServer({ serviceName: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+  let serverService = await createHttpServer({ serviceName: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
+
+  return { service: [serverService, graphDbService]}
 }

@@ -19,15 +19,24 @@ export async function createHttpServer({ serviceName, port, host = '0.0.0.0', mi
   // register middleware
   middlewareArray.forEach(middleware => serverKoa.use(middleware))
 
-  await new Promise(
-    (resolve, reject) =>
-      http
+  return await new Promise(
+    (resolve, reject) => {
+      let server = http
         .createServer(serverKoa.callback())
         .listen({ port, host }, () => {
           process.emit('service', { serviceName, host, port, status: 'ready', description: 'Server listening' })
           isPortTaken(port).then(_isPortTaken => {
             assert(!_isPortTaken, `• Failed to run server on ${host}:${port}`) // make sure port is in use, and server started correctly
-            resolve()
+            resolve({
+              name: serviceName, 
+              connectionHandler: server, 
+              // provide a function to close the server connection
+              close: () => new Promise((resolve, reject) => {
+                // a technique to close the server without tracking connections
+                server.close(() => resolve())
+                setImmediate(() => server.emit('close'))
+              })
+            })
           })
         })
         .on('connection', socket => {
@@ -36,7 +45,8 @@ export async function createHttpServer({ serviceName, port, host = '0.0.0.0', mi
           // socket.on('timeout', () => console.info('SOCKET TIMEOUT'))
           // socket.on('error', error => console.info('SOCKET ERROR: ' + JSON.stringify(error)))
           // socket.on('close', had_error => console.info('SOCKET CLOSED. Is ERROR ?: ' + had_error))
-        }),
+        })
+    }
     // .setTimeout(0, () => console.log('HTTP server connection socket was timedout (console.log in httpServer.setTimeout)!')),
   )
 

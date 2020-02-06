@@ -46,5 +46,9 @@ export async function initializeGraph({ graphDataArray = [], contextData = {} /*
   let concereteDatabase = concreteDatabaseBehavior[Database.$.key.getter]()
   for (let graphData of graphDataArray) await concereteDatabase.loadGraphData({ nodeEntryData: graphData.node, connectionEntryData: graphData.edge })
 
-  return { configuredGraph }
+  return { configuredGraph, service: {
+    name: 'Neo4j Bolt Driver', 
+    connectionHandler: concereteDatabase.driverInstance, 
+    close: concereteDatabase.close
+  } }
 }
