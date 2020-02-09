@@ -8,7 +8,8 @@ try {
   babel = require('@babel/core')
   getBabelConfig = require('@deployment/javascriptTranspilation').getBabelConfig
 } catch (error) {
-  if (DEVELOPMENT) throw error
+  // TODO: pass environmentVariables from config.
+  // if (DEVELOPMENT) throw error
 }
 
 export async function transformJavascript({
