@@ -1,29 +1,30 @@
-import path from 'path'
-import filesystem from 'fs'
-import stream from 'stream'
-import { streamToString } from '@dependency/handleJSNativeDataStructure'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.transformJavascript = transformJavascript;
 
-let babel, getBabelConfig // as in production appDeploymentLifecycle dependency doesn't exist.
+var _stream = _interopRequireDefault(require("stream"));
+var _handleJSNativeDataStructure = require("@dependency/handleJSNativeDataStructure");
+
+let babel, getBabelConfig;
 try {
-  babel = require('@babel/core')
-  getBabelConfig = require('@deployment/javascriptTranspilation').getBabelConfig
+  babel = require('@babel/core');
+  getBabelConfig = require('@deployment/javascriptTranspilation').getBabelConfig;
 } catch (error) {
-  // TODO: pass environmentVariables from config.
-  // if (DEVELOPMENT) throw error
+
+
 }
 
-export async function transformJavascript({
+async function transformJavascript({
   scriptCode,
   transformBabelPreset = getBabelConfig('nativeClientSideRuntime.BabelConfig.js').presets,
-  transformBabelPlugin = getBabelConfig('nativeClientSideRuntime.BabelConfig.js').plugins,
-}: {
-  scriptCode: stream,
-}) {
+  transformBabelPlugin = getBabelConfig('nativeClientSideRuntime.BabelConfig.js').plugins })
+
+
+{
   if (transformBabelPlugin.length) {
-    // convert stream into string
-    if (scriptCode instanceof stream.Stream) scriptCode = await streamToString(scriptCode)
-    // transform code using array of plugins.
-    let transformedObject = babel.transformSync(scriptCode, { presets: transformBabelPreset, plugins: transformBabelPlugin })
-    return transformedObject.code // object containing 'code' property
+
+    if (scriptCode instanceof _stream.default.Stream) scriptCode = await (0, _handleJSNativeDataStructure.streamToString)(scriptCode);
+
+    let transformedObject = babel.transformSync(scriptCode, { presets: transformBabelPreset, plugins: transformBabelPlugin });
+    return transformedObject.code;
   }
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9mdW5jdGlvbmFsaXR5L2JhYmVsVHJhbnNmb3JtSnNTdHJlYW0uanMiXSwibmFtZXMiOlsiYmFiZWwiLCJnZXRCYWJlbENvbmZpZyIsInJlcXVpcmUiLCJlcnJvciIsInRyYW5zZm9ybUphdmFzY3JpcHQiLCJzY3JpcHRDb2RlIiwidHJhbnNmb3JtQmFiZWxQcmVzZXQiLCJwcmVzZXRzIiwidHJhbnNmb3JtQmFiZWxQbHVnaW4iLCJwbHVnaW5zIiwibGVuZ3RoIiwic3RyZWFtIiwiU3RyZWFtIiwidHJhbnNmb3JtZWRPYmplY3QiLCJ0cmFuc2Zvcm1TeW5jIiwiY29kZSJdLCJtYXBwaW5ncyI6Ijs7QUFFQTtBQUNBOztBQUVBLElBQUlBLEtBQUosRUFBV0MsY0FBWDtBQUNBLElBQUk7QUFDRkQsRUFBQUEsS0FBSyxHQUFHRSxPQUFPLENBQUMsYUFBRCxDQUFmO0FBQ0FELEVBQUFBLGNBQWMsR0FBR0MsT0FBTyxDQUFDLHFDQUFELENBQVAsQ0FBK0NELGNBQWhFO0FBQ0QsQ0FIRCxDQUdFLE9BQU9FLEtBQVAsRUFBYzs7O0FBR2Y7O0FBRU0sZUFBZUMsbUJBQWYsQ0FBbUM7QUFDeENDLEVBQUFBLFVBRHdDO0FBRXhDQyxFQUFBQSxvQkFBb0IsR0FBR0wsY0FBYyxDQUFDLHdDQUFELENBQWQsQ0FBeURNLE9BRnhDO0FBR3hDQyxFQUFBQSxvQkFBb0IsR0FBR1AsY0FBYyxDQUFDLHdDQUFELENBQWQsQ0FBeURRLE9BSHhDLEVBQW5DOzs7QUFNSjtBQUNELE1BQUlELG9CQUFvQixDQUFDRSxNQUF6QixFQUFpQzs7QUFFL0IsUUFBSUwsVUFBVSxZQUFZTSxnQkFBT0MsTUFBakMsRUFBeUNQLFVBQVUsR0FBRyxNQUFNLGlEQUFlQSxVQUFmLENBQW5COztBQUV6QyxRQUFJUSxpQkFBaUIsR0FBR2IsS0FBSyxDQUFDYyxhQUFOLENBQW9CVCxVQUFwQixFQUFnQyxFQUFFRSxPQUFPLEVBQUVELG9CQUFYLEVBQWlDRyxPQUFPLEVBQUVELG9CQUExQyxFQUFoQyxDQUF4QjtBQUNBLFdBQU9LLGlCQUFpQixDQUFDRSxJQUF6QjtBQUNEO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuaW1wb3J0IGZpbGVzeXN0ZW0gZnJvbSAnZnMnXG5pbXBvcnQgc3RyZWFtIGZyb20gJ3N0cmVhbSdcbmltcG9ydCB7IHN0cmVhbVRvU3RyaW5nIH0gZnJvbSAnQGRlcGVuZGVuY3kvaGFuZGxlSlNOYXRpdmVEYXRhU3RydWN0dXJlJ1xuXG5sZXQgYmFiZWwsIGdldEJhYmVsQ29uZmlnIC8vIGFzIGluIHByb2R1Y3Rpb24gYXBwRGVwbG95bWVudExpZmVjeWNsZSBkZXBlbmRlbmN5IGRvZXNuJ3QgZXhpc3QuXG50cnkge1xuICBiYWJlbCA9IHJlcXVpcmUoJ0BiYWJlbC9jb3JlJylcbiAgZ2V0QmFiZWxDb25maWcgPSByZXF1aXJlKCdAZGVwbG95bWVudC9qYXZhc2NyaXB0VHJhbnNwaWxhdGlvbicpLmdldEJhYmVsQ29uZmlnXG59IGNhdGNoIChlcnJvcikge1xuICAvLyBUT0RPOiBwYXNzIGVudmlyb25tZW50VmFyaWFibGVzIGZyb20gY29uZmlnLlxuICAvLyBpZiAoREVWRUxPUE1FTlQpIHRocm93IGVycm9yXG59XG5cbmV4cG9ydCBhc3luYyBmdW5jdGlvbiB0cmFuc2Zvcm1KYXZhc2NyaXB0KHtcbiAgc2NyaXB0Q29kZSxcbiAgdHJhbnNmb3JtQmFiZWxQcmVzZXQgPSBnZXRCYWJlbENvbmZpZygnbmF0aXZlQ2xpZW50U2lkZVJ1bnRpbWUuQmFiZWxDb25maWcuanMnKS5wcmVzZXRzLFxuICB0cmFuc2Zvcm1CYWJlbFBsdWdpbiA9IGdldEJhYmVsQ29uZmlnKCduYXRpdmVDbGllbnRTaWRlUnVudGltZS5CYWJlbENvbmZpZy5qcycpLnBsdWdpbnMsXG59OiB7XG4gIHNjcmlwdENvZGU6IHN0cmVhbSxcbn0pIHtcbiAgaWYgKHRyYW5zZm9ybUJhYmVsUGx1Z2luLmxlbmd0aCkge1xuICAgIC8vIGNvbnZlcnQgc3RyZWFtIGludG8gc3RyaW5nXG4gICAgaWYgKHNjcmlwdENvZGUgaW5zdGFuY2VvZiBzdHJlYW0uU3RyZWFtKSBzY3JpcHRDb2RlID0gYXdhaXQgc3RyZWFtVG9TdHJpbmcoc2NyaXB0Q29kZSlcbiAgICAvLyB0cmFuc2Zvcm0gY29kZSB1c2luZyBhcnJheSBvZiBwbHVnaW5zLlxuICAgIGxldCB0cmFuc2Zvcm1lZE9iamVjdCA9IGJhYmVsLnRyYW5zZm9ybVN5bmMoc2NyaXB0Q29kZSwgeyBwcmVzZXRzOiB0cmFuc2Zvcm1CYWJlbFByZXNldCwgcGx1Z2luczogdHJhbnNmb3JtQmFiZWxQbHVnaW4gfSlcbiAgICByZXR1cm4gdHJhbnNmb3JtZWRPYmplY3QuY29kZSAvLyBvYmplY3QgY29udGFpbmluZyAnY29kZScgcHJvcGVydHlcbiAgfVxufVxuIl19

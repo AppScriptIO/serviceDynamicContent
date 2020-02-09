@@ -1,12 +1,12 @@
-// expose all functionality as programmatic api first:
-export * from './functionality/babelTransformJsStream.js'
-export * from './functionality/pickClientSideConfiguration.js'
-export * from './functionality/underscoreTemplateInterpolation.js'
-export * from './functionality/renderFile.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });var _exportNames = { service: true };exports.service = void 0;
+var _babelTransformJsStream = require("./functionality/babelTransformJsStream.js");Object.keys(_babelTransformJsStream).forEach(function (key) {if (key === "default" || key === "__esModule") return;if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _babelTransformJsStream[key];} });});
+var _pickClientSideConfiguration = require("./functionality/pickClientSideConfiguration.js");Object.keys(_pickClientSideConfiguration).forEach(function (key) {if (key === "default" || key === "__esModule") return;if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _pickClientSideConfiguration[key];} });});
+var _underscoreTemplateInterpolation = require("./functionality/underscoreTemplateInterpolation.js");Object.keys(_underscoreTemplateInterpolation).forEach(function (key) {if (key === "default" || key === "__esModule") return;if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _underscoreTemplateInterpolation[key];} });});
+var _renderFile = require("./functionality/renderFile.js");Object.keys(_renderFile).forEach(function (key) {if (key === "default" || key === "__esModule") return;if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _renderFile[key];} });});
 
-// rest api initialization functions
-import * as restApi from './clientInterface/REST'
 
-export const service = {
-  restApi,
-}
+var restApi = _interopRequireWildcard(require("./clientInterface/REST"));
+
+const service = {
+  restApi };exports.service = service;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NvdXJjZS9zY3JpcHQuanMiXSwibmFtZXMiOlsic2VydmljZSIsInJlc3RBcGkiXSwibWFwcGluZ3MiOiI7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7O0FBR0E7O0FBRU8sTUFBTUEsT0FBTyxHQUFHO0FBQ3JCQyxFQUFBQSxPQURxQixFQUFoQixDIiwic291cmNlc0NvbnRlbnQiOlsiLy8gZXhwb3NlIGFsbCBmdW5jdGlvbmFsaXR5IGFzIHByb2dyYW1tYXRpYyBhcGkgZmlyc3Q6XG5leHBvcnQgKiBmcm9tICcuL2Z1bmN0aW9uYWxpdHkvYmFiZWxUcmFuc2Zvcm1Kc1N0cmVhbS5qcydcbmV4cG9ydCAqIGZyb20gJy4vZnVuY3Rpb25hbGl0eS9waWNrQ2xpZW50U2lkZUNvbmZpZ3VyYXRpb24uanMnXG5leHBvcnQgKiBmcm9tICcuL2Z1bmN0aW9uYWxpdHkvdW5kZXJzY29yZVRlbXBsYXRlSW50ZXJwb2xhdGlvbi5qcydcbmV4cG9ydCAqIGZyb20gJy4vZnVuY3Rpb25hbGl0eS9yZW5kZXJGaWxlLmpzJ1xuXG4vLyByZXN0IGFwaSBpbml0aWFsaXphdGlvbiBmdW5jdGlvbnNcbmltcG9ydCAqIGFzIHJlc3RBcGkgZnJvbSAnLi9jbGllbnRJbnRlcmZhY2UvUkVTVCdcblxuZXhwb3J0IGNvbnN0IHNlcnZpY2UgPSB7XG4gIHJlc3RBcGksXG59XG4iXX0=

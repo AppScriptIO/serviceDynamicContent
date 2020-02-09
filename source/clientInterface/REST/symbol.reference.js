@@ -1,4 +1,4 @@
-// symbols used in the middleware context, for next middlewares to use.
-export const context = {
-  clientSideProjectConfig: Symbol('clientSideProjectConfig'),
-}
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.context = void 0;
+const context = {
+  clientSideProjectConfig: Symbol('clientSideProjectConfig') };exports.context = context;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9zeW1ib2wucmVmZXJlbmNlLmpzIl0sIm5hbWVzIjpbImNvbnRleHQiLCJjbGllbnRTaWRlUHJvamVjdENvbmZpZyIsIlN5bWJvbCJdLCJtYXBwaW5ncyI6IjtBQUNPLE1BQU1BLE9BQU8sR0FBRztBQUNyQkMsRUFBQUEsdUJBQXVCLEVBQUVDLE1BQU0sQ0FBQyx5QkFBRCxDQURWLEVBQWhCLEMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBzeW1ib2xzIHVzZWQgaW4gdGhlIG1pZGRsZXdhcmUgY29udGV4dCwgZm9yIG5leHQgbWlkZGxld2FyZXMgdG8gdXNlLlxuZXhwb3J0IGNvbnN0IGNvbnRleHQgPSB7XG4gIGNsaWVudFNpZGVQcm9qZWN0Q29uZmlnOiBTeW1ib2woJ2NsaWVudFNpZGVQcm9qZWN0Q29uZmlnJyksXG59XG4iXX0=
