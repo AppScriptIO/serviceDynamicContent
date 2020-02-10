@@ -7,5 +7,12 @@ export const notFound = () =>
     // fallback to sending the app index. If not found.
     await next()
     if (404 != context.status) return
-    return send(context, path.normalize(`${context[symbol.context.clientSideProjectConfig].path}/template/root/entrypoint.html`))
+
+    await send(context, path.normalize(`${context[symbol.context.clientSideProjectConfig].path}/asset/template/entrypoint.html`))
+
+    // if still not found (if the html template was not found)
+    if (!context.body && 404 != context.status) {
+      context.body = 'Ops.. Not Found 404'
+      context.status = 404 // set explicively, preserving status value.
+    }
   }

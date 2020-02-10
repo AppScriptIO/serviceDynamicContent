@@ -8,6 +8,8 @@ import * as graphEvaluationFunction from './graphEvaluationFunction.js'
 import { graphMiddlewareImmediatelyExecute } from './middleware/traverseMiddlewareGraph.js'
 import { middlewareFunctionReferenceList, conditionFunctionReferenceList } from './graphReferenceContext.js'
 
+// TODO: Use logging plugin: for debug allow to log middlewares traversed, through applying logs in graphTraversal and implementation e.g. immediatelyExecuteMiddleware.
+
 /** 
 @param#1  service configurations
 @param#2  dependency services configurations
@@ -50,7 +52,7 @@ export async function initializeAssetContentDelivery(
   // create http server
   let serverService = await createHttpServer({ serviceName: `${serviceConfig.contentDelivery.serviceName}`, port, middlewareArray })
 
-  return { service: [serverService, graphDbService]}
+  return { service: [serverService, graphDbService] }
 }
 
 /** 
@@ -95,5 +97,5 @@ export async function initializeRootContentRendering(
   // create http server
   let serverService = await createHttpServer({ serviceName: `${serviceConfig.contentRendering.serviceName}`, port, middlewareArray })
 
-  return { service: [serverService, graphDbService]}
+  return { service: [serverService, graphDbService] }
 }
