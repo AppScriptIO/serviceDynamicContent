@@ -1,38 +1,39 @@
-import compose from 'koa-compose'
-import responseTime from 'koa-response-time'
-import logger from 'koa-logger'
-import bodyParser from 'koa-bodyparser'
-import cors from 'kcors'
-// import helmet from 'koa-helmet'
-import error from 'koa-json-error'
-// import enforceHTTPS from 'koa-sslify'
-import koaCompress from 'koa-compress'
-import zlib from 'zlib'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.commonFunctionality = void 0;var _koaCompose = _interopRequireDefault(require("koa-compose"));
+var _koaResponseTime = _interopRequireDefault(require("koa-response-time"));
+var _koaLogger = _interopRequireDefault(require("koa-logger"));
 
-export const commonFunctionality = ({ ssl = false } = {}) => {
+
+
+
+
+var _koaCompress = _interopRequireDefault(require("koa-compress"));
+var _zlib = _interopRequireDefault(require("zlib"));
+
+const commonFunctionality = ({ ssl = false } = {}) => {
   let middlewareArray = [
-    // async (context, next) => {
-    //   /* Important: that using this is not supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this property is considered a hack and is only a convenience to those wishing to use traditional fn(req, res) functions and middleware within Koa.
-    //     This will cause Koa to hang.
-    //   */
-    //   // context.respond = false // bypass default koa built-in response handling
-    //   await next()
-    // },
-    responseTime(), // Response time x-response-time
-    logger(), // Console logger
-    // bodyParser(),
-    // cors(), // Cross-Origin Resource Sharing(CORS)
 
-    // Only for debugging, as it exposes nodejs error on response.
-    // error(), // Error handler for pure-JSON Koa apps - this will return error when
-    koaCompress({ flush: zlib.Z_SYNC_FLUSH }),
-  ]
+
+
+
+
+
+
+  (0, _koaResponseTime.default)(),
+  (0, _koaLogger.default)(),
+
+
+
+
+
+  (0, _koaCompress.default)({ flush: _zlib.default.Z_SYNC_FLUSH })];
+
   if (!ssl)
-    middlewareArray = [
-      ...middlewareArray,
-      // enforceHTTPS(),
-      // helmet()
-    ]
+  middlewareArray = [
+  ...middlewareArray];
 
-  return compose(middlewareArray)
-}
+
+
+
+  return (0, _koaCompose.default)(middlewareArray);
+};exports.commonFunctionality = commonFunctionality;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2NvbW1vbkZ1bmN0aW9uYWxpdHkuanMiXSwibmFtZXMiOlsiY29tbW9uRnVuY3Rpb25hbGl0eSIsInNzbCIsIm1pZGRsZXdhcmVBcnJheSIsImZsdXNoIiwiemxpYiIsIlpfU1lOQ19GTFVTSCJdLCJtYXBwaW5ncyI6InFNQUFBO0FBQ0E7QUFDQTs7Ozs7O0FBTUE7QUFDQTs7QUFFTyxNQUFNQSxtQkFBbUIsR0FBRyxDQUFDLEVBQUVDLEdBQUcsR0FBRyxLQUFSLEtBQWtCLEVBQW5CLEtBQTBCO0FBQzNELE1BQUlDLGVBQWUsR0FBRzs7Ozs7Ozs7QUFRcEIsaUNBUm9CO0FBU3BCLDJCQVRvQjs7Ozs7O0FBZXBCLDRCQUFZLEVBQUVDLEtBQUssRUFBRUMsY0FBS0MsWUFBZCxFQUFaLENBZm9CLENBQXRCOztBQWlCQSxNQUFJLENBQUNKLEdBQUw7QUFDRUMsRUFBQUEsZUFBZSxHQUFHO0FBQ2hCLEtBQUdBLGVBRGEsQ0FBbEI7Ozs7O0FBTUYsU0FBTyx5QkFBUUEsZUFBUixDQUFQO0FBQ0QsQ0ExQk0sQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBjb21wb3NlIGZyb20gJ2tvYS1jb21wb3NlJ1xuaW1wb3J0IHJlc3BvbnNlVGltZSBmcm9tICdrb2EtcmVzcG9uc2UtdGltZSdcbmltcG9ydCBsb2dnZXIgZnJvbSAna29hLWxvZ2dlcidcbmltcG9ydCBib2R5UGFyc2VyIGZyb20gJ2tvYS1ib2R5cGFyc2VyJ1xuaW1wb3J0IGNvcnMgZnJvbSAna2NvcnMnXG4vLyBpbXBvcnQgaGVsbWV0IGZyb20gJ2tvYS1oZWxtZXQnXG5pbXBvcnQgZXJyb3IgZnJvbSAna29hLWpzb24tZXJyb3InXG4vLyBpbXBvcnQgZW5mb3JjZUhUVFBTIGZyb20gJ2tvYS1zc2xpZnknXG5pbXBvcnQga29hQ29tcHJlc3MgZnJvbSAna29hLWNvbXByZXNzJ1xuaW1wb3J0IHpsaWIgZnJvbSAnemxpYidcblxuZXhwb3J0IGNvbnN0IGNvbW1vbkZ1bmN0aW9uYWxpdHkgPSAoeyBzc2wgPSBmYWxzZSB9ID0ge30pID0+IHtcbiAgbGV0IG1pZGRsZXdhcmVBcnJheSA9IFtcbiAgICAvLyBhc3luYyAoY29udGV4dCwgbmV4dCkgPT4ge1xuICAgIC8vICAgLyogSW1wb3J0YW50OiB0aGF0IHVzaW5nIHRoaXMgaXMgbm90IHN1cHBvcnRlZCBieSBLb2EuIFRoaXMgbWF5IGJyZWFrIGludGVuZGVkIGZ1bmN0aW9uYWxpdHkgb2YgS29hIG1pZGRsZXdhcmUgYW5kIEtvYSBpdHNlbGYuIFVzaW5nIHRoaXMgcHJvcGVydHkgaXMgY29uc2lkZXJlZCBhIGhhY2sgYW5kIGlzIG9ubHkgYSBjb252ZW5pZW5jZSB0byB0aG9zZSB3aXNoaW5nIHRvIHVzZSB0cmFkaXRpb25hbCBmbihyZXEsIHJlcykgZnVuY3Rpb25zIGFuZCBtaWRkbGV3YXJlIHdpdGhpbiBLb2EuXG4gICAgLy8gICAgIFRoaXMgd2lsbCBjYXVzZSBLb2EgdG8gaGFuZy5cbiAgICAvLyAgICovXG4gICAgLy8gICAvLyBjb250ZXh0LnJlc3BvbmQgPSBmYWxzZSAvLyBieXBhc3MgZGVmYXVsdCBrb2EgYnVpbHQtaW4gcmVzcG9uc2UgaGFuZGxpbmdcbiAgICAvLyAgIGF3YWl0IG5leHQoKVxuICAgIC8vIH0sXG4gICAgcmVzcG9uc2VUaW1lKCksIC8vIFJlc3BvbnNlIHRpbWUgeC1yZXNwb25zZS10aW1lXG4gICAgbG9nZ2VyKCksIC8vIENvbnNvbGUgbG9nZ2VyXG4gICAgLy8gYm9keVBhcnNlcigpLFxuICAgIC8vIGNvcnMoKSwgLy8gQ3Jvc3MtT3JpZ2luIFJlc291cmNlIFNoYXJpbmcoQ09SUylcblxuICAgIC8vIE9ubHkgZm9yIGRlYnVnZ2luZywgYXMgaXQgZXhwb3NlcyBub2RlanMgZXJyb3Igb24gcmVzcG9uc2UuXG4gICAgLy8gZXJyb3IoKSwgLy8gRXJyb3IgaGFuZGxlciBmb3IgcHVyZS1KU09OIEtvYSBhcHBzIC0gdGhpcyB3aWxsIHJldHVybiBlcnJvciB3aGVuXG4gICAga29hQ29tcHJlc3MoeyBmbHVzaDogemxpYi5aX1NZTkNfRkxVU0ggfSksXG4gIF1cbiAgaWYgKCFzc2wpXG4gICAgbWlkZGxld2FyZUFycmF5ID0gW1xuICAgICAgLi4ubWlkZGxld2FyZUFycmF5LFxuICAgICAgLy8gZW5mb3JjZUhUVFBTKCksXG4gICAgICAvLyBoZWxtZXQoKVxuICAgIF1cblxuICByZXR1cm4gY29tcG9zZShtaWRkbGV3YXJlQXJyYXkpXG59XG4iXX0=

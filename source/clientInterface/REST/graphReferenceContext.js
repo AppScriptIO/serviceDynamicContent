@@ -1,152 +1,151 @@
-import assert from 'assert'
-import path from 'path'
-import { curryNamed } from '@dependency/namedCurry'
-import { curry } from 'ramda'
-import * as symbol from './symbol.reference.js'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.fileReferenceList = exports.conditionFunctionReferenceList = exports.middlewareFunctionReferenceList = void 0;var _assert = _interopRequireDefault(require("assert"));
+var _path = _interopRequireDefault(require("path"));
+var _namedCurry = require("@dependency/namedCurry");
+var _ramda = require("ramda");
+var symbol = _interopRequireWildcard(require("./symbol.reference.js"));
 
-import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction } from './graphEvaluationFunction.js'
-import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
-import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
-import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
-import { commonFunctionality } from './middleware/commonFunctionality.js'
-import { notFound } from './middleware/notFound.js'
-import { expandAtSignPath } from './middleware/map@PathToAbsolutePath.js'
-import { bodyParserMiddleware } from './middleware/bodyParser.js'
-import { debugMiddlewareProxy } from '../../utility/debugMiddlewareProxy.js'
-import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middleware/contextManipulation.js'
-import { setFrontendSetting } from './middleware/languageContent.js'
-import { templateRenderingMiddleware } from './middleware/templateRendering.js'
-import { graphDocumentRenderingMiddlewareAdapter } from './middleware/traverseTemplateGraph.js'
-import { wrapWithJsTag } from './pipeFunction/wrapString.js'
+var _graphEvaluationFunction = require("./graphEvaluationFunction.js");
+var _babelTranspiler = require("./middleware/babelTranspiler.js");
+var _serveFile = require("./middleware/serveFile.js");
+var _useragentDetection = require("./middleware/useragentDetection.js");
+var _commonFunctionality2 = require("./middleware/commonFunctionality.js");
+var _notFound2 = require("./middleware/notFound.js");
+var _mapPathToAbsolutePath = require("./middleware/map@PathToAbsolutePath.js");
+var _bodyParser = require("./middleware/bodyParser.js");
+var _debugMiddlewareProxy = require("../../utility/debugMiddlewareProxy.js");
+var _contextManipulation = require("./middleware/contextManipulation.js");
+var _languageContent = require("./middleware/languageContent.js");
+var _templateRendering = require("./middleware/templateRendering.js");
+var _traverseTemplateGraph = require("./middleware/traverseTemplateGraph.js");
+var _wrapString = require("./pipeFunction/wrapString.js");var _middlewareFunctionRe, _conditionFunctionRef, _fileReferenceList, _pipeFunctionReferenc;
 
-// Note: function are curried to allow initialization in stages.
-/** 
-    context that will be used by the graph traversal during execution.
-    functions registered in this object must comply (use adapter - wrapper function) with the graph middleware implementation - i.e. a function wrapped middleware.
-    add parameters to graph shared context.
-  */
 
-// list of function used in the context of graph traversal.
-let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
-  /**  middlewares
-   * @return {Function (context, next)=>{} } functions that return a middleware.
-   */
-  ({
-    nodeDebug: ({ node, traverser }) => (async next => console.log(`• executed middleware in node: ${JSON.stringify(node.properties)}`)) |> debugMiddlewareProxy, // debug
-    bodyParser: ({ node, traverser }) => (bodyParserMiddleware |> curry)(middlewareContext),
-    serveStaticFile: ({ node, traverser }) => curry(serveStaticFile({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }))(middlewareContext),
-    serveServerSideRenderedFile: ({ node, traverser }) =>
-      (
-        serveServerSideRenderedFile({
-          filePath: node.properties.filePath,
-          basePath: node.properties.basePath,
-          renderType: node.properties.renderType,
-          mimeType: node.properties.mimeType,
-        }) |> curry
-      )(middlewareContext),
-    setResponseHeaders: ({ node, traverser }) => (setResponseHeaders() |> curry)(middlewareContext),
-    setFrontendSetting: ({ node, traverser }) => (setFrontendSetting() |> curry)(middlewareContext),
-    pickClientSideProjectConfig: ({ node, traverser }) => (pickClientSideProjectConfig({ targetProjectConfig }) |> curry)(middlewareContext),
-    commonFunctionality: ({ node, traverser }) => (commonFunctionality({ middlewareContext }) |> curry)(middlewareContext),
-    notFound: ({ node, traverser }) => (notFound() |> curry)(middlewareContext),
-    cacheControl: ({ node, traverser }) => (cacheControl() |> curry)(middlewareContext),
-    transformJavascriptMiddleware: ({ node, traverser }) => (transformJavascriptMiddleware() |> curry)(middlewareContext),
-    expandAtSignPath: ({ node, traverser }) => (expandAtSignPath() |> curry)(middlewareContext),
-    templateRenderingMiddleware: ({ node, traverser }) => (templateRenderingMiddleware() |> curry)(middlewareContext),
-    graphRenderedTemplateDocument: async function({ node, traverser }) {
-      let curriedFileReferenceList = fileReferenceList({ targetProjectConfig, configuredGraph }),
-        curriedPipeFunctionReferenceList = pipeFunctionReferenceList({ targetProjectConfig, configuredGraph })
 
-      return (
-        (await graphDocumentRenderingMiddlewareAdapter({
-          middlewareNode: node,
-          graphInstance: traverser.graph,
-          configuredGraph /*Graph Class*/,
-          referenceList: middlewareContext => ({
-            functionReferenceContext: curriedPipeFunctionReferenceList({ middlewareContext }),
-            fileContext: curriedFileReferenceList({ middlewareContext }),
-          }),
-        })) |> curry
-      )(middlewareContext)
-    },
-  })
 
-let conditionFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
-  /**  conditions
-   * @return {any} value for condition comparison. Could return boolean, string, array.
-   */
-  ({
-    getUrlPathLevel: ({ node, traverser }) => getUrlPathLevel({ middlewareContext, level: node.properties.level }),
-    isExistUrlPathLevel: ({ node, traverser }) => isExistUrlPathLevel({ middlewareContext, level: node.properties.level }),
-    ifLevel1IncludesAt: async ({ node, traverser }) => await ifLevel1IncludesAt(middlewareContext),
-    ifLastUrlPathtIncludesFunction: ({ node, traverser }) => ifLastUrlPathtIncludesFunction(middlewareContext),
-    getRequestMethod: ({ node, traverser }) => getRequestMethod(middlewareContext),
-    getUrlPathAsArray: ({ node, traverser }) => getUrlPathAsArray(middlewareContext),
-  })
 
-let pipeFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
-  /** Pipes - for further processing results of template renderning
-   * @return {Function (input)=>output } functions that return a pipe function - receiving an input and returning a processed output.
-   */
-  ({
-    wrapWithJsTag: ({ node, traverser }) => wrapWithJsTag(),
-  })
 
-// list of files used in the context of graph traversal.
-let fileReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>
-  /** Template files */
-  ({
-    entrypointHTML: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/template/entrypoint.html`)
-    },
-    systemjsSetting: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/jspm.initialization.js`)
-    },
-    webcomponentPolyfill: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/polymerPolyfill.js`)
-    },
-    entrypointScript: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/template/entrypointScript.html`)
-    },
-    babelTranspiler: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/babelTranspiler.js`)
-    },
-    metadata: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/metadata/metadata.html`)
-    },
-    webScoket: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/websocket.js`)
-    },
-    googleAnalytics: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/googleAnalytics.js`)
-    },
-    serviceWorker: ({ node, traverser }) => {
-      assert(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-      let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path
-      return path.join(clientSidePath, `./asset/javascript/serviceWorker/serviceWorker.js`)
-    },
-  })
 
-// currify the functions
-middlewareFunctionReferenceList = middlewareFunctionReferenceList |> (func => curryNamed(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], func))
-conditionFunctionReferenceList = conditionFunctionReferenceList |> (func => curryNamed(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], func))
-fileReferenceList = fileReferenceList |> (func => curryNamed(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], func))
-pipeFunctionReferenceList = pipeFunctionReferenceList |> (func => curryNamed(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], func))
 
-export { middlewareFunctionReferenceList, conditionFunctionReferenceList, fileReferenceList }
+
+let middlewareFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) => (
+
+
+
+{
+  nodeDebug: ({ node, traverser }) => {var _ref;return _ref = async next => console.log(`• executed middleware in node: ${JSON.stringify(node.properties)}`), (0, _debugMiddlewareProxy.debugMiddlewareProxy)(_ref);},
+  bodyParser: ({ node, traverser }) => {var _bodyParserMiddleware;return (_bodyParserMiddleware = _bodyParser.bodyParserMiddleware, (0, _ramda.curry)(_bodyParserMiddleware))(middlewareContext);},
+  serveStaticFile: ({ node, traverser }) => (0, _ramda.curry)((0, _serveFile.serveStaticFile)({ targetProjectConfig, filePath: node.properties.filePath, basePath: node.properties.basePath }))(middlewareContext),
+  serveServerSideRenderedFile: ({ node, traverser }) => {var _serveServerSideRende;return (
+      (_serveServerSideRende =
+      (0, _serveFile.serveServerSideRenderedFile)({
+        filePath: node.properties.filePath,
+        basePath: node.properties.basePath,
+        renderType: node.properties.renderType,
+        mimeType: node.properties.mimeType }), (0,
+      _ramda.curry)(_serveServerSideRende))(
+      middlewareContext));},
+  setResponseHeaders: ({ node, traverser }) => {var _setResponseHeaders;return (_setResponseHeaders = (0, _contextManipulation.setResponseHeaders)(), (0, _ramda.curry)(_setResponseHeaders))(middlewareContext);},
+  setFrontendSetting: ({ node, traverser }) => {var _setFrontendSetting;return (_setFrontendSetting = (0, _languageContent.setFrontendSetting)(), (0, _ramda.curry)(_setFrontendSetting))(middlewareContext);},
+  pickClientSideProjectConfig: ({ node, traverser }) => {var _pickClientSideProjec;return (_pickClientSideProjec = (0, _useragentDetection.pickClientSideProjectConfig)({ targetProjectConfig }), (0, _ramda.curry)(_pickClientSideProjec))(middlewareContext);},
+  commonFunctionality: ({ node, traverser }) => {var _commonFunctionality;return (_commonFunctionality = (0, _commonFunctionality2.commonFunctionality)({ middlewareContext }), (0, _ramda.curry)(_commonFunctionality))(middlewareContext);},
+  notFound: ({ node, traverser }) => {var _notFound;return (_notFound = (0, _notFound2.notFound)(), (0, _ramda.curry)(_notFound))(middlewareContext);},
+  cacheControl: ({ node, traverser }) => {var _cacheControl;return (_cacheControl = (0, _contextManipulation.cacheControl)(), (0, _ramda.curry)(_cacheControl))(middlewareContext);},
+  transformJavascriptMiddleware: ({ node, traverser }) => {var _transformJavascriptM;return (_transformJavascriptM = (0, _babelTranspiler.transformJavascriptMiddleware)(), (0, _ramda.curry)(_transformJavascriptM))(middlewareContext);},
+  expandAtSignPath: ({ node, traverser }) => {var _expandAtSignPath;return (_expandAtSignPath = (0, _mapPathToAbsolutePath.expandAtSignPath)(), (0, _ramda.curry)(_expandAtSignPath))(middlewareContext);},
+  templateRenderingMiddleware: ({ node, traverser }) => {var _templateRenderingMid;return (_templateRenderingMid = (0, _templateRendering.templateRenderingMiddleware)(), (0, _ramda.curry)(_templateRenderingMid))(middlewareContext);},
+  graphRenderedTemplateDocument: async function ({ node, traverser }) {var _ref2;
+    let curriedFileReferenceList = fileReferenceList({ targetProjectConfig, configuredGraph }),
+    curriedPipeFunctionReferenceList = pipeFunctionReferenceList({ targetProjectConfig, configuredGraph });
+
+    return (_ref2 =
+    await (0, _traverseTemplateGraph.graphDocumentRenderingMiddlewareAdapter)({
+      middlewareNode: node,
+      graphInstance: traverser.graph,
+      configuredGraph,
+      referenceList: middlewareContext => ({
+        functionReferenceContext: curriedPipeFunctionReferenceList({ middlewareContext }),
+        fileContext: curriedFileReferenceList({ middlewareContext }) }) }), (0,
+
+    _ramda.curry)(_ref2))(
+    middlewareContext);
+  } });exports.middlewareFunctionReferenceList = middlewareFunctionReferenceList;
+
+
+let conditionFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) => (
+
+
+
+{
+  getUrlPathLevel: ({ node, traverser }) => (0, _graphEvaluationFunction.getUrlPathLevel)({ middlewareContext, level: node.properties.level }),
+  isExistUrlPathLevel: ({ node, traverser }) => (0, _graphEvaluationFunction.isExistUrlPathLevel)({ middlewareContext, level: node.properties.level }),
+  ifLevel1IncludesAt: async ({ node, traverser }) => await (0, _graphEvaluationFunction.ifLevel1IncludesAt)(middlewareContext),
+  ifLastUrlPathtIncludesFunction: ({ node, traverser }) => (0, _graphEvaluationFunction.ifLastUrlPathtIncludesFunction)(middlewareContext),
+  getRequestMethod: ({ node, traverser }) => (0, _graphEvaluationFunction.getRequestMethod)(middlewareContext),
+  getUrlPathAsArray: ({ node, traverser }) => (0, _graphEvaluationFunction.getUrlPathAsArray)(middlewareContext) });exports.conditionFunctionReferenceList = conditionFunctionReferenceList;
+
+
+let pipeFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) => (
+
+
+
+{
+  wrapWithJsTag: ({ node, traverser }) => (0, _wrapString.wrapWithJsTag)() });
+
+
+
+let fileReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) => (
+
+{
+  entrypointHTML: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/template/entrypoint.html`);
+  },
+  systemjsSetting: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/jspm.initialization.js`);
+  },
+  webcomponentPolyfill: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/polymerPolyfill.js`);
+  },
+  entrypointScript: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/template/entrypointScript.html`);
+  },
+  babelTranspiler: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/babelTranspiler.js`);
+  },
+  metadata: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/metadata/metadata.html`);
+  },
+  webScoket: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/websocket.js`);
+  },
+  googleAnalytics: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/googleAnalytics.js`);
+  },
+  serviceWorker: ({ node, traverser }) => {
+    (0, _assert.default)(middlewareContext[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`);
+    let clientSidePath = middlewareContext[symbol.context.clientSideProjectConfig].path;
+    return _path.default.join(clientSidePath, `./asset/javascript/serviceWorker/serviceWorker.js`);
+  } });exports.fileReferenceList = fileReferenceList;
+
+
+
+exports.middlewareFunctionReferenceList = middlewareFunctionReferenceList = (_middlewareFunctionRe = middlewareFunctionReferenceList, (0, _namedCurry.curryNamed)(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], _middlewareFunctionRe));
+exports.conditionFunctionReferenceList = conditionFunctionReferenceList = (_conditionFunctionRef = conditionFunctionReferenceList, (0, _namedCurry.curryNamed)(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], _conditionFunctionRef));
+exports.fileReferenceList = fileReferenceList = (_fileReferenceList = fileReferenceList, (0, _namedCurry.curryNamed)(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], _fileReferenceList));
+pipeFunctionReferenceList = (_pipeFunctionReferenc = pipeFunctionReferenceList, (0, _namedCurry.curryNamed)(['targetProjectConfig', 'configuredGraph', 'middlewareContext'], _pipeFunctionReferenc));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9ncmFwaFJlZmVyZW5jZUNvbnRleHQuanMiXSwibmFtZXMiOlsibWlkZGxld2FyZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCIsInRhcmdldFByb2plY3RDb25maWciLCJjb25maWd1cmVkR3JhcGgiLCJtaWRkbGV3YXJlQ29udGV4dCIsIm5vZGVEZWJ1ZyIsIm5vZGUiLCJ0cmF2ZXJzZXIiLCJuZXh0IiwiY29uc29sZSIsImxvZyIsIkpTT04iLCJzdHJpbmdpZnkiLCJwcm9wZXJ0aWVzIiwiZGVidWdNaWRkbGV3YXJlUHJveHkiLCJib2R5UGFyc2VyIiwiYm9keVBhcnNlck1pZGRsZXdhcmUiLCJjdXJyeSIsInNlcnZlU3RhdGljRmlsZSIsImZpbGVQYXRoIiwiYmFzZVBhdGgiLCJzZXJ2ZVNlcnZlclNpZGVSZW5kZXJlZEZpbGUiLCJyZW5kZXJUeXBlIiwibWltZVR5cGUiLCJzZXRSZXNwb25zZUhlYWRlcnMiLCJzZXRGcm9udGVuZFNldHRpbmciLCJwaWNrQ2xpZW50U2lkZVByb2plY3RDb25maWciLCJjb21tb25GdW5jdGlvbmFsaXR5Iiwibm90Rm91bmQiLCJjYWNoZUNvbnRyb2wiLCJ0cmFuc2Zvcm1KYXZhc2NyaXB0TWlkZGxld2FyZSIsImV4cGFuZEF0U2lnblBhdGgiLCJ0ZW1wbGF0ZVJlbmRlcmluZ01pZGRsZXdhcmUiLCJncmFwaFJlbmRlcmVkVGVtcGxhdGVEb2N1bWVudCIsImN1cnJpZWRGaWxlUmVmZXJlbmNlTGlzdCIsImZpbGVSZWZlcmVuY2VMaXN0IiwiY3VycmllZFBpcGVGdW5jdGlvblJlZmVyZW5jZUxpc3QiLCJwaXBlRnVuY3Rpb25SZWZlcmVuY2VMaXN0IiwibWlkZGxld2FyZU5vZGUiLCJncmFwaEluc3RhbmNlIiwiZ3JhcGgiLCJyZWZlcmVuY2VMaXN0IiwiZnVuY3Rpb25SZWZlcmVuY2VDb250ZXh0IiwiZmlsZUNvbnRleHQiLCJjb25kaXRpb25GdW5jdGlvblJlZmVyZW5jZUxpc3QiLCJnZXRVcmxQYXRoTGV2ZWwiLCJsZXZlbCIsImlzRXhpc3RVcmxQYXRoTGV2ZWwiLCJpZkxldmVsMUluY2x1ZGVzQXQiLCJpZkxhc3RVcmxQYXRodEluY2x1ZGVzRnVuY3Rpb24iLCJnZXRSZXF1ZXN0TWV0aG9kIiwiZ2V0VXJsUGF0aEFzQXJyYXkiLCJ3cmFwV2l0aEpzVGFnIiwiZW50cnlwb2ludEhUTUwiLCJzeW1ib2wiLCJjb250ZXh0IiwiY2xpZW50U2lkZVByb2plY3RDb25maWciLCJjbGllbnRTaWRlUGF0aCIsInBhdGgiLCJqb2luIiwic3lzdGVtanNTZXR0aW5nIiwid2ViY29tcG9uZW50UG9seWZpbGwiLCJlbnRyeXBvaW50U2NyaXB0IiwiYmFiZWxUcmFuc3BpbGVyIiwibWV0YWRhdGEiLCJ3ZWJTY29rZXQiLCJnb29nbGVBbmFseXRpY3MiLCJzZXJ2aWNlV29ya2VyIiwiZnVuYyJdLCJtYXBwaW5ncyI6IjZXQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwwRDs7Ozs7Ozs7OztBQVVBLElBQUlBLCtCQUErQixHQUFHLENBQUMsRUFBRUMsbUJBQUYsRUFBdUJDLGVBQXZCLEVBQXdDQyxpQkFBeEMsRUFBRDs7OztBQUluQztBQUNDQyxFQUFBQSxTQUFTLEVBQUUsQ0FBQyxFQUFFQyxJQUFGLEVBQVFDLFNBQVIsRUFBRCw2QkFBMEIsTUFBTUMsSUFBTixJQUFjQyxPQUFPLENBQUNDLEdBQVIsQ0FBYSxrQ0FBaUNDLElBQUksQ0FBQ0MsU0FBTCxDQUFlTixJQUFJLENBQUNPLFVBQXBCLENBQWdDLEVBQTlFLENBQXhDLE1BQTZIQywwQ0FBN0gsU0FEWjtBQUVDQyxFQUFBQSxVQUFVLEVBQUUsQ0FBQyxFQUFFVCxJQUFGLEVBQVFDLFNBQVIsRUFBRCx1Q0FBeUIseUJBQUNTLGdDQUFELE1BQXlCQyxZQUF6QiwwQkFBZ0NiLGlCQUFoQyxDQUF6QixFQUZiO0FBR0NjLEVBQUFBLGVBQWUsRUFBRSxDQUFDLEVBQUVaLElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCLGtCQUFNLGdDQUFnQixFQUFFTCxtQkFBRixFQUF1QmlCLFFBQVEsRUFBRWIsSUFBSSxDQUFDTyxVQUFMLENBQWdCTSxRQUFqRCxFQUEyREMsUUFBUSxFQUFFZCxJQUFJLENBQUNPLFVBQUwsQ0FBZ0JPLFFBQXJGLEVBQWhCLENBQU4sRUFBd0hoQixpQkFBeEgsQ0FIM0M7QUFJQ2lCLEVBQUFBLDJCQUEyQixFQUFFLENBQUMsRUFBRWYsSUFBRixFQUFRQyxTQUFSLEVBQUQ7QUFDM0I7QUFDRSxrREFBNEI7QUFDMUJZLFFBQUFBLFFBQVEsRUFBRWIsSUFBSSxDQUFDTyxVQUFMLENBQWdCTSxRQURBO0FBRTFCQyxRQUFBQSxRQUFRLEVBQUVkLElBQUksQ0FBQ08sVUFBTCxDQUFnQk8sUUFGQTtBQUcxQkUsUUFBQUEsVUFBVSxFQUFFaEIsSUFBSSxDQUFDTyxVQUFMLENBQWdCUyxVQUhGO0FBSTFCQyxRQUFBQSxRQUFRLEVBQUVqQixJQUFJLENBQUNPLFVBQUwsQ0FBZ0JVLFFBSkEsRUFBNUIsQ0FERjtBQU1RTixrQkFOUjtBQU9FYixNQUFBQSxpQkFQRixDQUQyQixHQUo5QjtBQWFDb0IsRUFBQUEsa0JBQWtCLEVBQUUsQ0FBQyxFQUFFbEIsSUFBRixFQUFRQyxTQUFSLEVBQUQscUNBQXlCLHVCQUFDLDhDQUFELE1BQXlCVSxZQUF6Qix3QkFBZ0NiLGlCQUFoQyxDQUF6QixFQWJyQjtBQWNDcUIsRUFBQUEsa0JBQWtCLEVBQUUsQ0FBQyxFQUFFbkIsSUFBRixFQUFRQyxTQUFSLEVBQUQscUNBQXlCLHVCQUFDLDBDQUFELE1BQXlCVSxZQUF6Qix3QkFBZ0NiLGlCQUFoQyxDQUF6QixFQWRyQjtBQWVDc0IsRUFBQUEsMkJBQTJCLEVBQUUsQ0FBQyxFQUFFcEIsSUFBRixFQUFRQyxTQUFSLEVBQUQsdUNBQXlCLHlCQUFDLHFEQUE0QixFQUFFTCxtQkFBRixFQUE1QixDQUFELE1BQXlEZSxZQUF6RCwwQkFBZ0ViLGlCQUFoRSxDQUF6QixFQWY5QjtBQWdCQ3VCLEVBQUFBLG1CQUFtQixFQUFFLENBQUMsRUFBRXJCLElBQUYsRUFBUUMsU0FBUixFQUFELHNDQUF5Qix3QkFBQywrQ0FBb0IsRUFBRUgsaUJBQUYsRUFBcEIsQ0FBRCxNQUErQ2EsWUFBL0MseUJBQXNEYixpQkFBdEQsQ0FBekIsRUFoQnRCO0FBaUJDd0IsRUFBQUEsUUFBUSxFQUFFLENBQUMsRUFBRXRCLElBQUYsRUFBUUMsU0FBUixFQUFELDJCQUF5QixhQUFDLDBCQUFELE1BQWVVLFlBQWYsY0FBc0JiLGlCQUF0QixDQUF6QixFQWpCWDtBQWtCQ3lCLEVBQUFBLFlBQVksRUFBRSxDQUFDLEVBQUV2QixJQUFGLEVBQVFDLFNBQVIsRUFBRCwrQkFBeUIsaUJBQUMsd0NBQUQsTUFBbUJVLFlBQW5CLGtCQUEwQmIsaUJBQTFCLENBQXpCLEVBbEJmO0FBbUJDMEIsRUFBQUEsNkJBQTZCLEVBQUUsQ0FBQyxFQUFFeEIsSUFBRixFQUFRQyxTQUFSLEVBQUQsdUNBQXlCLHlCQUFDLHFEQUFELE1BQW9DVSxZQUFwQywwQkFBMkNiLGlCQUEzQyxDQUF6QixFQW5CaEM7QUFvQkMyQixFQUFBQSxnQkFBZ0IsRUFBRSxDQUFDLEVBQUV6QixJQUFGLEVBQVFDLFNBQVIsRUFBRCxtQ0FBeUIscUJBQUMsOENBQUQsTUFBdUJVLFlBQXZCLHNCQUE4QmIsaUJBQTlCLENBQXpCLEVBcEJuQjtBQXFCQzRCLEVBQUFBLDJCQUEyQixFQUFFLENBQUMsRUFBRTFCLElBQUYsRUFBUUMsU0FBUixFQUFELHVDQUF5Qix5QkFBQyxxREFBRCxNQUFrQ1UsWUFBbEMsMEJBQXlDYixpQkFBekMsQ0FBekIsRUFyQjlCO0FBc0JDNkIsRUFBQUEsNkJBQTZCLEVBQUUsZ0JBQWUsRUFBRTNCLElBQUYsRUFBUUMsU0FBUixFQUFmLEVBQW9DO0FBQ2pFLFFBQUkyQix3QkFBd0IsR0FBR0MsaUJBQWlCLENBQUMsRUFBRWpDLG1CQUFGLEVBQXVCQyxlQUF2QixFQUFELENBQWhEO0FBQ0VpQyxJQUFBQSxnQ0FBZ0MsR0FBR0MseUJBQXlCLENBQUMsRUFBRW5DLG1CQUFGLEVBQXVCQyxlQUF2QixFQUFELENBRDlEOztBQUdBLFdBQU87QUFDSixVQUFNLG9FQUF3QztBQUM3Q21DLE1BQUFBLGNBQWMsRUFBRWhDLElBRDZCO0FBRTdDaUMsTUFBQUEsYUFBYSxFQUFFaEMsU0FBUyxDQUFDaUMsS0FGb0I7QUFHN0NyQyxNQUFBQSxlQUg2QztBQUk3Q3NDLE1BQUFBLGFBQWEsRUFBRXJDLGlCQUFpQixLQUFLO0FBQ25Dc0MsUUFBQUEsd0JBQXdCLEVBQUVOLGdDQUFnQyxDQUFDLEVBQUVoQyxpQkFBRixFQUFELENBRHZCO0FBRW5DdUMsUUFBQUEsV0FBVyxFQUFFVCx3QkFBd0IsQ0FBQyxFQUFFOUIsaUJBQUYsRUFBRCxDQUZGLEVBQUwsQ0FKYSxFQUF4QyxDQURGOztBQVNFYSxnQkFURjtBQVVMYixJQUFBQSxpQkFWSyxDQUFQO0FBV0QsR0FyQ0YsRUFKbUMsQ0FBdEMsQzs7O0FBNENBLElBQUl3Qyw4QkFBOEIsR0FBRyxDQUFDLEVBQUUxQyxtQkFBRixFQUF1QkMsZUFBdkIsRUFBd0NDLGlCQUF4QyxFQUFEOzs7O0FBSWxDO0FBQ0N5QyxFQUFBQSxlQUFlLEVBQUUsQ0FBQyxFQUFFdkMsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUIsOENBQWdCLEVBQUVILGlCQUFGLEVBQXFCMEMsS0FBSyxFQUFFeEMsSUFBSSxDQUFDTyxVQUFMLENBQWdCaUMsS0FBNUMsRUFBaEIsQ0FEM0M7QUFFQ0MsRUFBQUEsbUJBQW1CLEVBQUUsQ0FBQyxFQUFFekMsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUIsa0RBQW9CLEVBQUVILGlCQUFGLEVBQXFCMEMsS0FBSyxFQUFFeEMsSUFBSSxDQUFDTyxVQUFMLENBQWdCaUMsS0FBNUMsRUFBcEIsQ0FGL0M7QUFHQ0UsRUFBQUEsa0JBQWtCLEVBQUUsT0FBTyxFQUFFMUMsSUFBRixFQUFRQyxTQUFSLEVBQVAsS0FBK0IsTUFBTSxpREFBbUJILGlCQUFuQixDQUgxRDtBQUlDNkMsRUFBQUEsOEJBQThCLEVBQUUsQ0FBQyxFQUFFM0MsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUIsNkRBQStCSCxpQkFBL0IsQ0FKMUQ7QUFLQzhDLEVBQUFBLGdCQUFnQixFQUFFLENBQUMsRUFBRTVDLElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCLCtDQUFpQkgsaUJBQWpCLENBTDVDO0FBTUMrQyxFQUFBQSxpQkFBaUIsRUFBRSxDQUFDLEVBQUU3QyxJQUFGLEVBQVFDLFNBQVIsRUFBRCxLQUF5QixnREFBa0JILGlCQUFsQixDQU43QyxFQUprQyxDQUFyQyxDOzs7QUFhQSxJQUFJaUMseUJBQXlCLEdBQUcsQ0FBQyxFQUFFbkMsbUJBQUYsRUFBdUJDLGVBQXZCLEVBQXdDQyxpQkFBeEMsRUFBRDs7OztBQUk3QjtBQUNDZ0QsRUFBQUEsYUFBYSxFQUFFLENBQUMsRUFBRTlDLElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCLGdDQUR6QyxFQUo2QixDQUFoQzs7OztBQVNBLElBQUk0QixpQkFBaUIsR0FBRyxDQUFDLEVBQUVqQyxtQkFBRixFQUF1QkMsZUFBdkIsRUFBd0NDLGlCQUF4QyxFQUFEOztBQUVyQjtBQUNDaUQsRUFBQUEsY0FBYyxFQUFFLENBQUMsRUFBRS9DLElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCO0FBQ3ZDLHlCQUFPSCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBeEIsRUFBbUUsaUVBQW5FO0FBQ0EsUUFBSUMsY0FBYyxHQUFHckQsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQWpCLENBQTBERSxJQUEvRTtBQUNBLFdBQU9BLGNBQUtDLElBQUwsQ0FBVUYsY0FBVixFQUEyQixrQ0FBM0IsQ0FBUDtBQUNELEdBTEY7QUFNQ0csRUFBQUEsZUFBZSxFQUFFLENBQUMsRUFBRXRELElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCO0FBQ3hDLHlCQUFPSCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBeEIsRUFBbUUsaUVBQW5FO0FBQ0EsUUFBSUMsY0FBYyxHQUFHckQsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQWpCLENBQTBERSxJQUEvRTtBQUNBLFdBQU9BLGNBQUtDLElBQUwsQ0FBVUYsY0FBVixFQUEyQiwyQ0FBM0IsQ0FBUDtBQUNELEdBVkY7QUFXQ0ksRUFBQUEsb0JBQW9CLEVBQUUsQ0FBQyxFQUFFdkQsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUI7QUFDN0MseUJBQU9ILGlCQUFpQixDQUFDa0QsTUFBTSxDQUFDQyxPQUFQLENBQWVDLHVCQUFoQixDQUF4QixFQUFtRSxpRUFBbkU7QUFDQSxRQUFJQyxjQUFjLEdBQUdyRCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBakIsQ0FBMERFLElBQS9FO0FBQ0EsV0FBT0EsY0FBS0MsSUFBTCxDQUFVRixjQUFWLEVBQTJCLHVDQUEzQixDQUFQO0FBQ0QsR0FmRjtBQWdCQ0ssRUFBQUEsZ0JBQWdCLEVBQUUsQ0FBQyxFQUFFeEQsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUI7QUFDekMseUJBQU9ILGlCQUFpQixDQUFDa0QsTUFBTSxDQUFDQyxPQUFQLENBQWVDLHVCQUFoQixDQUF4QixFQUFtRSxpRUFBbkU7QUFDQSxRQUFJQyxjQUFjLEdBQUdyRCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBakIsQ0FBMERFLElBQS9FO0FBQ0EsV0FBT0EsY0FBS0MsSUFBTCxDQUFVRixjQUFWLEVBQTJCLHdDQUEzQixDQUFQO0FBQ0QsR0FwQkY7QUFxQkNNLEVBQUFBLGVBQWUsRUFBRSxDQUFDLEVBQUV6RCxJQUFGLEVBQVFDLFNBQVIsRUFBRCxLQUF5QjtBQUN4Qyx5QkFBT0gsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQXhCLEVBQW1FLGlFQUFuRTtBQUNBLFFBQUlDLGNBQWMsR0FBR3JELGlCQUFpQixDQUFDa0QsTUFBTSxDQUFDQyxPQUFQLENBQWVDLHVCQUFoQixDQUFqQixDQUEwREUsSUFBL0U7QUFDQSxXQUFPQSxjQUFLQyxJQUFMLENBQVVGLGNBQVYsRUFBMkIsdUNBQTNCLENBQVA7QUFDRCxHQXpCRjtBQTBCQ08sRUFBQUEsUUFBUSxFQUFFLENBQUMsRUFBRTFELElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCO0FBQ2pDLHlCQUFPSCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBeEIsRUFBbUUsaUVBQW5FO0FBQ0EsUUFBSUMsY0FBYyxHQUFHckQsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQWpCLENBQTBERSxJQUEvRTtBQUNBLFdBQU9BLGNBQUtDLElBQUwsQ0FBVUYsY0FBVixFQUEyQixnQ0FBM0IsQ0FBUDtBQUNELEdBOUJGO0FBK0JDUSxFQUFBQSxTQUFTLEVBQUUsQ0FBQyxFQUFFM0QsSUFBRixFQUFRQyxTQUFSLEVBQUQsS0FBeUI7QUFDbEMseUJBQU9ILGlCQUFpQixDQUFDa0QsTUFBTSxDQUFDQyxPQUFQLENBQWVDLHVCQUFoQixDQUF4QixFQUFtRSxpRUFBbkU7QUFDQSxRQUFJQyxjQUFjLEdBQUdyRCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBakIsQ0FBMERFLElBQS9FO0FBQ0EsV0FBT0EsY0FBS0MsSUFBTCxDQUFVRixjQUFWLEVBQTJCLGlDQUEzQixDQUFQO0FBQ0QsR0FuQ0Y7QUFvQ0NTLEVBQUFBLGVBQWUsRUFBRSxDQUFDLEVBQUU1RCxJQUFGLEVBQVFDLFNBQVIsRUFBRCxLQUF5QjtBQUN4Qyx5QkFBT0gsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQXhCLEVBQW1FLGlFQUFuRTtBQUNBLFFBQUlDLGNBQWMsR0FBR3JELGlCQUFpQixDQUFDa0QsTUFBTSxDQUFDQyxPQUFQLENBQWVDLHVCQUFoQixDQUFqQixDQUEwREUsSUFBL0U7QUFDQSxXQUFPQSxjQUFLQyxJQUFMLENBQVVGLGNBQVYsRUFBMkIsdUNBQTNCLENBQVA7QUFDRCxHQXhDRjtBQXlDQ1UsRUFBQUEsYUFBYSxFQUFFLENBQUMsRUFBRTdELElBQUYsRUFBUUMsU0FBUixFQUFELEtBQXlCO0FBQ3RDLHlCQUFPSCxpQkFBaUIsQ0FBQ2tELE1BQU0sQ0FBQ0MsT0FBUCxDQUFlQyx1QkFBaEIsQ0FBeEIsRUFBbUUsaUVBQW5FO0FBQ0EsUUFBSUMsY0FBYyxHQUFHckQsaUJBQWlCLENBQUNrRCxNQUFNLENBQUNDLE9BQVAsQ0FBZUMsdUJBQWhCLENBQWpCLENBQTBERSxJQUEvRTtBQUNBLFdBQU9BLGNBQUtDLElBQUwsQ0FBVUYsY0FBVixFQUEyQixtREFBM0IsQ0FBUDtBQUNELEdBN0NGLEVBRnFCLENBQXhCLEM7Ozs7QUFtREEsMENBQUF4RCwrQkFBK0IsNEJBQUdBLCtCQUFILEVBQStDLDRCQUFXLENBQUMscUJBQUQsRUFBd0IsaUJBQXhCLEVBQTJDLG1CQUEzQyxDQUFYLEVBQTRFbUUscUJBQTVFLENBQS9DLENBQS9CO0FBQ0EseUNBQUF4Qiw4QkFBOEIsNEJBQUdBLDhCQUFILEVBQThDLDRCQUFXLENBQUMscUJBQUQsRUFBd0IsaUJBQXhCLEVBQTJDLG1CQUEzQyxDQUFYLEVBQTRFd0IscUJBQTVFLENBQTlDLENBQTlCO0FBQ0EsNEJBQUFqQyxpQkFBaUIseUJBQUdBLGlCQUFILEVBQWlDLDRCQUFXLENBQUMscUJBQUQsRUFBd0IsaUJBQXhCLEVBQTJDLG1CQUEzQyxDQUFYLEVBQTRFaUMsa0JBQTVFLENBQWpDLENBQWpCO0FBQ0EvQix5QkFBeUIsNEJBQUdBLHlCQUFILEVBQXlDLDRCQUFXLENBQUMscUJBQUQsRUFBd0IsaUJBQXhCLEVBQTJDLG1CQUEzQyxDQUFYLEVBQTRFK0IscUJBQTVFLENBQXpDLENBQXpCIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGFzc2VydCBmcm9tICdhc3NlcnQnXG5pbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuaW1wb3J0IHsgY3VycnlOYW1lZCB9IGZyb20gJ0BkZXBlbmRlbmN5L25hbWVkQ3VycnknXG5pbXBvcnQgeyBjdXJyeSB9IGZyb20gJ3JhbWRhJ1xuaW1wb3J0ICogYXMgc3ltYm9sIGZyb20gJy4vc3ltYm9sLnJlZmVyZW5jZS5qcydcblxuaW1wb3J0IHsgZ2V0UmVxdWVzdE1ldGhvZCwgZ2V0VXJsUGF0aExldmVsLCBpc0V4aXN0VXJsUGF0aExldmVsLCBnZXRVcmxQYXRoQXNBcnJheSwgaWZMZXZlbDFJbmNsdWRlc0F0LCBpZkxhc3RVcmxQYXRodEluY2x1ZGVzRnVuY3Rpb24gfSBmcm9tICcuL2dyYXBoRXZhbHVhdGlvbkZ1bmN0aW9uLmpzJ1xuaW1wb3J0IHsgdHJhbnNmb3JtSmF2YXNjcmlwdE1pZGRsZXdhcmUgfSBmcm9tICcuL21pZGRsZXdhcmUvYmFiZWxUcmFuc3BpbGVyLmpzJ1xuaW1wb3J0IHsgc2VydmVTdGF0aWNGaWxlLCBzZXJ2ZVNlcnZlclNpZGVSZW5kZXJlZEZpbGUgfSBmcm9tICcuL21pZGRsZXdhcmUvc2VydmVGaWxlLmpzJ1xuaW1wb3J0IHsgcGlja0NsaWVudFNpZGVQcm9qZWN0Q29uZmlnIH0gZnJvbSAnLi9taWRkbGV3YXJlL3VzZXJhZ2VudERldGVjdGlvbi5qcydcbmltcG9ydCB7IGNvbW1vbkZ1bmN0aW9uYWxpdHkgfSBmcm9tICcuL21pZGRsZXdhcmUvY29tbW9uRnVuY3Rpb25hbGl0eS5qcydcbmltcG9ydCB7IG5vdEZvdW5kIH0gZnJvbSAnLi9taWRkbGV3YXJlL25vdEZvdW5kLmpzJ1xuaW1wb3J0IHsgZXhwYW5kQXRTaWduUGF0aCB9IGZyb20gJy4vbWlkZGxld2FyZS9tYXBAUGF0aFRvQWJzb2x1dGVQYXRoLmpzJ1xuaW1wb3J0IHsgYm9keVBhcnNlck1pZGRsZXdhcmUgfSBmcm9tICcuL21pZGRsZXdhcmUvYm9keVBhcnNlci5qcydcbmltcG9ydCB7IGRlYnVnTWlkZGxld2FyZVByb3h5IH0gZnJvbSAnLi4vLi4vdXRpbGl0eS9kZWJ1Z01pZGRsZXdhcmVQcm94eS5qcydcbmltcG9ydCB7IHNldFJlc3BvbnNlSGVhZGVycywgY2FjaGVDb250cm9sLCBoYW5kbGVPcHRpb25zUmVxdWVzdCB9IGZyb20gJy4vbWlkZGxld2FyZS9jb250ZXh0TWFuaXB1bGF0aW9uLmpzJ1xuaW1wb3J0IHsgc2V0RnJvbnRlbmRTZXR0aW5nIH0gZnJvbSAnLi9taWRkbGV3YXJlL2xhbmd1YWdlQ29udGVudC5qcydcbmltcG9ydCB7IHRlbXBsYXRlUmVuZGVyaW5nTWlkZGxld2FyZSB9IGZyb20gJy4vbWlkZGxld2FyZS90ZW1wbGF0ZVJlbmRlcmluZy5qcydcbmltcG9ydCB7IGdyYXBoRG9jdW1lbnRSZW5kZXJpbmdNaWRkbGV3YXJlQWRhcHRlciB9IGZyb20gJy4vbWlkZGxld2FyZS90cmF2ZXJzZVRlbXBsYXRlR3JhcGguanMnXG5pbXBvcnQgeyB3cmFwV2l0aEpzVGFnIH0gZnJvbSAnLi9waXBlRnVuY3Rpb24vd3JhcFN0cmluZy5qcydcblxuLy8gTm90ZTogZnVuY3Rpb24gYXJlIGN1cnJpZWQgdG8gYWxsb3cgaW5pdGlhbGl6YXRpb24gaW4gc3RhZ2VzLlxuLyoqIFxuICAgIGNvbnRleHQgdGhhdCB3aWxsIGJlIHVzZWQgYnkgdGhlIGdyYXBoIHRyYXZlcnNhbCBkdXJpbmcgZXhlY3V0aW9uLlxuICAgIGZ1bmN0aW9ucyByZWdpc3RlcmVkIGluIHRoaXMgb2JqZWN0IG11c3QgY29tcGx5ICh1c2UgYWRhcHRlciAtIHdyYXBwZXIgZnVuY3Rpb24pIHdpdGggdGhlIGdyYXBoIG1pZGRsZXdhcmUgaW1wbGVtZW50YXRpb24gLSBpLmUuIGEgZnVuY3Rpb24gd3JhcHBlZCBtaWRkbGV3YXJlLlxuICAgIGFkZCBwYXJhbWV0ZXJzIHRvIGdyYXBoIHNoYXJlZCBjb250ZXh0LlxuICAqL1xuXG4vLyBsaXN0IG9mIGZ1bmN0aW9uIHVzZWQgaW4gdGhlIGNvbnRleHQgb2YgZ3JhcGggdHJhdmVyc2FsLlxubGV0IG1pZGRsZXdhcmVGdW5jdGlvblJlZmVyZW5jZUxpc3QgPSAoeyB0YXJnZXRQcm9qZWN0Q29uZmlnLCBjb25maWd1cmVkR3JhcGgsIG1pZGRsZXdhcmVDb250ZXh0IH0pID0+XG4gIC8qKiAgbWlkZGxld2FyZXNcbiAgICogQHJldHVybiB7RnVuY3Rpb24gKGNvbnRleHQsIG5leHQpPT57fSB9IGZ1bmN0aW9ucyB0aGF0IHJldHVybiBhIG1pZGRsZXdhcmUuXG4gICAqL1xuICAoe1xuICAgIG5vZGVEZWJ1ZzogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChhc3luYyBuZXh0ID0+IGNvbnNvbGUubG9nKGDigKIgZXhlY3V0ZWQgbWlkZGxld2FyZSBpbiBub2RlOiAke0pTT04uc3RyaW5naWZ5KG5vZGUucHJvcGVydGllcyl9YCkpIHw+IGRlYnVnTWlkZGxld2FyZVByb3h5LCAvLyBkZWJ1Z1xuICAgIGJvZHlQYXJzZXI6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiAoYm9keVBhcnNlck1pZGRsZXdhcmUgfD4gY3VycnkpKG1pZGRsZXdhcmVDb250ZXh0KSxcbiAgICBzZXJ2ZVN0YXRpY0ZpbGU6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiBjdXJyeShzZXJ2ZVN0YXRpY0ZpbGUoeyB0YXJnZXRQcm9qZWN0Q29uZmlnLCBmaWxlUGF0aDogbm9kZS5wcm9wZXJ0aWVzLmZpbGVQYXRoLCBiYXNlUGF0aDogbm9kZS5wcm9wZXJ0aWVzLmJhc2VQYXRoIH0pKShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgc2VydmVTZXJ2ZXJTaWRlUmVuZGVyZWRGaWxlOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT5cbiAgICAgIChcbiAgICAgICAgc2VydmVTZXJ2ZXJTaWRlUmVuZGVyZWRGaWxlKHtcbiAgICAgICAgICBmaWxlUGF0aDogbm9kZS5wcm9wZXJ0aWVzLmZpbGVQYXRoLFxuICAgICAgICAgIGJhc2VQYXRoOiBub2RlLnByb3BlcnRpZXMuYmFzZVBhdGgsXG4gICAgICAgICAgcmVuZGVyVHlwZTogbm9kZS5wcm9wZXJ0aWVzLnJlbmRlclR5cGUsXG4gICAgICAgICAgbWltZVR5cGU6IG5vZGUucHJvcGVydGllcy5taW1lVHlwZSxcbiAgICAgICAgfSkgfD4gY3VycnlcbiAgICAgICkobWlkZGxld2FyZUNvbnRleHQpLFxuICAgIHNldFJlc3BvbnNlSGVhZGVyczogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChzZXRSZXNwb25zZUhlYWRlcnMoKSB8PiBjdXJyeSkobWlkZGxld2FyZUNvbnRleHQpLFxuICAgIHNldEZyb250ZW5kU2V0dGluZzogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChzZXRGcm9udGVuZFNldHRpbmcoKSB8PiBjdXJyeSkobWlkZGxld2FyZUNvbnRleHQpLFxuICAgIHBpY2tDbGllbnRTaWRlUHJvamVjdENvbmZpZzogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChwaWNrQ2xpZW50U2lkZVByb2plY3RDb25maWcoeyB0YXJnZXRQcm9qZWN0Q29uZmlnIH0pIHw+IGN1cnJ5KShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgY29tbW9uRnVuY3Rpb25hbGl0eTogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChjb21tb25GdW5jdGlvbmFsaXR5KHsgbWlkZGxld2FyZUNvbnRleHQgfSkgfD4gY3VycnkpKG1pZGRsZXdhcmVDb250ZXh0KSxcbiAgICBub3RGb3VuZDogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IChub3RGb3VuZCgpIHw+IGN1cnJ5KShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgY2FjaGVDb250cm9sOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gKGNhY2hlQ29udHJvbCgpIHw+IGN1cnJ5KShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgdHJhbnNmb3JtSmF2YXNjcmlwdE1pZGRsZXdhcmU6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiAodHJhbnNmb3JtSmF2YXNjcmlwdE1pZGRsZXdhcmUoKSB8PiBjdXJyeSkobWlkZGxld2FyZUNvbnRleHQpLFxuICAgIGV4cGFuZEF0U2lnblBhdGg6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiAoZXhwYW5kQXRTaWduUGF0aCgpIHw+IGN1cnJ5KShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgdGVtcGxhdGVSZW5kZXJpbmdNaWRkbGV3YXJlOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gKHRlbXBsYXRlUmVuZGVyaW5nTWlkZGxld2FyZSgpIHw+IGN1cnJ5KShtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgZ3JhcGhSZW5kZXJlZFRlbXBsYXRlRG9jdW1lbnQ6IGFzeW5jIGZ1bmN0aW9uKHsgbm9kZSwgdHJhdmVyc2VyIH0pIHtcbiAgICAgIGxldCBjdXJyaWVkRmlsZVJlZmVyZW5jZUxpc3QgPSBmaWxlUmVmZXJlbmNlTGlzdCh7IHRhcmdldFByb2plY3RDb25maWcsIGNvbmZpZ3VyZWRHcmFwaCB9KSxcbiAgICAgICAgY3VycmllZFBpcGVGdW5jdGlvblJlZmVyZW5jZUxpc3QgPSBwaXBlRnVuY3Rpb25SZWZlcmVuY2VMaXN0KHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoIH0pXG5cbiAgICAgIHJldHVybiAoXG4gICAgICAgIChhd2FpdCBncmFwaERvY3VtZW50UmVuZGVyaW5nTWlkZGxld2FyZUFkYXB0ZXIoe1xuICAgICAgICAgIG1pZGRsZXdhcmVOb2RlOiBub2RlLFxuICAgICAgICAgIGdyYXBoSW5zdGFuY2U6IHRyYXZlcnNlci5ncmFwaCxcbiAgICAgICAgICBjb25maWd1cmVkR3JhcGggLypHcmFwaCBDbGFzcyovLFxuICAgICAgICAgIHJlZmVyZW5jZUxpc3Q6IG1pZGRsZXdhcmVDb250ZXh0ID0+ICh7XG4gICAgICAgICAgICBmdW5jdGlvblJlZmVyZW5jZUNvbnRleHQ6IGN1cnJpZWRQaXBlRnVuY3Rpb25SZWZlcmVuY2VMaXN0KHsgbWlkZGxld2FyZUNvbnRleHQgfSksXG4gICAgICAgICAgICBmaWxlQ29udGV4dDogY3VycmllZEZpbGVSZWZlcmVuY2VMaXN0KHsgbWlkZGxld2FyZUNvbnRleHQgfSksXG4gICAgICAgICAgfSksXG4gICAgICAgIH0pKSB8PiBjdXJyeVxuICAgICAgKShtaWRkbGV3YXJlQ29udGV4dClcbiAgICB9LFxuICB9KVxuXG5sZXQgY29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gKHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoLCBtaWRkbGV3YXJlQ29udGV4dCB9KSA9PlxuICAvKiogIGNvbmRpdGlvbnNcbiAgICogQHJldHVybiB7YW55fSB2YWx1ZSBmb3IgY29uZGl0aW9uIGNvbXBhcmlzb24uIENvdWxkIHJldHVybiBib29sZWFuLCBzdHJpbmcsIGFycmF5LlxuICAgKi9cbiAgKHtcbiAgICBnZXRVcmxQYXRoTGV2ZWw6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiBnZXRVcmxQYXRoTGV2ZWwoeyBtaWRkbGV3YXJlQ29udGV4dCwgbGV2ZWw6IG5vZGUucHJvcGVydGllcy5sZXZlbCB9KSxcbiAgICBpc0V4aXN0VXJsUGF0aExldmVsOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gaXNFeGlzdFVybFBhdGhMZXZlbCh7IG1pZGRsZXdhcmVDb250ZXh0LCBsZXZlbDogbm9kZS5wcm9wZXJ0aWVzLmxldmVsIH0pLFxuICAgIGlmTGV2ZWwxSW5jbHVkZXNBdDogYXN5bmMgKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IGF3YWl0IGlmTGV2ZWwxSW5jbHVkZXNBdChtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgaWZMYXN0VXJsUGF0aHRJbmNsdWRlc0Z1bmN0aW9uOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gaWZMYXN0VXJsUGF0aHRJbmNsdWRlc0Z1bmN0aW9uKG1pZGRsZXdhcmVDb250ZXh0KSxcbiAgICBnZXRSZXF1ZXN0TWV0aG9kOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gZ2V0UmVxdWVzdE1ldGhvZChtaWRkbGV3YXJlQ29udGV4dCksXG4gICAgZ2V0VXJsUGF0aEFzQXJyYXk6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiBnZXRVcmxQYXRoQXNBcnJheShtaWRkbGV3YXJlQ29udGV4dCksXG4gIH0pXG5cbmxldCBwaXBlRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gKHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoLCBtaWRkbGV3YXJlQ29udGV4dCB9KSA9PlxuICAvKiogUGlwZXMgLSBmb3IgZnVydGhlciBwcm9jZXNzaW5nIHJlc3VsdHMgb2YgdGVtcGxhdGUgcmVuZGVybmluZ1xuICAgKiBAcmV0dXJuIHtGdW5jdGlvbiAoaW5wdXQpPT5vdXRwdXQgfSBmdW5jdGlvbnMgdGhhdCByZXR1cm4gYSBwaXBlIGZ1bmN0aW9uIC0gcmVjZWl2aW5nIGFuIGlucHV0IGFuZCByZXR1cm5pbmcgYSBwcm9jZXNzZWQgb3V0cHV0LlxuICAgKi9cbiAgKHtcbiAgICB3cmFwV2l0aEpzVGFnOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4gd3JhcFdpdGhKc1RhZygpLFxuICB9KVxuXG4vLyBsaXN0IG9mIGZpbGVzIHVzZWQgaW4gdGhlIGNvbnRleHQgb2YgZ3JhcGggdHJhdmVyc2FsLlxubGV0IGZpbGVSZWZlcmVuY2VMaXN0ID0gKHsgdGFyZ2V0UHJvamVjdENvbmZpZywgY29uZmlndXJlZEdyYXBoLCBtaWRkbGV3YXJlQ29udGV4dCB9KSA9PlxuICAvKiogVGVtcGxhdGUgZmlsZXMgKi9cbiAgKHtcbiAgICBlbnRyeXBvaW50SFRNTDogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IHtcbiAgICAgIGFzc2VydChtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10sIGDigKIgY2xpZW50U2lkZVByb2plY3RDb25maWcgbXVzdCBiZSBzZXQgYnkgYSBwcmV2aW91cyBtaWRkbGV3YXJlLmApXG4gICAgICBsZXQgY2xpZW50U2lkZVBhdGggPSBtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10ucGF0aFxuICAgICAgcmV0dXJuIHBhdGguam9pbihjbGllbnRTaWRlUGF0aCwgYC4vYXNzZXQvdGVtcGxhdGUvZW50cnlwb2ludC5odG1sYClcbiAgICB9LFxuICAgIHN5c3RlbWpzU2V0dGluZzogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IHtcbiAgICAgIGFzc2VydChtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10sIGDigKIgY2xpZW50U2lkZVByb2plY3RDb25maWcgbXVzdCBiZSBzZXQgYnkgYSBwcmV2aW91cyBtaWRkbGV3YXJlLmApXG4gICAgICBsZXQgY2xpZW50U2lkZVBhdGggPSBtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10ucGF0aFxuICAgICAgcmV0dXJuIHBhdGguam9pbihjbGllbnRTaWRlUGF0aCwgYC4vYXNzZXQvamF2YXNjcmlwdC9qc3BtLmluaXRpYWxpemF0aW9uLmpzYClcbiAgICB9LFxuICAgIHdlYmNvbXBvbmVudFBvbHlmaWxsOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4ge1xuICAgICAgYXNzZXJ0KG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXSwgYOKAoiBjbGllbnRTaWRlUHJvamVjdENvbmZpZyBtdXN0IGJlIHNldCBieSBhIHByZXZpb3VzIG1pZGRsZXdhcmUuYClcbiAgICAgIGxldCBjbGllbnRTaWRlUGF0aCA9IG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXS5wYXRoXG4gICAgICByZXR1cm4gcGF0aC5qb2luKGNsaWVudFNpZGVQYXRoLCBgLi9hc3NldC9qYXZhc2NyaXB0L3BvbHltZXJQb2x5ZmlsbC5qc2ApXG4gICAgfSxcbiAgICBlbnRyeXBvaW50U2NyaXB0OiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4ge1xuICAgICAgYXNzZXJ0KG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXSwgYOKAoiBjbGllbnRTaWRlUHJvamVjdENvbmZpZyBtdXN0IGJlIHNldCBieSBhIHByZXZpb3VzIG1pZGRsZXdhcmUuYClcbiAgICAgIGxldCBjbGllbnRTaWRlUGF0aCA9IG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXS5wYXRoXG4gICAgICByZXR1cm4gcGF0aC5qb2luKGNsaWVudFNpZGVQYXRoLCBgLi9hc3NldC90ZW1wbGF0ZS9lbnRyeXBvaW50U2NyaXB0Lmh0bWxgKVxuICAgIH0sXG4gICAgYmFiZWxUcmFuc3BpbGVyOiAoeyBub2RlLCB0cmF2ZXJzZXIgfSkgPT4ge1xuICAgICAgYXNzZXJ0KG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXSwgYOKAoiBjbGllbnRTaWRlUHJvamVjdENvbmZpZyBtdXN0IGJlIHNldCBieSBhIHByZXZpb3VzIG1pZGRsZXdhcmUuYClcbiAgICAgIGxldCBjbGllbnRTaWRlUGF0aCA9IG1pZGRsZXdhcmVDb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXS5wYXRoXG4gICAgICByZXR1cm4gcGF0aC5qb2luKGNsaWVudFNpZGVQYXRoLCBgLi9hc3NldC9qYXZhc2NyaXB0L2JhYmVsVHJhbnNwaWxlci5qc2ApXG4gICAgfSxcbiAgICBtZXRhZGF0YTogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IHtcbiAgICAgIGFzc2VydChtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10sIGDigKIgY2xpZW50U2lkZVByb2plY3RDb25maWcgbXVzdCBiZSBzZXQgYnkgYSBwcmV2aW91cyBtaWRkbGV3YXJlLmApXG4gICAgICBsZXQgY2xpZW50U2lkZVBhdGggPSBtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10ucGF0aFxuICAgICAgcmV0dXJuIHBhdGguam9pbihjbGllbnRTaWRlUGF0aCwgYC4vYXNzZXQvbWV0YWRhdGEvbWV0YWRhdGEuaHRtbGApXG4gICAgfSxcbiAgICB3ZWJTY29rZXQ6ICh7IG5vZGUsIHRyYXZlcnNlciB9KSA9PiB7XG4gICAgICBhc3NlcnQobWlkZGxld2FyZUNvbnRleHRbc3ltYm9sLmNvbnRleHQuY2xpZW50U2lkZVByb2plY3RDb25maWddLCBg4oCiIGNsaWVudFNpZGVQcm9qZWN0Q29uZmlnIG11c3QgYmUgc2V0IGJ5IGEgcHJldmlvdXMgbWlkZGxld2FyZS5gKVxuICAgICAgbGV0IGNsaWVudFNpZGVQYXRoID0gbWlkZGxld2FyZUNvbnRleHRbc3ltYm9sLmNvbnRleHQuY2xpZW50U2lkZVByb2plY3RDb25maWddLnBhdGhcbiAgICAgIHJldHVybiBwYXRoLmpvaW4oY2xpZW50U2lkZVBhdGgsIGAuL2Fzc2V0L2phdmFzY3JpcHQvd2Vic29ja2V0LmpzYClcbiAgICB9LFxuICAgIGdvb2dsZUFuYWx5dGljczogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IHtcbiAgICAgIGFzc2VydChtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10sIGDigKIgY2xpZW50U2lkZVByb2plY3RDb25maWcgbXVzdCBiZSBzZXQgYnkgYSBwcmV2aW91cyBtaWRkbGV3YXJlLmApXG4gICAgICBsZXQgY2xpZW50U2lkZVBhdGggPSBtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10ucGF0aFxuICAgICAgcmV0dXJuIHBhdGguam9pbihjbGllbnRTaWRlUGF0aCwgYC4vYXNzZXQvamF2YXNjcmlwdC9nb29nbGVBbmFseXRpY3MuanNgKVxuICAgIH0sXG4gICAgc2VydmljZVdvcmtlcjogKHsgbm9kZSwgdHJhdmVyc2VyIH0pID0+IHtcbiAgICAgIGFzc2VydChtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10sIGDigKIgY2xpZW50U2lkZVByb2plY3RDb25maWcgbXVzdCBiZSBzZXQgYnkgYSBwcmV2aW91cyBtaWRkbGV3YXJlLmApXG4gICAgICBsZXQgY2xpZW50U2lkZVBhdGggPSBtaWRkbGV3YXJlQ29udGV4dFtzeW1ib2wuY29udGV4dC5jbGllbnRTaWRlUHJvamVjdENvbmZpZ10ucGF0aFxuICAgICAgcmV0dXJuIHBhdGguam9pbihjbGllbnRTaWRlUGF0aCwgYC4vYXNzZXQvamF2YXNjcmlwdC9zZXJ2aWNlV29ya2VyL3NlcnZpY2VXb3JrZXIuanNgKVxuICAgIH0sXG4gIH0pXG5cbi8vIGN1cnJpZnkgdGhlIGZ1bmN0aW9uc1xubWlkZGxld2FyZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCA9IG1pZGRsZXdhcmVGdW5jdGlvblJlZmVyZW5jZUxpc3QgfD4gKGZ1bmMgPT4gY3VycnlOYW1lZChbJ3RhcmdldFByb2plY3RDb25maWcnLCAnY29uZmlndXJlZEdyYXBoJywgJ21pZGRsZXdhcmVDb250ZXh0J10sIGZ1bmMpKVxuY29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0ID0gY29uZGl0aW9uRnVuY3Rpb25SZWZlcmVuY2VMaXN0IHw+IChmdW5jID0+IGN1cnJ5TmFtZWQoWyd0YXJnZXRQcm9qZWN0Q29uZmlnJywgJ2NvbmZpZ3VyZWRHcmFwaCcsICdtaWRkbGV3YXJlQ29udGV4dCddLCBmdW5jKSlcbmZpbGVSZWZlcmVuY2VMaXN0ID0gZmlsZVJlZmVyZW5jZUxpc3QgfD4gKGZ1bmMgPT4gY3VycnlOYW1lZChbJ3RhcmdldFByb2plY3RDb25maWcnLCAnY29uZmlndXJlZEdyYXBoJywgJ21pZGRsZXdhcmVDb250ZXh0J10sIGZ1bmMpKVxucGlwZUZ1bmN0aW9uUmVmZXJlbmNlTGlzdCA9IHBpcGVGdW5jdGlvblJlZmVyZW5jZUxpc3QgfD4gKGZ1bmMgPT4gY3VycnlOYW1lZChbJ3RhcmdldFByb2plY3RDb25maWcnLCAnY29uZmlndXJlZEdyYXBoJywgJ21pZGRsZXdhcmVDb250ZXh0J10sIGZ1bmMpKVxuXG5leHBvcnQgeyBtaWRkbGV3YXJlRnVuY3Rpb25SZWZlcmVuY2VMaXN0LCBjb25kaXRpb25GdW5jdGlvblJlZmVyZW5jZUxpc3QsIGZpbGVSZWZlcmVuY2VMaXN0IH1cbiJdfQ==
