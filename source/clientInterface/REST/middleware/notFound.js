@@ -11,8 +11,7 @@ export const notFound = () =>
     await send(context, path.normalize(`${context[symbol.context.clientSideProjectConfig].path}/asset/template/entrypoint.html`))
 
     // if still not found (if the html template was not found)
-    if (!context.body && 404 != context.status) {
-      context.body = 'Ops.. Not Found 404'
-      context.status = 404 // set explicively, preserving status value.
-    }
+    if (!context.body) context.body = 'Ops.. Not Found 404'
+
+    context.status = 404 // set explicively, preserving status value.
   }
