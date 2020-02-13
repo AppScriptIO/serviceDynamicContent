@@ -4,7 +4,7 @@ import { curryNamed } from '@dependency/namedCurry'
 import { curry } from 'ramda'
 import * as symbol from './symbol.reference.js'
 
-import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifLastUrlPathtIncludesFunction, getFileType } from './graphEvaluationFunction.js'
+import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifDollarFunction, getFileType } from './graphEvaluationFunction.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
@@ -83,7 +83,7 @@ let conditionFunctionReferenceList = ({ targetProjectConfig, configuredGraph, mi
     getUrlPathLevel: ({ node, traverser }) => getUrlPathLevel({ middlewareContext, level: node.properties.level }),
     isExistUrlPathLevel: ({ node, traverser }) => isExistUrlPathLevel({ middlewareContext, level: node.properties.level }),
     ifLevel1IncludesAt: async ({ node, traverser }) => await ifLevel1IncludesAt(middlewareContext),
-    ifLastUrlPathtIncludesFunction: ({ node, traverser }) => ifLastUrlPathtIncludesFunction(middlewareContext),
+    ifDollarFunction: ({ node, traverser }) => ifDollarFunction({ middlewareContext, shouldParsePath: node.properties.shouldParsePath }),
     getRequestMethod: ({ node, traverser }) => getRequestMethod(middlewareContext),
     getUrlPathAsArray: ({ node, traverser }) => getUrlPathAsArray(middlewareContext),
     getFileType: ({ node, traverser }) => getFileType(middlewareContext),

@@ -1,3 +1,5 @@
+import * as symbol from './symbol.reference.js'
+
 /**
  * @param {Koa Context {request, response}} middlewareContext
  */
@@ -31,12 +33,16 @@ export const getUrlPathLevel = async ({ middlewareContext, level = 0 }) => {
   return pathArray[level]
 }
 
-export const ifLastUrlPathtIncludesFunction = async middlewareContext => {
-  let pathArray = await getUrlPathAsArray(middlewareContext)
-  let lastPath = pathArray.pop() // get url path
-  if (!lastPath) return
-  if (lastPath.includes('?')) lastPath = lastPath.substr(0, lastPath.lastIndexOf('?')) // remove parameters
-  return lastPath.includes('$') ? true : false // check if function sign exists
+export const ifDollarFunction = async ({ middlewareContext, shouldParsePath = true }) => {
+  if (shouldParsePath) {
+    let pathArray = await getUrlPathAsArray(middlewareContext)
+    let lastPath = pathArray.pop() // get url path
+    if (!lastPath) return
+    if (lastPath.includes('?')) lastPath = lastPath.substr(0, lastPath.lastIndexOf('?')) // remove parameters
+    return lastPath.includes('$') ? true : false // check if function sign exists
+  } else {
+    return Boolean(middlewareContext[symbol.context.parsed.dollarSign])
+  }
 }
 
 export const ifLevel1IncludesAt = async middlewareContext => {

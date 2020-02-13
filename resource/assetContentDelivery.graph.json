@@ -1,1 +1,1204 @@
-{"node":[{"identity":3238,"labels":["Reroute"],"properties":{"key":"07b2ef41-2363-45e3-bb28-0af6faca23d3","name":"file path check"}},{"identity":3239,"labels":["Reroute"],"properties":{"key":"0835add2-538e-4b1a-9278-20e16c4747e0","name":"routes"}},{"identity":3240,"labels":["Stage","Process","Function","Port"],"properties":{"functionName":"parseAtSignPath","handlePropagationImplementation":"chronological","key":"088c5717-31fa-4bf3-a5b4-40dbbc8a3411"}},{"identity":3241,"labels":["Reroute"],"properties":{"key":"08w7g-0892u3f-9834g89"}},{"identity":3242,"labels":["Stage","Process","Function"],"properties":{"functionName":"commonFunctionality","key":"097b3cb0-b121-4aae-ab2d-0150fa3d6b66"}},{"identity":3243,"labels":["Stage","Process","Function"],"properties":{"functionName":"removeDollarSignPath","key":"0a73bb26-9ee1-4614-8733-e3648317f5bb"}},{"identity":3244,"labels":["Stage","Process","Function"],"properties":{"functionName":"getUrlPathAsArray","key":"0cba6c2b-0803-4e59-9e03-6d19e6147478"}},{"identity":3245,"labels":["Stage","Process","Function"],"properties":{"functionName":"expandAtSignPath","key":"1cd1887d-86ab-4e49-934e-d4a65b86c0ff"}},{"identity":3246,"labels":["Stage","Process","Function"],"properties":{"basePath":"./","functionName":"serveStaticFile","key":"1d07b024-6417-41a8-a917-f4e923c2cc2c","name":"serveStaticFile"}},{"identity":3247,"labels":["Stage","Port"],"properties":{"handlePropagationImplementation":"chronological","key":"1d9cc904-0c16-406f-be47-70f5a779c9ad","name":"upload"}},{"identity":3248,"labels":["Stage","Process","Function"],"properties":{"functionName":"getFileType","key":"1deffb84-827d-4fa4-ae6a-7b07a2111bf1","name":"getFileType"}},{"identity":3249,"labels":["Reroute"],"properties":{"key":"1e8c4818-d85b-4dcd-9746-34903f2fce2c"}},{"identity":3250,"labels":["Reroute"],"properties":{"key":"293097b9-3522-4f2b-b557-8380ff3e96e3","name":"Asset Content Delivery - REST architecture + Custom concepts"}},{"identity":3251,"labels":["Stage","Process","Function"],"properties":{"functionName":"nodeDebug","key":"3e5c6b3e-136e-4cde-bb2c-e58ff08450cd"}},{"identity":3252,"labels":["Stage","Process","Function"],"properties":{"functionName":"getRequestMethod","key":"400f822b-ed2c-4503-ad53-370668603d04"}},{"identity":3253,"labels":["Stage","Process","Function"],"properties":{"basePath":"./","functionName":"serveStaticFile","key":"4a749a74-e75c-42e4-8aee-eeeba71461d2","name":"serveStaticFile"}},{"identity":3254,"labels":["Stage","Process","Function"],"properties":{"functionName":"pickClientSideProjectConfig","key":"51efac8a-22a3-4ed8-9450-907cb316c35e"}},{"identity":3255,"labels":["Stage","Process","Function"],"properties":{"filePath":"../packageManager/library.browser.jspm/jspm.config.js","functionName":"serveStaticFile","key":"56a309e6-70f8-4d22-b6ca-8a5da9191d94"}},{"identity":3256,"labels":["Stage","Process","Function"],"properties":{"functionName":"transformJavascriptMiddleware","key":"58dcf5b8-6d5c-44ba-91ce-ede56eb78c30"}},{"identity":3257,"labels":["Stage","Process","Function"],"properties":{"functionName":"ifLevel1IncludesAt","key":"6b2e0f97-e667-4e7f-80d4-369e551506d1","name":"ifLevel1IncludesAt"}},{"identity":3258,"labels":["Stage","Process","Function"],"properties":{"functionName":"nodeDebug","key":"6c07b30e-190c-429d-88e6-9d26e7477e05"}},{"identity":3259,"labels":["Stage","Process","Function"],"properties":{"functionName":"setResponseHeaders","key":"72aa1d74-04e6-4cfe-ad3f-3fe93188a8a2"}},{"identity":3260,"labels":["Stage","Process","Function"],"properties":{"functionName":"ifLastUrlPathtIncludesFunction","key":"7e90e794-735d-4d56-b9d6-ea6f32742dd1","name":"ifLastUrlPathtIncludesFunction"}},{"identity":3261,"labels":["Stage","Process","Function"],"properties":{"functionName":"notFound","key":"7f01c60f-b5db-49b7-b748-f05a25a608d4"}},{"identity":3262,"labels":["Stage","Process","Function"],"properties":{"functionName":"serveServerSideRenderedFile","key":"80e4c170-408c-4bd4-86be-75402ebe08b4"}},{"identity":3263,"labels":["Stage","Port"],"properties":{"handlePropagationImplementation":"chronological","key":"932c9d9a-ca68-472d-8285-6f5d6c2f2892","name":"common middlewares"}},{"identity":3264,"labels":["Stage","Process","Function"],"properties":{"functionName":"setFrontendSetting","key":"9c4bc8c1-2a2e-4783-b58a-c4655447163f"}},{"identity":3265,"labels":["Stage","Process","Function"],"properties":{"functionName":"getUrlPathLevel","key":"a2db9344-58fc-47b0-a41e-b48c8c7f859e","level":0,"name":"getUrlPathLevel"}},{"identity":3266,"labels":["Stage","Process","Function","Port"],"properties":{"functionName":"parseDollarSignPath","handlePropagationImplementation":"chronological","key":"a4ba9d95-ed32-4b7e-8c85-838b398012dc"}},{"identity":3267,"labels":["Reroute"],"properties":{"key":"abe0e7b1-a8e4-4335-a11c-f341a2798de4"}},{"identity":3268,"labels":["Stage","Port"],"properties":{"handlePropagationImplementation":"chronological","key":"ac58f648-cf0e-4d4c-90f0-6d8e8064dfda","name":"parse & extract"}},{"identity":3269,"labels":["Stage","Process","Function"],"properties":{"functionName":"bodyParser","key":"b011ece0-74e8-4c32-842d-1a146e3f8a8a"}},{"identity":3270,"labels":["Stage","Process","Function"],"properties":{"functionName":"cacheControl","key":"b76345a9-1c7a-42ca-b577-3426f7204f9f"}},{"identity":3271,"labels":["Stage","Port"],"properties":{"handlePropagationImplementation":"chronological","key":"d12f0416-fdef-4fff-8294-5e606bce9849"}},{"identity":3272,"labels":["Reroute"],"properties":{"key":"d3297ef3-52b6-4895-b1cf-f3b6987cefdd","name":"reroutes"}}],"edge":[{"identity":8693,"start":3239,"end":3238,"type":"FALLBACK","properties":{"key":"23e05a2d-dcc3-436a-8bac-c12fd4403deb"}},{"identity":8481,"start":3238,"end":3238,"type":"REFERENCE","properties":{"key":"76cefa1b-829e-48d7-a9fa-030056f78a27","resolutionImplementation":"selection"}},{"identity":8482,"start":3263,"end":3239,"type":"NEXT","properties":{"key":"81905485-2c39-46d8-a8ab-03bf57fa2950","order":10}},{"identity":8483,"start":3239,"end":3239,"type":"REFERENCE","properties":{"key":"f9fd9584-9568-4bc2-8ec2-01fb5caa3b98","resolutionImplementation":"selection"}},{"identity":8484,"start":3267,"end":3240,"type":"CASE","properties":{"expected":true,"key":"2e7a8bc8-3908-49b4-ae5f-56470e6d7eb3"}},{"identity":8485,"start":3240,"end":3240,"type":"RESOURCE","properties":{"context":"applicationReference","key":"d41e3a7c-0b70-4ebf-977a-d795f160ffbb"}},{"identity":8486,"start":3240,"end":3240,"type":"FORK","properties":{"key":"45eb790b-9e1f-4f68-89fb-258ab471a609"}},{"identity":8487,"start":3240,"end":3240,"type":"EXECUTE","properties":{"key":"fa4b8527-db2d-4955-a018-b7df432a0f5b"}},{"identity":8488,"start":3241,"end":3241,"type":"REFERENCE","properties":{"key":"94c6e656-720c-4a55-8388-2af3654f0ec1","resolutionImplementation":"selection"}},{"identity":8489,"start":3258,"end":3241,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"7d577ce0-2fd9-4367-a70f-442872e9a7a8"}},{"identity":8490,"start":3241,"end":3241,"type":"SELECT","properties":{"key":"6539f02b-f092-487c-9841-8121edc4154d"}},{"identity":8491,"start":3271,"end":3241,"type":"NEXT","properties":{"key":"5728bdc0-b964-410e-9fcb-503065ce4014","order":2}},{"identity":8493,"start":3242,"end":3242,"type":"EXECUTE","properties":{"key":"2bf831b9-d2ae-42fc-aab0-c31663f7414b"}},{"identity":8494,"start":3242,"end":3242,"type":"RESOURCE","properties":{"context":"applicationReference","key":"628f48fd-6a31-4ccf-9a4d-440fa52a1ebe"}},{"identity":8492,"start":3263,"end":3242,"type":"NEXT","properties":{"key":"7d12d9f1-0ca1-4844-adef-e7572fee0ecb","order":5}},{"identity":8495,"start":3266,"end":3243,"type":"NEXT","properties":{"key":"b0be48b8-1609-4e11-b33c-b8be52e54bde","order":1}},{"identity":8496,"start":3243,"end":3243,"type":"RESOURCE","properties":{"context":"applicationReference","key":"0e90a02d-c18e-4426-9432-6f8eb482b205"}},{"identity":8497,"start":3243,"end":3243,"type":"EXECUTE","properties":{"key":"68f484ce-9e73-424e-897a-9bd5aa4cb997"}},{"identity":8498,"start":3244,"end":3244,"type":"RESOURCE","properties":{"context":"applicationReference","key":"1a2b842f-50f1-4274-b06f-4abf4e0e1d3e"}},{"identity":8499,"start":3244,"end":3244,"type":"EXECUTE","properties":{"key":"f35631be-9cb6-4ebe-8b48-de73282c1074"}},{"identity":8500,"start":3244,"end":3244,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"f350b406-ea93-45b2-be7a-dd4fa26980a8"}},{"identity":8501,"start":3239,"end":3244,"type":"SELECT","properties":{"key":"7cf7c399-09b1-4b7e-be79-a670f10910db","order":1}},{"identity":8504,"start":3245,"end":3245,"type":"RESOURCE","properties":{"context":"applicationReference","key":"6dbfc738-0329-4930-8f8e-128fd30de79e"}},{"identity":8503,"start":3240,"end":3245,"type":"NEXT","properties":{"key":"89005529-2927-4aac-995f-7727eced1ed8","order":1}},{"identity":8502,"start":3245,"end":3245,"type":"EXECUTE","properties":{"key":"3da365ac-5797-4173-afee-dab104cce89f"}},{"identity":8506,"start":3246,"end":3246,"type":"RESOURCE","properties":{"context":"applicationReference","key":"3044994c-6346-483b-8266-845058a90b7d"}},{"identity":8505,"start":3247,"end":3246,"type":"NEXT","properties":{"key":"a15147c3-84c3-41fa-92b2-58fe61cd733c","order":2}},{"identity":8507,"start":3246,"end":3246,"type":"EXECUTE","properties":{"key":"5b6f8a4b-f4a3-4ff6-8760-f319e35fc332"}},{"identity":8508,"start":3247,"end":3247,"type":"FORK","properties":{"key":"256fdef3-b147-4729-87f2-5fb42fcb506f"}},{"identity":8509,"start":3265,"end":3247,"type":"CASE","properties":{"expected":"upload","key":"cda79ec8-933a-40c7-aa8d-ada655b326ef"}},{"identity":8512,"start":3248,"end":3248,"type":"RESOURCE","properties":{"context":"applicationReference","key":"e5548f77-3755-42bb-954a-a35974bcac24"}},{"identity":8511,"start":3238,"end":3248,"type":"SELECT","properties":{"key":"368ff241-97d6-4cf9-a9aa-a3c5d384da20"}},{"identity":8510,"start":3248,"end":3248,"type":"EXECUTE","properties":{"key":"49f4b862-6a95-47f3-9c5d-dc8e7597a629"}},{"identity":8513,"start":3248,"end":3248,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"b056e874-117e-4a4b-979a-e688c20d535b"}},{"identity":8515,"start":3268,"end":3249,"type":"NEXT","properties":{"key":"0733728f-353e-41e0-8b3e-c3cd7f1a5d0c","order":3}},{"identity":8514,"start":3249,"end":3249,"type":"REFERENCE","properties":{"key":"2f52a70c-e31d-41ae-a995-39bdc415c600","resolutionImplementation":"selection"}},{"identity":8517,"start":3260,"end":3249,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"3749568b-d652-4ab3-a6bc-10df7021dde1"}},{"identity":8516,"start":3249,"end":3249,"type":"SELECT","properties":{"key":"bf89bfb9-dfcc-4792-8976-3ea4e5cf1960"}},{"identity":8520,"start":3251,"end":3251,"type":"EXECUTE","properties":{"key":"ca6e884d-38f0-4eee-9d47-b2391a3c6d1a"}},{"identity":8519,"start":3272,"end":3251,"type":"FALLBACK","properties":{"key":"6514e54a-11b7-4182-a00c-44d15a860e65"}},{"identity":8518,"start":3251,"end":3251,"type":"RESOURCE","properties":{"context":"applicationReference","key":"96a899dc-bfff-4dfb-8faa-bbe9d73570e5"}},{"identity":8522,"start":3252,"end":3252,"type":"EXECUTE","properties":{"key":"089b17e3-f9ad-42f9-b565-ba807e22d369"}},{"identity":8521,"start":3252,"end":3252,"type":"RESOURCE","properties":{"context":"applicationReference","key":"beed8bb1-aa41-4b00-8ce0-298406f62509"}},{"identity":8524,"start":3238,"end":3253,"type":"FALLBACK","properties":{"key":"eb51d3d8-3261-4501-b7ff-0f9ee0231ad9"}},{"identity":8523,"start":3253,"end":3253,"type":"EXECUTE","properties":{"key":"4fc331ea-f504-4a60-a3a6-d0f0b76cc295"}},{"identity":8525,"start":3253,"end":3253,"type":"RESOURCE","properties":{"context":"applicationReference","key":"fe7ba11c-4982-4181-8ec4-6e81592f4f27"}},{"identity":8526,"start":3254,"end":3254,"type":"RESOURCE","properties":{"context":"applicationReference","key":"1cc3b31f-51ad-43b1-add7-0eb876899eec"}},{"identity":8527,"start":3254,"end":3254,"type":"EXECUTE","properties":{"key":"e5c53a1f-d5bf-4594-8740-b200f9c69902"}},{"identity":8528,"start":3263,"end":3254,"type":"NEXT","properties":{"key":"8c16db24-a3cb-4c46-bfd5-740c46ab8202","order":3}},{"identity":8529,"start":3255,"end":3255,"type":"EXECUTE","properties":{"key":"8bfa4bd3-b588-438b-ace4-ae87b28702bb"}},{"identity":8530,"start":3244,"end":3255,"type":"CASE","properties":{"expected":["javascript","jspm.config.js"],"key":"ca6e2e62-2b54-467f-9f0c-dc0195923907"}},{"identity":8531,"start":3255,"end":3255,"type":"RESOURCE","properties":{"context":"applicationReference","key":"66fe1c47-52fb-4da8-950f-e39ae78aab38"}},{"identity":8532,"start":3256,"end":3256,"type":"EXECUTE","properties":{"key":"837c6b46-e66f-42f4-9208-3287c4f8bd25"}},{"identity":8533,"start":3256,"end":3256,"type":"RESOURCE","properties":{"context":"applicationReference","key":"7a647d0c-3acb-4bb8-983a-867965772271"}},{"identity":8534,"start":3241,"end":3256,"type":"CASE","properties":{"expected":true,"key":"bb831108-837e-4017-9680-fba72de81dd9"}},{"identity":8535,"start":3257,"end":3257,"type":"RESOURCE","properties":{"context":"applicationReference","key":"c4379e7c-c6a2-47c6-a116-e16a6ca08219"}},{"identity":8536,"start":3257,"end":3257,"type":"EXECUTE","properties":{"key":"1c69975d-d8f1-4a83-8898-63cc63c2655e"}},{"identity":8537,"start":3258,"end":3258,"type":"RESOURCE","properties":{"context":"applicationReference","key":"71b1eb92-3bc0-4cfb-b068-6c14f125d358"}},{"identity":8538,"start":3258,"end":3258,"type":"EXECUTE","properties":{"key":"9990e385-f932-457e-b5fb-f08519bb7155"}},{"identity":8539,"start":3259,"end":3259,"type":"RESOURCE","properties":{"context":"applicationReference","key":"dc9c6466-601d-40c3-998d-7306c623b6ef"}},{"identity":8540,"start":3263,"end":3259,"type":"NEXT","properties":{"key":"82decfdf-1e8e-42e7-b7f7-2c87115876d7","order":1}},{"identity":8541,"start":3259,"end":3259,"type":"EXECUTE","properties":{"key":"9c167e61-7768-4a63-93a9-7711e53df4e3"}},{"identity":8543,"start":3260,"end":3260,"type":"EXECUTE","properties":{"key":"16822f4d-4b28-4fa9-8853-8bf2e330d4a9"}},{"identity":8542,"start":3260,"end":3260,"type":"RESOURCE","properties":{"context":"applicationReference","key":"3dd8c3fe-6a11-4cca-87e8-cc6c93413ba7"}},{"identity":8546,"start":3261,"end":3261,"type":"RESOURCE","properties":{"context":"applicationReference","key":"487abf8d-1af7-4004-8dc9-1f2d393c097a"}},{"identity":8545,"start":3261,"end":3261,"type":"EXECUTE","properties":{"key":"15442e3b-7f46-4a7d-a220-f12e35ab5185"}},{"identity":8544,"start":3263,"end":3261,"type":"NEXT","properties":{"key":"1b000cf4-5096-4b35-b976-098ab3517dfb","order":6}},{"identity":8549,"start":3262,"end":3262,"type":"RESOURCE","properties":{"context":"applicationReference","key":"7cd0685c-405a-423d-a6d2-0c67a32cea10"}},{"identity":8547,"start":3262,"end":3262,"type":"EXECUTE","properties":{"key":"63a8e714-e83e-45e2-b1e9-191fcf5ea71e"}},{"identity":8548,"start":3271,"end":3262,"type":"NEXT","properties":{"key":"78a3cafd-96a0-410b-915d-8b14d781c884","order":1}},{"identity":8551,"start":3263,"end":3263,"type":"FORK","properties":{"key":"9acddf48-4e38-41d3-8318-b8731ca6c22c"}},{"identity":8550,"start":3272,"end":3263,"type":"CASE","properties":{"expected":"GET","key":"fe0be0ab-9bac-4c82-bc13-498396732961"}},{"identity":8553,"start":3264,"end":3264,"type":"RESOURCE","properties":{"context":"applicationReference","key":"ee3f3713-a197-4bd8-8ee5-aea248c7aee1"}},{"identity":8554,"start":3264,"end":3264,"type":"EXECUTE","properties":{"key":"a292a0e4-d2a5-41ff-adf7-dc8987e0e3b4"}},{"identity":8552,"start":3263,"end":3264,"type":"NEXT","properties":{"key":"f70bc1e3-da28-4112-a3e7-10108d542c4b","order":2}},{"identity":8555,"start":3265,"end":3265,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"2d1a1320-f8fd-4ceb-9549-10382644ef8b"}},{"identity":8556,"start":3265,"end":3265,"type":"EXECUTE","properties":{"key":"0a8cb06f-468a-432b-8db2-d23cd3eceb1f"}},{"identity":8557,"start":3239,"end":3265,"type":"SELECT","properties":{"key":"bf834ba9-c796-420a-89e5-8a1944cb0272"}},{"identity":8558,"start":3265,"end":3265,"type":"RESOURCE","properties":{"context":"applicationReference","key":"7d338724-4a6a-4a82-87f4-0c4ffaa694b2"}},{"identity":8559,"start":3249,"end":3266,"type":"CASE","properties":{"expected":true,"key":"10a4f6d3-5b3d-4744-89c0-bf7da7f9b677"}},{"identity":8560,"start":3266,"end":3266,"type":"FORK","properties":{"key":"8cab8437-272d-434c-a9d7-a167a900c5de"}},{"identity":8561,"start":3266,"end":3266,"type":"RESOURCE","properties":{"context":"applicationReference","key":"e946e208-2546-44ac-940d-061f258d8efc"}},{"identity":8562,"start":3266,"end":3266,"type":"EXECUTE","properties":{"key":"2de17d0f-d982-458a-b4e9-8e890577825e"}},{"identity":8565,"start":3257,"end":3267,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"8a4e2574-646b-4434-bc1d-be18feb3f011"}},{"identity":8566,"start":3268,"end":3267,"type":"NEXT","properties":{"key":"d9c87239-b2e8-4828-96b4-7fb694582896","order":3}},{"identity":8564,"start":3267,"end":3267,"type":"REFERENCE","properties":{"key":"95773e39-0234-4d4a-bc80-9eefbd691653","resolutionImplementation":"selection"}},{"identity":8563,"start":3267,"end":3267,"type":"SELECT","properties":{"key":"7201db11-c748-4762-a784-029824c6e65f"}},{"identity":8567,"start":3268,"end":3268,"type":"FORK","properties":{"key":"b7138937-be5e-4008-b99e-64d8e066b496"}},{"identity":8568,"start":3263,"end":3268,"type":"NEXT","properties":{"key":"c702ad8a-c9e1-413c-8ee8-0ab9ad5eadb1","order":8}},{"identity":8569,"start":3268,"end":3269,"type":"NEXT","properties":{"key":"06a5b49c-21f5-4c85-9ff6-d6643751e5b5","order":1}},{"identity":8570,"start":3269,"end":3269,"type":"RESOURCE","properties":{"context":"applicationReference","key":"54153c74-ff20-461d-964d-bd3f1af439b9"}},{"identity":8571,"start":3269,"end":3269,"type":"EXECUTE","properties":{"key":"a41c23dd-b732-48f4-9433-ac8f5259eb35"}},{"identity":8572,"start":3263,"end":3270,"type":"NEXT","properties":{"key":"a9269743-ef49-48fd-8a8e-f6a90b6f786f","order":7}},{"identity":8573,"start":3270,"end":3270,"type":"RESOURCE","properties":{"context":"applicationReference","key":"c12897de-b1dc-47c4-aea8-e5659d3da3b2"}},{"identity":8574,"start":3270,"end":3270,"type":"EXECUTE","properties":{"key":"ae7241a2-86b7-4353-af95-b7336ba7842f"}},{"identity":8575,"start":3271,"end":3271,"type":"FORK","properties":{"key":"6190fdad-ecad-4c43-a137-720df3775458"}},{"identity":8576,"start":3248,"end":3271,"type":"CASE","properties":{"expected":"javascript","key":"c2f89d3d-c781-4f16-bf13-c38c1b831935"}},{"identity":8580,"start":3252,"end":3272,"type":"VALUE","properties":{"implementation":"conditionSubgraph","key":"f0c197ef-1ccd-4e74-aae6-3a0d58a0d961"}},{"identity":8578,"start":3272,"end":3272,"type":"REFERENCE","properties":{"key":"f5c4eaaf-d709-4a1a-aa04-b1665e902531","resolutionImplementation":"selection"}},{"identity":8577,"start":3250,"end":3272,"type":"REFERENCE","properties":{"key":"1e08a1ae-ff16-4e98-9861-5f3023626a24"}},{"identity":8579,"start":3272,"end":3272,"type":"SELECT","properties":{"key":"k923knji-d709-k923knji-aa04-g9876677"}}]}
+{
+  "node": [{
+    "identity": 3632,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "07b2ef41-2363-45e3-bb28-0af6faca23d3",
+      "name": "file path check"
+    }
+  }, {
+    "identity": 3633,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "0835add2-538e-4b1a-9278-20e16c4747e0",
+      "name": "routes"
+    }
+  }, {
+    "identity": 3634,
+    "labels": ["Stage", "Process", "Function", "Port"],
+    "properties": {
+      "functionName": "parseAtSignPath",
+      "handlePropagationImplementation": "chronological",
+      "key": "088c5717-31fa-4bf3-a5b4-40dbbc8a3411"
+    }
+  }, {
+    "identity": 3635,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "08w7g-0892u3f-9834g89"
+    }
+  }, {
+    "identity": 3636,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "commonFunctionality",
+      "key": "097b3cb0-b121-4aae-ab2d-0150fa3d6b66"
+    }
+  }, {
+    "identity": 3637,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "removeDollarSignPath",
+      "key": "0a73bb26-9ee1-4614-8733-e3648317f5bb"
+    }
+  }, {
+    "identity": 3638,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "getUrlPathAsArray",
+      "key": "0cba6c2b-0803-4e59-9e03-6d19e6147478"
+    }
+  }, {
+    "identity": 3639,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "expandAtSignPath",
+      "key": "1cd1887d-86ab-4e49-934e-d4a65b86c0ff"
+    }
+  }, {
+    "identity": 3640,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "basePath": "./",
+      "functionName": "serveStaticFile",
+      "key": "1d07b024-6417-41a8-a917-f4e923c2cc2c",
+      "name": "serveStaticFile"
+    }
+  }, {
+    "identity": 3641,
+    "labels": ["Stage", "Port"],
+    "properties": {
+      "handlePropagationImplementation": "chronological",
+      "key": "1d9cc904-0c16-406f-be47-70f5a779c9ad",
+      "name": "upload"
+    }
+  }, {
+    "identity": 3642,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "getFileType",
+      "key": "1deffb84-827d-4fa4-ae6a-7b07a2111bf1",
+      "name": "getFileType"
+    }
+  }, {
+    "identity": 3643,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "1e8c4818-d85b-4dcd-9746-34903f2fce2c"
+    }
+  }, {
+    "identity": 3644,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "293097b9-3522-4f2b-b557-8380ff3e96e3",
+      "name": "Asset Content Delivery - REST architecture + Custom concepts"
+    }
+  }, {
+    "identity": 3645,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "nodeDebug",
+      "key": "3e5c6b3e-136e-4cde-bb2c-e58ff08450cd"
+    }
+  }, {
+    "identity": 3646,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "getRequestMethod",
+      "key": "400f822b-ed2c-4503-ad53-370668603d04"
+    }
+  }, {
+    "identity": 3647,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "basePath": "./",
+      "functionName": "serveStaticFile",
+      "key": "4a749a74-e75c-42e4-8aee-eeeba71461d2",
+      "name": "serveStaticFile"
+    }
+  }, {
+    "identity": 3648,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "pickClientSideProjectConfig",
+      "key": "51efac8a-22a3-4ed8-9450-907cb316c35e"
+    }
+  }, {
+    "identity": 3649,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "filePath": "../packageManager/library.browser.jspm/jspm.config.js",
+      "functionName": "serveStaticFile",
+      "key": "56a309e6-70f8-4d22-b6ca-8a5da9191d94"
+    }
+  }, {
+    "identity": 3650,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "transformJavascriptMiddleware",
+      "key": "58dcf5b8-6d5c-44ba-91ce-ede56eb78c30"
+    }
+  }, {
+    "identity": 3668,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "ifDollarFunction",
+      "key": "61a453b2-41ce-4eec-bbdd-84bde2b3f76c",
+      "shouldParsePath": false
+    }
+  }, {
+    "identity": 3651,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "ifLevel1IncludesAt",
+      "key": "6b2e0f97-e667-4e7f-80d4-369e551506d1",
+      "name": "ifLevel1IncludesAt"
+    }
+  }, {
+    "identity": 3652,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "nodeDebug",
+      "key": "6c07b30e-190c-429d-88e6-9d26e7477e05"
+    }
+  }, {
+    "identity": 3653,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "setResponseHeaders",
+      "key": "72aa1d74-04e6-4cfe-ad3f-3fe93188a8a2"
+    }
+  }, {
+    "identity": 3654,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "ifDollarFunction",
+      "key": "7e90e794-735d-4d56-b9d6-ea6f32742dd1",
+      "name": "ifDollarFunction"
+    }
+  }, {
+    "identity": 3655,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "notFound",
+      "key": "7f01c60f-b5db-49b7-b748-f05a25a608d4"
+    }
+  }, {
+    "identity": 3656,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "serveServerSideRenderedFile",
+      "key": "80e4c170-408c-4bd4-86be-75402ebe08b4"
+    }
+  }, {
+    "identity": 3667,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "83f83842-25f4-480a-8e6c-1cd84a15ba0a"
+    }
+  }, {
+    "identity": 3657,
+    "labels": ["Stage", "Port"],
+    "properties": {
+      "handlePropagationImplementation": "chronological",
+      "key": "932c9d9a-ca68-472d-8285-6f5d6c2f2892",
+      "name": "common middlewares"
+    }
+  }, {
+    "identity": 3658,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "setFrontendSetting",
+      "key": "9c4bc8c1-2a2e-4783-b58a-c4655447163f"
+    }
+  }, {
+    "identity": 3659,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "getUrlPathLevel",
+      "key": "a2db9344-58fc-47b0-a41e-b48c8c7f859e",
+      "level": 0,
+      "name": "getUrlPathLevel"
+    }
+  }, {
+    "identity": 3660,
+    "labels": ["Stage", "Process", "Function", "Port"],
+    "properties": {
+      "functionName": "parseDollarSignPath",
+      "handlePropagationImplementation": "chronological",
+      "key": "a4ba9d95-ed32-4b7e-8c85-838b398012dc"
+    }
+  }, {
+    "identity": 3661,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "abe0e7b1-a8e4-4335-a11c-f341a2798de4"
+    }
+  }, {
+    "identity": 3662,
+    "labels": ["Stage", "Port"],
+    "properties": {
+      "handlePropagationImplementation": "chronological",
+      "key": "ac58f648-cf0e-4d4c-90f0-6d8e8064dfda",
+      "name": "parse & extract"
+    }
+  }, {
+    "identity": 3663,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "bodyParser",
+      "key": "b011ece0-74e8-4c32-842d-1a146e3f8a8a"
+    }
+  }, {
+    "identity": 3664,
+    "labels": ["Stage", "Process", "Function"],
+    "properties": {
+      "functionName": "cacheControl",
+      "key": "b76345a9-1c7a-42ca-b577-3426f7204f9f"
+    }
+  }, {
+    "identity": 3665,
+    "labels": ["Stage", "Port"],
+    "properties": {
+      "handlePropagationImplementation": "chronological",
+      "key": "d12f0416-fdef-4fff-8294-5e606bce9849"
+    }
+  }, {
+    "identity": 3666,
+    "labels": ["Reroute"],
+    "properties": {
+      "key": "d3297ef3-52b6-4895-b1cf-f3b6987cefdd",
+      "name": "reroutes"
+    }
+  }],
+  "edge": [{
+    "identity": 9552,
+    "start": 3633,
+    "end": 3632,
+    "type": "FALLBACK",
+    "properties": {
+      "key": "23e05a2d-dcc3-436a-8bac-c12fd4403deb"
+    }
+  }, {
+    "identity": 9551,
+    "start": 3632,
+    "end": 3632,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "76cefa1b-829e-48d7-a9fa-030056f78a27",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9553,
+    "start": 3633,
+    "end": 3633,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "f9fd9584-9568-4bc2-8ec2-01fb5caa3b98",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9554,
+    "start": 3657,
+    "end": 3633,
+    "type": "NEXT",
+    "properties": {
+      "key": "81905485-2c39-46d8-a8ab-03bf57fa2950",
+      "order": 10
+    }
+  }, {
+    "identity": 9555,
+    "start": 3661,
+    "end": 3634,
+    "type": "CASE",
+    "properties": {
+      "expected": true,
+      "key": "2e7a8bc8-3908-49b4-ae5f-56470e6d7eb3"
+    }
+  }, {
+    "identity": 9556,
+    "start": 3634,
+    "end": 3634,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "d41e3a7c-0b70-4ebf-977a-d795f160ffbb"
+    }
+  }, {
+    "identity": 9557,
+    "start": 3634,
+    "end": 3634,
+    "type": "FORK",
+    "properties": {
+      "key": "45eb790b-9e1f-4f68-89fb-258ab471a609"
+    }
+  }, {
+    "identity": 9558,
+    "start": 3634,
+    "end": 3634,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "fa4b8527-db2d-4955-a018-b7df432a0f5b"
+    }
+  }, {
+    "identity": 9559,
+    "start": 3635,
+    "end": 3635,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "94c6e656-720c-4a55-8388-2af3654f0ec1",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9560,
+    "start": 3652,
+    "end": 3635,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "7d577ce0-2fd9-4367-a70f-442872e9a7a8"
+    }
+  }, {
+    "identity": 9561,
+    "start": 3635,
+    "end": 3635,
+    "type": "SELECT",
+    "properties": {
+      "key": "6539f02b-f092-487c-9841-8121edc4154d"
+    }
+  }, {
+    "identity": 9562,
+    "start": 3665,
+    "end": 3635,
+    "type": "NEXT",
+    "properties": {
+      "key": "5728bdc0-b964-410e-9fcb-503065ce4014",
+      "order": 2
+    }
+  }, {
+    "identity": 9563,
+    "start": 3636,
+    "end": 3636,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "628f48fd-6a31-4ccf-9a4d-440fa52a1ebe"
+    }
+  }, {
+    "identity": 9565,
+    "start": 3636,
+    "end": 3636,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "2bf831b9-d2ae-42fc-aab0-c31663f7414b"
+    }
+  }, {
+    "identity": 9564,
+    "start": 3657,
+    "end": 3636,
+    "type": "NEXT",
+    "properties": {
+      "key": "7d12d9f1-0ca1-4844-adef-e7572fee0ecb",
+      "order": 5
+    }
+  }, {
+    "identity": 9566,
+    "start": 3660,
+    "end": 3637,
+    "type": "NEXT",
+    "properties": {
+      "key": "b0be48b8-1609-4e11-b33c-b8be52e54bde",
+      "order": 1
+    }
+  }, {
+    "identity": 9567,
+    "start": 3637,
+    "end": 3637,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "0e90a02d-c18e-4426-9432-6f8eb482b205"
+    }
+  }, {
+    "identity": 9568,
+    "start": 3637,
+    "end": 3637,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "68f484ce-9e73-424e-897a-9bd5aa4cb997"
+    }
+  }, {
+    "identity": 9569,
+    "start": 3638,
+    "end": 3638,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "1a2b842f-50f1-4274-b06f-4abf4e0e1d3e"
+    }
+  }, {
+    "identity": 9570,
+    "start": 3638,
+    "end": 3638,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "f35631be-9cb6-4ebe-8b48-de73282c1074"
+    }
+  }, {
+    "identity": 9571,
+    "start": 3638,
+    "end": 3638,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "f350b406-ea93-45b2-be7a-dd4fa26980a8"
+    }
+  }, {
+    "identity": 9572,
+    "start": 3633,
+    "end": 3638,
+    "type": "SELECT",
+    "properties": {
+      "key": "7cf7c399-09b1-4b7e-be79-a670f10910db",
+      "order": 1
+    }
+  }, {
+    "identity": 9575,
+    "start": 3639,
+    "end": 3639,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "6dbfc738-0329-4930-8f8e-128fd30de79e"
+    }
+  }, {
+    "identity": 9574,
+    "start": 3634,
+    "end": 3639,
+    "type": "NEXT",
+    "properties": {
+      "key": "89005529-2927-4aac-995f-7727eced1ed8",
+      "order": 1
+    }
+  }, {
+    "identity": 9573,
+    "start": 3639,
+    "end": 3639,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "3da365ac-5797-4173-afee-dab104cce89f"
+    }
+  }, {
+    "identity": 9577,
+    "start": 3640,
+    "end": 3640,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "3044994c-6346-483b-8266-845058a90b7d"
+    }
+  }, {
+    "identity": 9576,
+    "start": 3641,
+    "end": 3640,
+    "type": "NEXT",
+    "properties": {
+      "key": "a15147c3-84c3-41fa-92b2-58fe61cd733c",
+      "order": 2
+    }
+  }, {
+    "identity": 9578,
+    "start": 3640,
+    "end": 3640,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "5b6f8a4b-f4a3-4ff6-8760-f319e35fc332"
+    }
+  }, {
+    "identity": 9580,
+    "start": 3641,
+    "end": 3641,
+    "type": "FORK",
+    "properties": {
+      "key": "256fdef3-b147-4729-87f2-5fb42fcb506f"
+    }
+  }, {
+    "identity": 9579,
+    "start": 3659,
+    "end": 3641,
+    "type": "CASE",
+    "properties": {
+      "expected": "upload",
+      "key": "cda79ec8-933a-40c7-aa8d-ada655b326ef"
+    }
+  }, {
+    "identity": 9584,
+    "start": 3642,
+    "end": 3642,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "e5548f77-3755-42bb-954a-a35974bcac24"
+    }
+  }, {
+    "identity": 9581,
+    "start": 3642,
+    "end": 3642,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "49f4b862-6a95-47f3-9c5d-dc8e7597a629"
+    }
+  }, {
+    "identity": 9583,
+    "start": 3632,
+    "end": 3642,
+    "type": "SELECT",
+    "properties": {
+      "key": "368ff241-97d6-4cf9-a9aa-a3c5d384da20"
+    }
+  }, {
+    "identity": 9582,
+    "start": 3642,
+    "end": 3642,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "b056e874-117e-4a4b-979a-e688c20d535b"
+    }
+  }, {
+    "identity": 9588,
+    "start": 3643,
+    "end": 3643,
+    "type": "SELECT",
+    "properties": {
+      "key": "bf89bfb9-dfcc-4792-8976-3ea4e5cf1960"
+    }
+  }, {
+    "identity": 9587,
+    "start": 3654,
+    "end": 3643,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "3749568b-d652-4ab3-a6bc-10df7021dde1"
+    }
+  }, {
+    "identity": 9586,
+    "start": 3643,
+    "end": 3643,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "2f52a70c-e31d-41ae-a995-39bdc415c600",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9585,
+    "start": 3662,
+    "end": 3643,
+    "type": "NEXT",
+    "properties": {
+      "key": "0733728f-353e-41e0-8b3e-c3cd7f1a5d0c",
+      "order": 3
+    }
+  }, {
+    "identity": 9589,
+    "start": 3645,
+    "end": 3645,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "96a899dc-bfff-4dfb-8faa-bbe9d73570e5"
+    }
+  }, {
+    "identity": 9590,
+    "start": 3645,
+    "end": 3645,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "ca6e884d-38f0-4eee-9d47-b2391a3c6d1a"
+    }
+  }, {
+    "identity": 9591,
+    "start": 3666,
+    "end": 3645,
+    "type": "FALLBACK",
+    "properties": {
+      "key": "6514e54a-11b7-4182-a00c-44d15a860e65"
+    }
+  }, {
+    "identity": 9592,
+    "start": 3646,
+    "end": 3646,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "089b17e3-f9ad-42f9-b565-ba807e22d369"
+    }
+  }, {
+    "identity": 9593,
+    "start": 3646,
+    "end": 3646,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "beed8bb1-aa41-4b00-8ce0-298406f62509"
+    }
+  }, {
+    "identity": 9596,
+    "start": 3647,
+    "end": 3647,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "fe7ba11c-4982-4181-8ec4-6e81592f4f27"
+    }
+  }, {
+    "identity": 9594,
+    "start": 3632,
+    "end": 3647,
+    "type": "FALLBACK",
+    "properties": {
+      "key": "eb51d3d8-3261-4501-b7ff-0f9ee0231ad9"
+    }
+  }, {
+    "identity": 9595,
+    "start": 3647,
+    "end": 3647,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "4fc331ea-f504-4a60-a3a6-d0f0b76cc295"
+    }
+  }, {
+    "identity": 9597,
+    "start": 3648,
+    "end": 3648,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "1cc3b31f-51ad-43b1-add7-0eb876899eec"
+    }
+  }, {
+    "identity": 9598,
+    "start": 3648,
+    "end": 3648,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "e5c53a1f-d5bf-4594-8740-b200f9c69902"
+    }
+  }, {
+    "identity": 9599,
+    "start": 3657,
+    "end": 3648,
+    "type": "NEXT",
+    "properties": {
+      "key": "8c16db24-a3cb-4c46-bfd5-740c46ab8202",
+      "order": 3
+    }
+  }, {
+    "identity": 9600,
+    "start": 3649,
+    "end": 3649,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "8bfa4bd3-b588-438b-ace4-ae87b28702bb"
+    }
+  }, {
+    "identity": 9601,
+    "start": 3638,
+    "end": 3649,
+    "type": "CASE",
+    "properties": {
+      "expected": ["javascript", "jspm.config.js"],
+      "key": "ca6e2e62-2b54-467f-9f0c-dc0195923907"
+    }
+  }, {
+    "identity": 9602,
+    "start": 3649,
+    "end": 3649,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "66fe1c47-52fb-4da8-950f-e39ae78aab38"
+    }
+  }, {
+    "identity": 9603,
+    "start": 3635,
+    "end": 3650,
+    "type": "CASE",
+    "properties": {
+      "expected": true,
+      "key": "bb831108-837e-4017-9680-fba72de81dd9"
+    }
+  }, {
+    "identity": 9604,
+    "start": 3650,
+    "end": 3650,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "7a647d0c-3acb-4bb8-983a-867965772271"
+    }
+  }, {
+    "identity": 9605,
+    "start": 3650,
+    "end": 3650,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "837c6b46-e66f-42f4-9208-3287c4f8bd25"
+    }
+  }, {
+    "identity": 9657,
+    "start": 3668,
+    "end": 3668,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "e41d2c37-e7c2-49ef-80d7-f84d0fad778f"
+    }
+  }, {
+    "identity": 9656,
+    "start": 3668,
+    "end": 3668,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "fd1db5e1-f661-4f56-879c-732a6aa8648f"
+    }
+  }, {
+    "identity": 9606,
+    "start": 3651,
+    "end": 3651,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "1c69975d-d8f1-4a83-8898-63cc63c2655e"
+    }
+  }, {
+    "identity": 9607,
+    "start": 3651,
+    "end": 3651,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "c4379e7c-c6a2-47c6-a116-e16a6ca08219"
+    }
+  }, {
+    "identity": 9609,
+    "start": 3652,
+    "end": 3652,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "71b1eb92-3bc0-4cfb-b068-6c14f125d358"
+    }
+  }, {
+    "identity": 9608,
+    "start": 3652,
+    "end": 3652,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "9990e385-f932-457e-b5fb-f08519bb7155"
+    }
+  }, {
+    "identity": 9612,
+    "start": 3653,
+    "end": 3653,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "dc9c6466-601d-40c3-998d-7306c623b6ef"
+    }
+  }, {
+    "identity": 9611,
+    "start": 3657,
+    "end": 3653,
+    "type": "NEXT",
+    "properties": {
+      "key": "82decfdf-1e8e-42e7-b7f7-2c87115876d7",
+      "order": 1
+    }
+  }, {
+    "identity": 9610,
+    "start": 3653,
+    "end": 3653,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "9c167e61-7768-4a63-93a9-7711e53df4e3"
+    }
+  }, {
+    "identity": 9613,
+    "start": 3654,
+    "end": 3654,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "16822f4d-4b28-4fa9-8853-8bf2e330d4a9"
+    }
+  }, {
+    "identity": 9614,
+    "start": 3654,
+    "end": 3654,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "3dd8c3fe-6a11-4cca-87e8-cc6c93413ba7"
+    }
+  }, {
+    "identity": 9615,
+    "start": 3655,
+    "end": 3655,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "487abf8d-1af7-4004-8dc9-1f2d393c097a"
+    }
+  }, {
+    "identity": 9616,
+    "start": 3655,
+    "end": 3655,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "15442e3b-7f46-4a7d-a220-f12e35ab5185"
+    }
+  }, {
+    "identity": 9617,
+    "start": 3657,
+    "end": 3655,
+    "type": "NEXT",
+    "properties": {
+      "key": "1b000cf4-5096-4b35-b976-098ab3517dfb",
+      "order": 6
+    }
+  }, {
+    "identity": 9618,
+    "start": 3656,
+    "end": 3656,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "7cd0685c-405a-423d-a6d2-0c67a32cea10"
+    }
+  }, {
+    "identity": 9619,
+    "start": 3656,
+    "end": 3656,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "63a8e714-e83e-45e2-b1e9-191fcf5ea71e"
+    }
+  }, {
+    "identity": 9620,
+    "start": 3667,
+    "end": 3656,
+    "type": "CASE",
+    "properties": {
+      "expected": true,
+      "key": "33ea5300-3cd1-42fe-a9a7-71ce47c7f78b"
+    }
+  }, {
+    "identity": 9652,
+    "start": 3667,
+    "end": 3667,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "af1a1882-d08e-44c6-8e29-c35b2f091faa",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9653,
+    "start": 3667,
+    "end": 3667,
+    "type": "SELECT",
+    "properties": {
+      "key": "c417a28d-86eb-4f87-a529-d22114875f9e"
+    }
+  }, {
+    "identity": 9654,
+    "start": 3668,
+    "end": 3667,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "752c4594-e5a9-49eb-8b17-fc37d198da60"
+    }
+  }, {
+    "identity": 9768,
+    "start": 3667,
+    "end": 3647,
+    "type": "FALLBACK",
+    "properties": {
+      "key": "7e46c760-f75d-4c54-a7f0-7c42965187ba"
+    }
+  }, {
+    "identity": 9655,
+    "start": 3665,
+    "end": 3667,
+    "type": "NEXT",
+    "properties": {
+      "key": "63bd10e7-84a8-43fc-9f7c-2870337013c5",
+      "order": 1
+    }
+  }, {
+    "identity": 9622,
+    "start": 3666,
+    "end": 3657,
+    "type": "CASE",
+    "properties": {
+      "expected": "GET",
+      "key": "fe0be0ab-9bac-4c82-bc13-498396732961"
+    }
+  }, {
+    "identity": 9621,
+    "start": 3657,
+    "end": 3657,
+    "type": "FORK",
+    "properties": {
+      "key": "9acddf48-4e38-41d3-8318-b8731ca6c22c"
+    }
+  }, {
+    "identity": 9623,
+    "start": 3657,
+    "end": 3658,
+    "type": "NEXT",
+    "properties": {
+      "key": "f70bc1e3-da28-4112-a3e7-10108d542c4b",
+      "order": 2
+    }
+  }, {
+    "identity": 9624,
+    "start": 3658,
+    "end": 3658,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "ee3f3713-a197-4bd8-8ee5-aea248c7aee1"
+    }
+  }, {
+    "identity": 9625,
+    "start": 3658,
+    "end": 3658,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "a292a0e4-d2a5-41ff-adf7-dc8987e0e3b4"
+    }
+  }, {
+    "identity": 9627,
+    "start": 3659,
+    "end": 3659,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "0a8cb06f-468a-432b-8db2-d23cd3eceb1f"
+    }
+  }, {
+    "identity": 9626,
+    "start": 3659,
+    "end": 3659,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "2d1a1320-f8fd-4ceb-9549-10382644ef8b"
+    }
+  }, {
+    "identity": 9628,
+    "start": 3633,
+    "end": 3659,
+    "type": "SELECT",
+    "properties": {
+      "key": "bf834ba9-c796-420a-89e5-8a1944cb0272"
+    }
+  }, {
+    "identity": 9629,
+    "start": 3659,
+    "end": 3659,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "7d338724-4a6a-4a82-87f4-0c4ffaa694b2"
+    }
+  }, {
+    "identity": 9630,
+    "start": 3643,
+    "end": 3660,
+    "type": "CASE",
+    "properties": {
+      "expected": true,
+      "key": "10a4f6d3-5b3d-4744-89c0-bf7da7f9b677"
+    }
+  }, {
+    "identity": 9631,
+    "start": 3660,
+    "end": 3660,
+    "type": "FORK",
+    "properties": {
+      "key": "8cab8437-272d-434c-a9d7-a167a900c5de"
+    }
+  }, {
+    "identity": 9632,
+    "start": 3660,
+    "end": 3660,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "e946e208-2546-44ac-940d-061f258d8efc"
+    }
+  }, {
+    "identity": 9633,
+    "start": 3660,
+    "end": 3660,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "2de17d0f-d982-458a-b4e9-8e890577825e"
+    }
+  }, {
+    "identity": 9635,
+    "start": 3661,
+    "end": 3661,
+    "type": "SELECT",
+    "properties": {
+      "key": "7201db11-c748-4762-a784-029824c6e65f"
+    }
+  }, {
+    "identity": 9637,
+    "start": 3651,
+    "end": 3661,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "8a4e2574-646b-4434-bc1d-be18feb3f011"
+    }
+  }, {
+    "identity": 9636,
+    "start": 3661,
+    "end": 3661,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "95773e39-0234-4d4a-bc80-9eefbd691653",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9634,
+    "start": 3662,
+    "end": 3661,
+    "type": "NEXT",
+    "properties": {
+      "key": "d9c87239-b2e8-4828-96b4-7fb694582896",
+      "order": 3
+    }
+  }, {
+    "identity": 9639,
+    "start": 3662,
+    "end": 3662,
+    "type": "FORK",
+    "properties": {
+      "key": "b7138937-be5e-4008-b99e-64d8e066b496"
+    }
+  }, {
+    "identity": 9638,
+    "start": 3657,
+    "end": 3662,
+    "type": "NEXT",
+    "properties": {
+      "key": "c702ad8a-c9e1-413c-8ee8-0ab9ad5eadb1",
+      "order": 8
+    }
+  }, {
+    "identity": 9640,
+    "start": 3663,
+    "end": 3663,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "54153c74-ff20-461d-964d-bd3f1af439b9"
+    }
+  }, {
+    "identity": 9641,
+    "start": 3663,
+    "end": 3663,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "a41c23dd-b732-48f4-9433-ac8f5259eb35"
+    }
+  }, {
+    "identity": 9642,
+    "start": 3662,
+    "end": 3663,
+    "type": "NEXT",
+    "properties": {
+      "key": "06a5b49c-21f5-4c85-9ff6-d6643751e5b5",
+      "order": 1
+    }
+  }, {
+    "identity": 9643,
+    "start": 3664,
+    "end": 3664,
+    "type": "EXECUTE",
+    "properties": {
+      "key": "ae7241a2-86b7-4353-af95-b7336ba7842f"
+    }
+  }, {
+    "identity": 9644,
+    "start": 3664,
+    "end": 3664,
+    "type": "RESOURCE",
+    "properties": {
+      "context": "applicationReference",
+      "key": "c12897de-b1dc-47c4-aea8-e5659d3da3b2"
+    }
+  }, {
+    "identity": 9645,
+    "start": 3657,
+    "end": 3664,
+    "type": "NEXT",
+    "properties": {
+      "key": "a9269743-ef49-48fd-8a8e-f6a90b6f786f",
+      "order": 7
+    }
+  }, {
+    "identity": 9646,
+    "start": 3642,
+    "end": 3665,
+    "type": "CASE",
+    "properties": {
+      "expected": "javascript",
+      "key": "c2f89d3d-c781-4f16-bf13-c38c1b831935"
+    }
+  }, {
+    "identity": 9647,
+    "start": 3665,
+    "end": 3665,
+    "type": "FORK",
+    "properties": {
+      "key": "6190fdad-ecad-4c43-a137-720df3775458"
+    }
+  }, {
+    "identity": 9650,
+    "start": 3666,
+    "end": 3666,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "f5c4eaaf-d709-4a1a-aa04-b1665e902531",
+      "resolutionImplementation": "selection"
+    }
+  }, {
+    "identity": 9651,
+    "start": 3644,
+    "end": 3666,
+    "type": "REFERENCE",
+    "properties": {
+      "key": "1e08a1ae-ff16-4e98-9861-5f3023626a24"
+    }
+  }, {
+    "identity": 9648,
+    "start": 3666,
+    "end": 3666,
+    "type": "SELECT",
+    "properties": {
+      "key": "k923knji-d709-k923knji-aa04-g9876677"
+    }
+  }, {
+    "identity": 9649,
+    "start": 3646,
+    "end": 3666,
+    "type": "VALUE",
+    "properties": {
+      "implementation": "conditionSubgraph",
+      "key": "f0c197ef-1ccd-4e74-aae6-3a0d58a0d961"
+    }
+  }]
+}

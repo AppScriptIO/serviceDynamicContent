@@ -5,6 +5,8 @@ import Stream from 'stream'
 import multistream from 'multistream'
 import underscore from 'underscore'
 import send from 'koa-sendfile' // Static files.
+// import serverStatic from 'koa-static' // Static files.
+// import mount from 'koa-mount'
 import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 import * as symbol from '../symbol.reference.js'
 import {
@@ -22,23 +24,17 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
   assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
 
   filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
-  renderType ||= context[symbol.context.parsed.dollarSign]
-
   let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
+
+  // render requested resource
+  renderType ||= context[symbol.context.parsed.dollarSign]
   let functionReference = renderFile[renderType] // the reference context is actually the module "renderFile.js"
   assert(functionReference, `• function keyword in the url must have an equivalent in the function reference.`)
   context.body = await functionReference({ filePath: absoluteFilePath })
   context.response.type = mimeType
+
   await next()
 }
-
-// import serverStatic from 'koa-static' // Static files.
-// import mount from 'koa-mount'
-// export let serverDirectory() {
-// Previously used - serving directoryPath:
-// let directoryPath = await path.resolve(path.normalize(`${context.instance.config.clientBasePath}${setting.directoryPath}`))
-// let mountMiddleware = mount(setting.urlPath, serverStatic(`${directoryPath}`, setting.options))
-// }
 
 /**
  * serve static file.
@@ -50,6 +46,11 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
 export const serveStaticFile = ({ filePath, basePath } = {}) =>
   async function serveStaticFile(context, next) {
     assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+
+    // // Previously used - koa-mount for serving directory contents:
+    // let directoryPath = await path.resolve(path.normalize(`${context[symbol.context.clientSideProjectConfig].path}${basePath}`))
+    // let mountMiddleware = mount(filePath || context.path, serverStatic(`${directoryPath}`, {}))
+
     let absoluteFilePath = path.join(
       context[symbol.context.clientSideProjectConfig].path,
       basePath || '', // additional folder path.
