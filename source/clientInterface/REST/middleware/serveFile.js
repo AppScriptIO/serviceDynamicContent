@@ -20,22 +20,6 @@ import {
 } from '../../../functionality/renderFile.js'
 import * as renderFile from '../../../functionality/renderFile.js'
 
-export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType = 'application/javascript' } = {}) => async (context, next) => {
-  assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-
-  filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
-
-  // render requested resource
-  renderType ||= context[symbol.context.parsed.dollarSign]
-  let functionReference = renderFile[renderType] // the reference context is actually the module "renderFile.js"
-  assert(functionReference, `• function keyword in the url must have an equivalent in the function reference.`)
-  context.body = await functionReference({ filePath: absoluteFilePath })
-  context.response.type = mimeType
-
-  await next()
-}
-
 /**
  * serve static file.
  * @dependency useragentDetection middleware, userAgent modules
@@ -60,6 +44,23 @@ export const serveStaticFile = ({ filePath, basePath } = {}) =>
     // if file doesn't exist then pass to the next middleware.
     if (!fileStats || !fileStats.isFile()) await next()
   }
+
+// Apply render function before serving file, $ function is extracted from context.path
+export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType = 'application/javascript' } = {}) => async (context, next) => {
+  assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+
+  filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
+  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
+
+  // render requested resource
+  renderType ||= context[symbol.context.parsed.dollarSign]
+  let functionReference = renderFile[renderType] // the reference context is actually the module "renderFile.js"
+  assert(functionReference, `• function keyword in the url must have an equivalent in the function reference.`)
+  context.body = await functionReference({ filePath: absoluteFilePath })
+  context.response.type = mimeType
+
+  await next()
+}
 
 /**
  * servers serverside rendered javascript blocks or other rendering.
