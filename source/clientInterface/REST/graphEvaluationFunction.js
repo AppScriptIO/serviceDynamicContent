@@ -1,3 +1,4 @@
+import path from 'path'
 import * as symbol from './symbol.reference.js'
 
 /**
@@ -52,8 +53,8 @@ export const ifLevel1IncludesAt = async middlewareContext => {
 }
 
 // check type of requested resource - javascript, stylesheet, html, other. or folder dirent
+const ecmascriptType = ['.js', '.mjs']
 export const getFileType = async middlewareContext => {
-  let pathArray = await getUrlPathAsArray(middlewareContext)
-  // TODO: check type of requested resource
-  return 'javascript'
+  let extension = path.extname(middlewareContext[symbol.context.parsed.path])
+  return ecmascriptType.includes(extension) ? 'javascript' : extension
 }
