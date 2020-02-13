@@ -1,9 +1,8 @@
-// symbols used in the middleware context, for next middlewares to use.
-export const context = {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.context = void 0;
+const context = {
   clientSideProjectConfig: Symbol('clientSideProjectConfig'),
   parsed: {
     path: 'path',
     atSign: Symbol('parsed:atSign'),
-    dollarSign: Symbol('pased:dollarSign'),
-  },
-}
+    dollarSign: Symbol('pased:dollarSign') } };exports.context = context;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9zeW1ib2wucmVmZXJlbmNlLmpzIl0sIm5hbWVzIjpbImNvbnRleHQiLCJjbGllbnRTaWRlUHJvamVjdENvbmZpZyIsIlN5bWJvbCIsInBhcnNlZCIsInBhdGgiLCJhdFNpZ24iLCJkb2xsYXJTaWduIl0sIm1hcHBpbmdzIjoiO0FBQ08sTUFBTUEsT0FBTyxHQUFHO0FBQ3JCQyxFQUFBQSx1QkFBdUIsRUFBRUMsTUFBTSxDQUFDLHlCQUFELENBRFY7QUFFckJDLEVBQUFBLE1BQU0sRUFBRTtBQUNOQyxJQUFBQSxJQUFJLEVBQUUsTUFEQTtBQUVOQyxJQUFBQSxNQUFNLEVBQUVILE1BQU0sQ0FBQyxlQUFELENBRlI7QUFHTkksSUFBQUEsVUFBVSxFQUFFSixNQUFNLENBQUMsa0JBQUQsQ0FIWixFQUZhLEVBQWhCLEMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBzeW1ib2xzIHVzZWQgaW4gdGhlIG1pZGRsZXdhcmUgY29udGV4dCwgZm9yIG5leHQgbWlkZGxld2FyZXMgdG8gdXNlLlxuZXhwb3J0IGNvbnN0IGNvbnRleHQgPSB7XG4gIGNsaWVudFNpZGVQcm9qZWN0Q29uZmlnOiBTeW1ib2woJ2NsaWVudFNpZGVQcm9qZWN0Q29uZmlnJyksXG4gIHBhcnNlZDoge1xuICAgIHBhdGg6ICdwYXRoJyxcbiAgICBhdFNpZ246IFN5bWJvbCgncGFyc2VkOmF0U2lnbicpLFxuICAgIGRvbGxhclNpZ246IFN5bWJvbCgncGFzZWQ6ZG9sbGFyU2lnbicpLFxuICB9LFxufVxuIl19

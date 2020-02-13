@@ -1,8 +1,9 @@
-import { transformJavascript } from '../../../functionality/babelTransformJsStream.js'
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.transformJavascriptMiddleware = void 0;var _babelTransformJsStream = require("../../../functionality/babelTransformJsStream.js");
 
-// transpile only on development and non-distribution folders, i.e. on-the-fly transpilation middleware is executed only in development, while in productios the distribution folder should be already transpiled.
-export const transformJavascriptMiddleware = () =>
-  async function transformJavascriptMiddleware(context, next) {
-    if (context.response.type == `application/javascript`) context.body = await transformJavascript({ scriptCode: context.body })
-    await next()
-  }
+
+const transformJavascriptMiddleware = () =>
+async function transformJavascriptMiddleware(context, next) {
+  if (context.response.type == `application/javascript`) context.body = await (0, _babelTransformJsStream.transformJavascript)({ scriptCode: context.body });
+  await next();
+};exports.transformJavascriptMiddleware = transformJavascriptMiddleware;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2JhYmVsVHJhbnNwaWxlci5qcyJdLCJuYW1lcyI6WyJ0cmFuc2Zvcm1KYXZhc2NyaXB0TWlkZGxld2FyZSIsImNvbnRleHQiLCJuZXh0IiwicmVzcG9uc2UiLCJ0eXBlIiwiYm9keSIsInNjcmlwdENvZGUiXSwibWFwcGluZ3MiOiIwSEFBQTs7O0FBR08sTUFBTUEsNkJBQTZCLEdBQUc7QUFDM0MsZUFBZUEsNkJBQWYsQ0FBNkNDLE9BQTdDLEVBQXNEQyxJQUF0RCxFQUE0RDtBQUMxRCxNQUFJRCxPQUFPLENBQUNFLFFBQVIsQ0FBaUJDLElBQWpCLElBQTBCLHdCQUE5QixFQUF1REgsT0FBTyxDQUFDSSxJQUFSLEdBQWUsTUFBTSxpREFBb0IsRUFBRUMsVUFBVSxFQUFFTCxPQUFPLENBQUNJLElBQXRCLEVBQXBCLENBQXJCO0FBQ3ZELFFBQU1ILElBQUksRUFBVjtBQUNELENBSkksQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHRyYW5zZm9ybUphdmFzY3JpcHQgfSBmcm9tICcuLi8uLi8uLi9mdW5jdGlvbmFsaXR5L2JhYmVsVHJhbnNmb3JtSnNTdHJlYW0uanMnXG5cbi8vIHRyYW5zcGlsZSBvbmx5IG9uIGRldmVsb3BtZW50IGFuZCBub24tZGlzdHJpYnV0aW9uIGZvbGRlcnMsIGkuZS4gb24tdGhlLWZseSB0cmFuc3BpbGF0aW9uIG1pZGRsZXdhcmUgaXMgZXhlY3V0ZWQgb25seSBpbiBkZXZlbG9wbWVudCwgd2hpbGUgaW4gcHJvZHVjdGlvcyB0aGUgZGlzdHJpYnV0aW9uIGZvbGRlciBzaG91bGQgYmUgYWxyZWFkeSB0cmFuc3BpbGVkLlxuZXhwb3J0IGNvbnN0IHRyYW5zZm9ybUphdmFzY3JpcHRNaWRkbGV3YXJlID0gKCkgPT5cbiAgYXN5bmMgZnVuY3Rpb24gdHJhbnNmb3JtSmF2YXNjcmlwdE1pZGRsZXdhcmUoY29udGV4dCwgbmV4dCkge1xuICAgIGlmIChjb250ZXh0LnJlc3BvbnNlLnR5cGUgPT0gYGFwcGxpY2F0aW9uL2phdmFzY3JpcHRgKSBjb250ZXh0LmJvZHkgPSBhd2FpdCB0cmFuc2Zvcm1KYXZhc2NyaXB0KHsgc2NyaXB0Q29kZTogY29udGV4dC5ib2R5IH0pXG4gICAgYXdhaXQgbmV4dCgpXG4gIH1cbiJdfQ==

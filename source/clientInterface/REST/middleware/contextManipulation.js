@@ -1,24 +1,25 @@
-export function setResponseHeaders() {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.setResponseHeaders = setResponseHeaders;exports.cacheControl = cacheControl;exports.handleOptionsRequest = void 0;function setResponseHeaders() {
   return async function setResponseHeaders(context, next) {
-    // await context.req.setTimeout(0); // changes default Nodejs timeout (default 120 seconds).
-    await context.set('Access-Control-Allow-Origin', '*')
-    await context.set('connection', 'keep-alive')
-    // for specific middleware module
-    context.compress = true
-    await next()
-  }
+
+    await context.set('Access-Control-Allow-Origin', '*');
+    await context.set('connection', 'keep-alive');
+
+    context.compress = true;
+    await next();
+  };
 }
 
-export function cacheControl() {
+function cacheControl() {
   return async function cacheControl(context, next) {
-    context.set('Cache-Control', 'max-age=604800')
-    await next()
-  }
+    context.set('Cache-Control', 'max-age=604800');
+    await next();
+  };
 }
 
-export const handleOptionsRequest = async (context, next) => {
-  context.set('Access-Control-Allow-Methods', '*' /* 'POST, GET, OPTIONS, DELETE' */)
-  context.set('Access-Control-Allow-Headers', '*' /* 'Content-Type' */) // used as a response to preflight, indicating which headers can be used in the request.
-  context.body = 'OK' // previous middlewares should have already defined cross origin all *.
-  await next()
-}
+const handleOptionsRequest = async (context, next) => {
+  context.set('Access-Control-Allow-Methods', '*');
+  context.set('Access-Control-Allow-Headers', '*');
+  context.body = 'OK';
+  await next();
+};exports.handleOptionsRequest = handleOptionsRequest;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2NvbnRleHRNYW5pcHVsYXRpb24uanMiXSwibmFtZXMiOlsic2V0UmVzcG9uc2VIZWFkZXJzIiwiY29udGV4dCIsIm5leHQiLCJzZXQiLCJjb21wcmVzcyIsImNhY2hlQ29udHJvbCIsImhhbmRsZU9wdGlvbnNSZXF1ZXN0IiwiYm9keSJdLCJtYXBwaW5ncyI6InFNQUFPLFNBQVNBLGtCQUFULEdBQThCO0FBQ25DLFNBQU8sZUFBZUEsa0JBQWYsQ0FBa0NDLE9BQWxDLEVBQTJDQyxJQUEzQyxFQUFpRDs7QUFFdEQsVUFBTUQsT0FBTyxDQUFDRSxHQUFSLENBQVksNkJBQVosRUFBMkMsR0FBM0MsQ0FBTjtBQUNBLFVBQU1GLE9BQU8sQ0FBQ0UsR0FBUixDQUFZLFlBQVosRUFBMEIsWUFBMUIsQ0FBTjs7QUFFQUYsSUFBQUEsT0FBTyxDQUFDRyxRQUFSLEdBQW1CLElBQW5CO0FBQ0EsVUFBTUYsSUFBSSxFQUFWO0FBQ0QsR0FQRDtBQVFEOztBQUVNLFNBQVNHLFlBQVQsR0FBd0I7QUFDN0IsU0FBTyxlQUFlQSxZQUFmLENBQTRCSixPQUE1QixFQUFxQ0MsSUFBckMsRUFBMkM7QUFDaERELElBQUFBLE9BQU8sQ0FBQ0UsR0FBUixDQUFZLGVBQVosRUFBNkIsZ0JBQTdCO0FBQ0EsVUFBTUQsSUFBSSxFQUFWO0FBQ0QsR0FIRDtBQUlEOztBQUVNLE1BQU1JLG9CQUFvQixHQUFHLE9BQU9MLE9BQVAsRUFBZ0JDLElBQWhCLEtBQXlCO0FBQzNERCxFQUFBQSxPQUFPLENBQUNFLEdBQVIsQ0FBWSw4QkFBWixFQUE0QyxHQUE1QztBQUNBRixFQUFBQSxPQUFPLENBQUNFLEdBQVIsQ0FBWSw4QkFBWixFQUE0QyxHQUE1QztBQUNBRixFQUFBQSxPQUFPLENBQUNNLElBQVIsR0FBZSxJQUFmO0FBQ0EsUUFBTUwsSUFBSSxFQUFWO0FBQ0QsQ0FMTSxDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGZ1bmN0aW9uIHNldFJlc3BvbnNlSGVhZGVycygpIHtcbiAgcmV0dXJuIGFzeW5jIGZ1bmN0aW9uIHNldFJlc3BvbnNlSGVhZGVycyhjb250ZXh0LCBuZXh0KSB7XG4gICAgLy8gYXdhaXQgY29udGV4dC5yZXEuc2V0VGltZW91dCgwKTsgLy8gY2hhbmdlcyBkZWZhdWx0IE5vZGVqcyB0aW1lb3V0IChkZWZhdWx0IDEyMCBzZWNvbmRzKS5cbiAgICBhd2FpdCBjb250ZXh0LnNldCgnQWNjZXNzLUNvbnRyb2wtQWxsb3ctT3JpZ2luJywgJyonKVxuICAgIGF3YWl0IGNvbnRleHQuc2V0KCdjb25uZWN0aW9uJywgJ2tlZXAtYWxpdmUnKVxuICAgIC8vIGZvciBzcGVjaWZpYyBtaWRkbGV3YXJlIG1vZHVsZVxuICAgIGNvbnRleHQuY29tcHJlc3MgPSB0cnVlXG4gICAgYXdhaXQgbmV4dCgpXG4gIH1cbn1cblxuZXhwb3J0IGZ1bmN0aW9uIGNhY2hlQ29udHJvbCgpIHtcbiAgcmV0dXJuIGFzeW5jIGZ1bmN0aW9uIGNhY2hlQ29udHJvbChjb250ZXh0LCBuZXh0KSB7XG4gICAgY29udGV4dC5zZXQoJ0NhY2hlLUNvbnRyb2wnLCAnbWF4LWFnZT02MDQ4MDAnKVxuICAgIGF3YWl0IG5leHQoKVxuICB9XG59XG5cbmV4cG9ydCBjb25zdCBoYW5kbGVPcHRpb25zUmVxdWVzdCA9IGFzeW5jIChjb250ZXh0LCBuZXh0KSA9PiB7XG4gIGNvbnRleHQuc2V0KCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1NZXRob2RzJywgJyonIC8qICdQT1NULCBHRVQsIE9QVElPTlMsIERFTEVURScgKi8pXG4gIGNvbnRleHQuc2V0KCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1IZWFkZXJzJywgJyonIC8qICdDb250ZW50LVR5cGUnICovKSAvLyB1c2VkIGFzIGEgcmVzcG9uc2UgdG8gcHJlZmxpZ2h0LCBpbmRpY2F0aW5nIHdoaWNoIGhlYWRlcnMgY2FuIGJlIHVzZWQgaW4gdGhlIHJlcXVlc3QuXG4gIGNvbnRleHQuYm9keSA9ICdPSycgLy8gcHJldmlvdXMgbWlkZGxld2FyZXMgc2hvdWxkIGhhdmUgYWxyZWFkeSBkZWZpbmVkIGNyb3NzIG9yaWdpbiBhbGwgKi5cbiAgYXdhaXQgbmV4dCgpXG59XG4iXX0=
