@@ -54,7 +54,6 @@ export const ifLevel1IncludesAt = async middlewareContext => {
 // check type of requested resource - javascript, stylesheet, html, other. or folder dirent
 export const getFileType = async middlewareContext => {
   let pathArray = await getUrlPathAsArray(middlewareContext)
-  console.log(pathArray)
   // TODO: check type of requested resource
   return 'javascript'
 }

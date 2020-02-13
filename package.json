@@ -20,6 +20,7 @@
 		"@dependency/handleJSNativeDataStructure": "https://github.com/AppScriptIO/handleJSNativeDataStructure#semver:^2.x.x",
 		"@dependency/namedCurry": "https://github.com/AppScriptIO/namedCurry#semver:^1.x.x",
 		"co-body": "*",
+		"etag": "^1.8.1",
 		"koa": "*",
 		"koa-bodyparser": "^4.2.1",
 		"koa-compress": "*",
