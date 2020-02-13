@@ -89,7 +89,7 @@
       "labels": ["Stage", "Process", "Function"],
       "properties": {
         "filePath": "./html/google276dc830e9fade0c.html",
-        "basePath": "./asset",
+        "basePath": "./",
         "functionName": "serveStaticFile",
         "key": "6065626c-1ef6-439b-a227-b5c56f8b03a5",
         "name": "Google verification"

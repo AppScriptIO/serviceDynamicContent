@@ -18,30 +18,13 @@ import {
 } from '../../../functionality/renderFile.js'
 import * as renderFile from '../../../functionality/renderFile.js'
 
-/** extract function name from keyword following $ signature.
- * Usage: `import html from './.html$convertTextToJSModule'`
- */
-function extractDollarSignKeyword(string) {
-  if (string.lastIndexOf('$') == -1) return false
-  let keyword = string.substr(string.lastIndexOf('$') + 1, string.length) // $function extracted from url after '$' signature
-  string = string.substr(0, string.lastIndexOf('$')) // remove function name
-  return { signKeyword: keyword, stringWithRemovedSign: string }
-}
-
 export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType = 'application/javascript' } = {}) => async (context, next) => {
   assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
 
-  filePath ||= context.path // a predefined path or an extracted url path
-  basePath ||= '' // additional folder path.
+  filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
+  renderType ||= context[symbol.context.parsed.dollarSign]
 
-  if (!renderType) {
-    let { signKeyword, stringWithRemovedSign } = extractDollarSignKeyword(filePath)
-    filePath = stringWithRemovedSign // if sign exist the actual file path woule be what comes before `./.html$convertTextToJSModule`
-    renderType ||= signKeyword
-  }
-
-  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath, filePath)
-  //TODO: - reconsider the function context used for referencing the dollar extracted function keyword.
+  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
   let functionReference = renderFile[renderType] // the reference context is actually the module "renderFile.js"
   assert(functionReference, `• function keyword in the url must have an equivalent in the function reference.`)
   context.body = await functionReference({ filePath: absoluteFilePath })
