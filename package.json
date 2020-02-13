@@ -6,6 +6,7 @@
 		"test": "yarn run scriptManager @deployment/deploymentScript \".test.default({ testPath: ['./test'] })\"",
 		"test-inspect": "export NODE_OPTIONS='--inspect-brk' && yarn run scriptManager @deployment/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
 		"exportGraphData": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".graphDataLoading.exportAllGraphData({targetPath: './temporary/resource',fileName: 'data.graph.json'})\"",
+		"exportSubgraphData": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".graphDataLoading.exportSubgraphData({subgraphEntryNodeKeyList: ['293097b9-3522-4f2b-b557-8380ff3e96e3'], targetPath: './temporary/resource',fileName: 'assetContentDelivery.graph.json'})\"",
 		"loadGraphData": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".graphDataLoading.loadGraphDataFromFile({ shouldClearDatabase: true, graphDataFilePath: './temporary/resource/data.graph.json' })\"",
 		"build": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".buildSourceCode.moduleProject({}, {compile:[/**'./test'*/]})\"",
 		"buildAndRelease": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".buildAndRelease.moduleProject({})\""

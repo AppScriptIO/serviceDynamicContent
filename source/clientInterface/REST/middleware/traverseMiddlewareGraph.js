@@ -26,6 +26,10 @@ export const graphMiddlewareImmediatelyExecute = async ({ configuredGraph, entry
         traversalInterception: 'handleMiddlewareNextCall_branchedGraph',
       },
     }) // implementation key is derived from the graph nodes - usally 'immediatelyExecuteMiddleware'
+
+    // debug viewing the traversals used in the graph
+    // console.log(graph.statistics.traverserArray[0].statistics.traversedNodeList)
+
     await next()
   }
 
