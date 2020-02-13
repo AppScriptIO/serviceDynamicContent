@@ -12,11 +12,6 @@ import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 import * as symbol from '../symbol.reference.js'
 import * as renderFile from '../../../functionality/renderFile.js'
 var notfound = { ENOENT: true, ENAMETOOLONG: true, ENOTDIR: true }
-function onstaterror(err) {
-  if (notfound[err.code]) return
-  err.status = 500
-  throw err
-}
 
 /**
  * serve static file.
@@ -51,29 +46,34 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
   let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
 
   renderType ||= context[symbol.context.parsed.dollarSign]
+  // render requested resource
 
-  try {
-    let stats = filesystem.statSync()
-    if (stats && stats.isFile()) {
-      context.response.status = 200
-      context.response.lastModified = stats.mtime
-      context.response.length = stats.size
-      context.response.type = mimeType || path.extname(absoluteFilePath)
-      if (!context.response.etag) context.response.etag = calculate(stats, { weak: true })
+  let fileStats = await filesystem.promises
+    .stat(absoluteFilePath)
+    .then(async stats => {
+      if (stats && stats.isFile()) {
+        context.response.lastModified = stats.mtime
+        context.response.length = stats.size
+        context.response.type = mimeType || path.extname(absoluteFilePath)
+        if (!context.response.etag) context.response.etag = calculate(stats, { weak: true })
 
-      // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
-      if (context.request.fresh) context.response.status = 304
-      else {
-        // render requested resource
-        let renderFunction = renderFile[renderType] // the reference context is actually the module "renderFile.js"
-        assert(renderFunction, `• function keyword in the url must have an equivalent in the function reference - ${renderType} was not found.`)
-        // context.body = filesystem.createReadStream(path)
-        context.body = await renderFunction({ filePath: absoluteFilePath })
+        // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
+        if (context.request.fresh) context.response.status = 304
+        else {
+          let renderFunction = renderFile[renderType] // the reference context is actually the module "renderFile.js"
+          if (!renderFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${renderType}" was not found.`)
+
+          // context.body = filesystem.createReadStream(path)
+          context.body = await renderFunction({ filePath: absoluteFilePath })
+        }
       }
-    }
-  } catch (error) {
-    onstaterror(error)
-  }
+    })
+    .catch(err => {
+      if (notfound[err.code]) return
+      err.status = 500
+      context.response.status = err.status
+      throw err
+    })
 
   await next()
 }
