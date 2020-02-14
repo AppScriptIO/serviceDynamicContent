@@ -4,7 +4,7 @@ import { curryNamed } from '@dependency/namedCurry'
 import { curry } from 'ramda'
 import * as symbol from './symbol.reference.js'
 
-import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifDollarFunction, getFileType } from './graphEvaluationFunction.js'
+import { getRequestMethod, getUrlPathLevel, isExistUrlPathLevel, getUrlPathAsArray, ifLevel1IncludesAt, ifDollarFunction, getFileType, isPackageResource } from './graphEvaluationFunction.js'
 import { transformJavascriptMiddleware } from './middleware/babelTranspiler.js'
 import { serveStaticFile, serveServerSideRenderedFile } from './middleware/serveFile.js'
 import { pickClientSideProjectConfig } from './middleware/useragentDetection.js'
@@ -87,6 +87,7 @@ let conditionFunctionReferenceList = ({ targetProjectConfig, configuredGraph, mi
     getRequestMethod: ({ node, traverser }) => getRequestMethod(middlewareContext),
     getUrlPathAsArray: ({ node, traverser }) => getUrlPathAsArray(middlewareContext),
     getFileType: ({ node, traverser }) => getFileType(middlewareContext),
+    isPackageResource: ({ node, traverser }) => isPackageResource(middlewareContext),
   })
 
 let pipeFunctionReferenceList = ({ targetProjectConfig, configuredGraph, middlewareContext }) =>

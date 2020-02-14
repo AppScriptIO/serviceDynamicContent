@@ -158,7 +158,7 @@
     "identity": 5333,
     "labels": ["Stage", "Process", "Function"],
     "properties": {
-      "functionName": "shouldTransformCode",
+      "functionName": "isPackageResource",
       "key": "6c07b30e-190c-429d-88e6-9d26e7477e05"
     }
   }, {
@@ -735,6 +735,15 @@
     "properties": {
       "expected": true,
       "key": "bb831108-837e-4017-9680-fba72de81dd9"
+    }
+  }, {
+    "identity": 141803,
+    "start": 5315,
+    "end": 5330,
+    "type": "FALLBACK",
+    "properties": {
+      "expected": true,
+      "key": "f98234-4017-9680-9g2h49h88h"
     }
   }, {
     "identity": 14182,
