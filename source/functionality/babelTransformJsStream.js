@@ -14,6 +14,7 @@ try {
 
 export async function transformJavascript({
   scriptCode,
+  filePath,
   transformBabelPreset = getBabelConfig('nativeClientSideRuntime.BabelConfig.js').presets,
   transformBabelPlugin = getBabelConfig('nativeClientSideRuntime.BabelConfig.js').plugins,
 }: {
@@ -23,7 +24,11 @@ export async function transformJavascript({
     // convert stream into string
     if (scriptCode instanceof stream.Stream) scriptCode = await streamToString(scriptCode)
     // transform code using array of plugins.
-    let transformedObject = babel.transformSync(scriptCode, { presets: transformBabelPreset, plugins: transformBabelPlugin })
+    let transformedObject = babel.transformSync(scriptCode, {
+      filename: filePath, // https://babeljs.io/docs/en/options#filename
+      presets: transformBabelPreset,
+      plugins: transformBabelPlugin,
+    })
     return transformedObject.code // object containing 'code' property
   }
 }

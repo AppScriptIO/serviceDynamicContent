@@ -58,3 +58,9 @@ export const getFileType = async middlewareContext => {
   let extension = path.extname(middlewareContext[symbol.context.parsed.path])
   return ecmascriptType.includes(extension) ? 'javascript' : extension
 }
+
+// Should run server-side rendering of the template files:
+export function shouldTransformCode(middlewareContext) {
+  let nodeModuleFolder = ['node_modules', '@package', '@package-' /*TODO: add regex for multiple packages */]
+  return nodeModuleFolder.some(item => middlewareContext.request.path.includes(item))
+}
