@@ -1,26 +1,10 @@
 import filesystem from 'fs'
-import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 // Note: Every function dependent on underscore will be affected by the configuration of the template string of the underscore imported instance.
 import underscore from 'underscore'
 
-/** Wrap css style in a tag (created using javascript) - to support shared styles in Polymer 3 javascript imports
- * Polyfill from https://github.com/Polymer/polymer-modulizer/blob/f1ef5dea3978a9601248d73f4d23dc033382286c/fixtures/packages/polymer/expected/test/unit/styling-import-shared-styles.js
- */
-export async function convertSharedStylesToJS({ filePath }) {
-  return await wrapStringStream({
-    stream: filesystem.createReadStream(filePath),
-    beforeString: "const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `",
-    afterString: '`;document.head.appendChild($_documentContainer);',
-  })
-}
+/** Template rendering related functionality, which doesn't change the type of content (MIME type) */
 
-/** Wrap text file with export default - converting it to js module */
-export async function covertTextFileToJSModule({ filePath }) {
-  let fileStream = filesystem.createReadStream(filePath)
-  return await wrapStringStream({ stream: fileStream, beforeString: 'export default `', afterString: '`' })
-}
-
-// render template using underscore - evaluating js code.
+// render template using underscore - evaluating js code. Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
 export function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
   return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ argument }) // Koa handles the stream and send it to the client.
 }

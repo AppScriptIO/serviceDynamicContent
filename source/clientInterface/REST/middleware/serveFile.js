@@ -1,7 +1,7 @@
 import path from 'path'
 import assert from 'assert'
 import filesystem from 'fs'
-import Stream from 'stream'
+import stream from 'stream'
 import multistream from 'multistream'
 import underscore from 'underscore'
 import calculate from 'etag'
@@ -10,7 +10,8 @@ import send from 'koa-sendfile' // Static files.
 // import mount from 'koa-mount'
 import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
 import * as symbol from '../symbol.reference.js'
-import * as renderFile from '../../../functionality/renderFile.js'
+import * as renderReferenceContext from '../../../functionality/renderFile.js'
+import * as processReferenceContext from '../../../functionality/postProcessFile.js'
 var notfound = { ENOENT: true, ENAMETOOLONG: true, ENOTDIR: true }
 
 /**
@@ -28,57 +29,19 @@ export const serveStaticFile = ({ filePath, basePath } = {}) =>
     // let directoryPath = await path.resolve(path.normalize(`${context[symbol.context.clientSideProjectConfig].path}${basePath}`))
     // let mountMiddleware = mount(filePath || context.path, serverStatic(`${directoryPath}`, {}))
 
-    let absoluteFilePath = path.join(
+    context[symbol.context.parsed.filePath] = path.join(
       context[symbol.context.clientSideProjectConfig].path,
       basePath || '', // additional folder path.
       filePath || context.path, // a predefined path or an extracted url path
     )
-    let fileStats = await send(context, absoluteFilePath)
+
+    let fileStats = await send(context, context[symbol.context.parsed.filePath])
     // if file doesn't exist then pass to the next middleware.
     if (!fileStats || !fileStats.isFile()) await next()
   }
 
-// Apply render function before serving file, $ function is extracted from context.path
-export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mimeType /*= 'application/javascript'*/ } = {}) => async (context, next) => {
-  assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-
-  filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
-  let absoluteFilePath = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
-
-  renderType ||= context[symbol.context.parsed.dollarSign]
-  // render requested resource
-
-  let fileStats = await filesystem.promises
-    .stat(absoluteFilePath)
-    .then(async stats => {
-      if (stats && stats.isFile()) {
-        context.response.lastModified = stats.mtime
-        context.response.length = stats.size
-        context.response.type = mimeType || path.extname(absoluteFilePath)
-        if (!context.response.etag) context.response.etag = calculate(stats, { weak: true })
-
-        // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
-        if (context.request.fresh) context.response.status = 304
-        else {
-          let renderFunction = renderFile[renderType] // the reference context is actually the module "renderFile.js"
-          if (!renderFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${renderType}" was not found.`)
-
-          // context.body = filesystem.createReadStream(path)
-          context.body = await renderFunction({ filePath: absoluteFilePath })
-        }
-      }
-    })
-    .catch(err => {
-      if (notfound[err.code]) return
-      err.status = 500
-      context.response.status = err.status
-      throw err
-    })
-
-  await next()
-}
-
 /**
+ * Apply render function before serving file, $ function is extracted from context.path
  * servers serverside rendered javascript blocks or other rendering.
  * @dependency useragentDetection middleware, userAgent modules
  * @dependency templateRenderingMiddleware middleware, koa-views & underscore modules
@@ -86,83 +49,55 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, mi
  * Resources:
  * - read streams and send them using koa - https://github.com/koajs/koa/issues/944 http://book.mixu.net/node/ch9.html
  */
-export const renderSharedStyle = ({ filePath, basePath, mimeType = 'application/javascript' }) =>
-  async function renderSharedStyle(context, next) {
-    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-    let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
-      clientSidePath,
-      basePath || '', // additional folder path.
-      filePath_,
-    )
-    context.body = await renderFile.convertSharedStylesToJS({ filePath: absoluteFilePath })
-    context.response.type = mimeType
-    await next()
+export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, processType, mimeType /*= 'application/javascript'*/ } = {}) => async (context, next) => {
+  assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
+
+  filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
+  context[symbol.context.parsed.filePath] = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
+
+  let renderFunction, processFunction
+  if (!renderType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'render') {
+    renderType = context[symbol.context.parsed.dollarSign].functionName 
+    renderFunction = renderReferenceContext[renderType] // the reference context is actually the module "renderFile.js"
+    if (!renderFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${renderType}" was not found.`)
+  }
+  if (!processType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'process') {
+    processType = context[symbol.context.parsed.dollarSign].functionName 
+    processFunction = processReferenceContext[processType] // the reference context is actually the module "renderFile.js"
+    if (!processFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${processType}" was not found.`)
   }
 
-export const renderFileAsJSModule = ({ filePath, basePath, mimeType = 'application/javascript' }) =>
-  async function renderFileAsJSModule(context, next) {
-    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-    let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
-      clientSidePath,
-      basePath || '', // additional folder path.
-      filePath_,
-    )
-    context.body = await renderFile.covertTextFileToJSModule({ filePath: absoluteFilePath })
-    context.response.type = mimeType
-    await next()
-  }
+  let fileStats = await filesystem.promises
+    .stat(context[symbol.context.parsed.filePath])
+    .then(async stats => {
+      if (stats && stats.isFile()) {
+        context.response.lastModified = stats.mtime
+        context.response.length = stats.size
+        context.response.type = mimeType || path.extname(context[symbol.context.parsed.filePath])
+        if (!context.response.etag) context.response.etag = calculate(stats, { weak: true })
 
-export const renderHTMLImportWebcomponent = ({ filePath, basePath }) =>
-  async function renderHTMLImportWebcomponent(context, next) {
-    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-    let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
-      clientSidePath,
-      basePath || '', // additional folder path.
-      filePath_,
-    )
-    context.body = await combineHTMLImportWebcomponent({ filePath: absoluteFilePath })
-    await next()
-  }
+        // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
+        if (context.request.fresh) context.response.status = 304
+        else {
+          // render requested resource
+          if(renderType)
+            context.body = await renderFunction({ filePath: context[symbol.context.parsed.filePath] })
+          else 
+            context.body = filesystem.createReadStream(context[symbol.context.parsed.filePath])
+        }
+      }
+    })
+    .catch(error => {
+      if (notfound[error.code]) return
+      error.status = 500
+      context.response.status = error.status
+      throw error
+    })
 
-export const renderJSImportWebcomponent = ({ filePath, basePath }) =>
-  async function renderJSImportWebcomponent(context, next) {
-    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-    let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
-      clientSidePath,
-      basePath || '', // additional folder path.
-      filePath_,
-    )
-    context.body = await renderFile.combineJSImportWebcomponent({ filePath: absoluteFilePath })
-    await next()
-  }
+  await next()
 
-// Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
-export const renderJsTemplateUsingUnderscore = ({ filePath, basePath }) =>
-  async function renderJsTemplateUsingUnderscore(context, next) {
-    assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
-    let clientSidePath = context[symbol.context.clientSideProjectConfig].path
-    let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
-      clientSidePath,
-      basePath || '', // additional folder path.
-      filePath_,
-    )
-    try {
-      context.body = renderFile.renderTemplateEvaluatingJs({ filePath: absoluteFilePath, argument: { context } })
-      context.response.type = mimeType // TODO: detect MIME type automatically and support other mimes.
-    } catch (error) {
-      console.log(error)
-      await next()
-    }
-  }
+  if(processType) context.body = await processFunction({ content: context.body })
+}
 
 // serve evaluated file. Implementation using render using underlying `underscore` through `consolidate` module(framework like).
 // Takes into account
@@ -171,15 +106,15 @@ export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
     assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
     let clientSidePath = context[symbol.context.clientSideProjectConfig].path
     let filePath_ = filePath || context.path // a predefined path or an extracted url path
-    let absoluteFilePath = path.join(
+    context[symbol.context.parsed.filePath] = path.join(
       clientSidePath,
       basePath || '', // additional folder path.
       filePath_,
     )
 
-    if (filesystem.existsSync(absoluteFilePath) && filesystem.statSync(absoluteFilePath).isFile()) {
-      await context.render(absoluteFilePath, { argument: { context } })
-      context.response.type = path.extname(absoluteFilePath)
+    if (filesystem.existsSync(context[symbol.context.parsed.filePath]) && filesystem.statSync(context[symbol.context.parsed.filePath]).isFile()) {
+      await context.render(context[symbol.context.parsed.filePath], { argument: { context } })
+      context.response.type = path.extname(context[symbol.context.parsed.filePath])
       await next()
     } else await next()
   }

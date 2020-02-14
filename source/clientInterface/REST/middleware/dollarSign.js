@@ -13,7 +13,9 @@ function extractDollarSignKeyword(string) {
 // Parses the path without changing it.
 export const parseDollarSignPath = () =>
   async function parseDollarSignPath(context, next) {
-    context[symbol.context.parsed.dollarSign] = extractDollarSignKeyword(context[symbol.context.parsed.path]).signKeyword
+    let signString = extractDollarSignKeyword(context[symbol.context.parsed.path]).signKeyword
+    let keywordArray =  signString.split('.')
+    if(keywordArray.length == 2) context[symbol.context.parsed.dollarSign] =  { referenceContextName: keywordArray[0], functionName: keywordArray[1] } 
     await next()
   }
 
