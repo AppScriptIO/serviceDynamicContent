@@ -1,4 +1,5 @@
 import { transformJavascript } from '../../../functionality/babelTransformJsStream.js'
+import * as symbol from "../symbol.reference.js";
 
 // transpile only on development and non-distribution folders, i.e. on-the-fly transpilation middleware is executed only in development, while in productios the distribution folder should be already transpiled.
 export const transformJavascriptMiddleware = ({} = {}) =>

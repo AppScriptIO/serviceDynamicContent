@@ -16,6 +16,7 @@ export const parseDollarSignPath = () =>
     let signString = extractDollarSignKeyword(context[symbol.context.parsed.path]).signKeyword
     let keywordArray =  signString.split('.')
     if(keywordArray.length == 2) context[symbol.context.parsed.dollarSign] =  { referenceContextName: keywordArray[0], functionName: keywordArray[1] } 
+    else context[symbol.context.parsed.dollarSign] = signString
     await next()
   }
 

@@ -12,7 +12,7 @@ export async function convertSharedStylesToJS({ content, filePath}) {
     if(!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params')
     
     content = filesystem.createReadStream(filePath)
-  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([string]) // yield one event for the entire string, rather than without the array emitting event for each character.
+  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([content]) // yield one event for the entire string, rather than without the array emitting event for each character.
 
   
   return await wrapStringStream({
@@ -28,7 +28,7 @@ export async function covertTextFileToJSModule({ content, filePath}) {
     if(!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params')
     
     content = filesystem.createReadStream(filePath)
-  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([string]) // yield one event for the entire string, rather than without the array emitting event for each character.
+  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([content]) // yield one event for the entire string, rather than without the array emitting event for each character.
 
   return await wrapStringStream({ stream: content, beforeString: 'export default `', afterString: '`' })
 }

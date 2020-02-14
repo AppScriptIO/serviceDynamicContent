@@ -55,48 +55,54 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, pr
   filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
   context[symbol.context.parsed.filePath] = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
 
+
   let renderFunction, processFunction
-  if (!renderType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'render') {
-    renderType = context[symbol.context.parsed.dollarSign].functionName 
-    renderFunction = renderReferenceContext[renderType] // the reference context is actually the module "renderFile.js"
-    if (!renderFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${renderType}" was not found.`)
-  }
-  if (!processType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'process') {
-    processType = context[symbol.context.parsed.dollarSign].functionName 
-    processFunction = processReferenceContext[processType] // the reference context is actually the module "renderFile.js"
-    if (!processFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${processType}" was not found.`)
-  }
+  try {
+    if (!renderType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'render') {
+      renderType = context[symbol.context.parsed.dollarSign].functionName 
+      renderFunction = renderReferenceContext[renderType] // the reference context is actually the module "renderFile.js"
+      if (!renderFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${renderType}" was not found.`)
+    }
+    if (!processType && context[symbol.context.parsed.dollarSign]?.referenceContextName == 'process') {
+      processType = context[symbol.context.parsed.dollarSign].functionName 
+      processFunction = processReferenceContext[processType] // the reference context is actually the module "renderFile.js"
+      if (!processFunction) throw new Error(`• function keyword in the url must have an equivalent in the function reference - "${processType}" was not found.`)
+    }
 
-  let fileStats = await filesystem.promises
-    .stat(context[symbol.context.parsed.filePath])
-    .then(async stats => {
-      if (stats && stats.isFile()) {
-        context.response.lastModified = stats.mtime
-        context.response.length = stats.size
-        context.response.type = mimeType || path.extname(context[symbol.context.parsed.filePath])
-        if (!context.response.etag) context.response.etag = calculate(stats, { weak: true })
+    let fileStats = await filesystem.promises
+      .stat(context[symbol.context.parsed.filePath])
+      .catch(error => {
+        if (notfound[error.code]) return
+        error.status = 500
+        context.response.status = error.status
+        throw error
+      })
 
-        // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
-        if (context.request.fresh) context.response.status = 304
-        else {
-          // render requested resource
-          if(renderType)
-            context.body = await renderFunction({ filePath: context[symbol.context.parsed.filePath] })
-          else 
-            context.body = filesystem.createReadStream(context[symbol.context.parsed.filePath])
-        }
+    if (fileStats && fileStats.isFile()) {
+      context.response.lastModified = fileStats.mtime
+      context.response.length = fileStats.size
+      context.response.type = mimeType || path.extname(context[symbol.context.parsed.filePath])
+      if (!context.response.etag) context.response.etag = calculate(fileStats, { weak: true })
+
+      // fresh based solely on last-modified - Check if a request cache is "fresh", aka the contents have not changed. This method is for cache negotiation between If-None-Match / ETag, and If-Modified-Since and Last-Modified. It should be referenced after setting one or more of these response headers.
+      if (context.request.fresh) context.response.status = 304
+      else {
+        // render requested resource
+        if(renderType) context.body = await renderFunction({ filePath: context[symbol.context.parsed.filePath] })
+        else context.body = filesystem.createReadStream(context[symbol.context.parsed.filePath])
       }
-    })
-    .catch(error => {
-      if (notfound[error.code]) return
-      error.status = 500
-      context.response.status = error.status
-      throw error
-    })
+    }
 
-  await next()
+    await next()
 
-  if(processType) context.body = await processFunction({ content: context.body })
+    if(processType) context.body = await processFunction({ content: context.body })
+
+  } catch (error) {
+    error.status = 500
+    context.response.status = error.status
+    throw error
+  }
+
 }
 
 // serve evaluated file. Implementation using render using underlying `underscore` through `consolidate` module(framework like).
