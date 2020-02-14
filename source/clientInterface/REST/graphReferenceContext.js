@@ -18,7 +18,7 @@ import { setResponseHeaders, cacheControl, handleOptionsRequest } from './middle
 import { setFrontendSetting } from './middleware/languageContent.js'
 import { templateRenderingMiddleware } from './middleware/templateRendering.js'
 import { graphDocumentRenderingMiddlewareAdapter } from './middleware/traverseTemplateGraph.js'
-import { wrapWithJsTag } from './pipeFunction/wrapString.js'
+import { wrapWithJsTag } from '../../functionality/postProcessFile.js'
 
 // Note: function are curried to allow initialization in stages.
 /** 

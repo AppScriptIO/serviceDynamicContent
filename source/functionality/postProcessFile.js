@@ -32,3 +32,5 @@ export async function covertTextFileToJSModule({ content, filePath}) {
 
   return await wrapStringStream({ stream: content, beforeString: 'export default `', afterString: '`' })
 }
+
+export const wrapWithJsTag = () => string => `<script>${string}</script>`
