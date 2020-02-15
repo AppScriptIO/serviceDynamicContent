@@ -1,20 +1,21 @@
-import { transformJavascript } from '../../../functionality/babelTransformJsStream.js'
-import * as symbol from '../symbol.reference.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.transformJavascriptMiddleware = void 0;var _babelTransformJsStream = require("../../../functionality/babelTransformJsStream.js");
+var symbol = _interopRequireWildcard(require("../symbol.reference.js"));
 
-// transpile only on development and non-distribution folders, i.e. on-the-fly transpilation middleware is executed only in development, while in productios the distribution folder should be already transpiled.
-export const transformJavascriptMiddleware = ({} = {}) =>
-  async function transformJavascriptMiddleware(context, next) {
-    // if (context.response.type.includes('application/javascript'))
 
-    // only if file serve function was successful
-    if (context.response.status == 200) {
-      try {
-        context.body = await transformJavascript({ scriptCode: context.body, filePath: context[symbol.context.parsed.filePath] })
-      } catch (error) {
-        error.status = 500
-        context.response.status = error.status
-        throw error
-      }
+const transformJavascriptMiddleware = ({} = {}) =>
+async function transformJavascriptMiddleware(context, next) {
+
+
+
+  if (context.response.status == 200) {
+    try {
+      context.body = await (0, _babelTransformJsStream.transformJavascript)({ scriptCode: context.body, filePath: context[symbol.context.parsed.filePath] });
+    } catch (error) {
+      error.status = 500;
+      context.response.status = error.status;
+      throw error;
     }
-    await next()
   }
+  await next();
+};exports.transformJavascriptMiddleware = transformJavascriptMiddleware;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2JhYmVsVHJhbnNwaWxlci5qcyJdLCJuYW1lcyI6WyJ0cmFuc2Zvcm1KYXZhc2NyaXB0TWlkZGxld2FyZSIsImNvbnRleHQiLCJuZXh0IiwicmVzcG9uc2UiLCJzdGF0dXMiLCJib2R5Iiwic2NyaXB0Q29kZSIsImZpbGVQYXRoIiwic3ltYm9sIiwicGFyc2VkIiwiZXJyb3IiXSwibWFwcGluZ3MiOiJpTkFBQTtBQUNBOzs7QUFHTyxNQUFNQSw2QkFBNkIsR0FBRyxDQUFDLEtBQUssRUFBTjtBQUMzQyxlQUFlQSw2QkFBZixDQUE2Q0MsT0FBN0MsRUFBc0RDLElBQXRELEVBQTREOzs7O0FBSTFELE1BQUlELE9BQU8sQ0FBQ0UsUUFBUixDQUFpQkMsTUFBakIsSUFBMkIsR0FBL0IsRUFBb0M7QUFDbEMsUUFBSTtBQUNGSCxNQUFBQSxPQUFPLENBQUNJLElBQVIsR0FBZSxNQUFNLGlEQUFvQixFQUFFQyxVQUFVLEVBQUVMLE9BQU8sQ0FBQ0ksSUFBdEIsRUFBNEJFLFFBQVEsRUFBRU4sT0FBTyxDQUFDTyxNQUFNLENBQUNQLE9BQVAsQ0FBZVEsTUFBZixDQUFzQkYsUUFBdkIsQ0FBN0MsRUFBcEIsQ0FBckI7QUFDRCxLQUZELENBRUUsT0FBT0csS0FBUCxFQUFjO0FBQ2RBLE1BQUFBLEtBQUssQ0FBQ04sTUFBTixHQUFlLEdBQWY7QUFDQUgsTUFBQUEsT0FBTyxDQUFDRSxRQUFSLENBQWlCQyxNQUFqQixHQUEwQk0sS0FBSyxDQUFDTixNQUFoQztBQUNBLFlBQU1NLEtBQU47QUFDRDtBQUNGO0FBQ0QsUUFBTVIsSUFBSSxFQUFWO0FBQ0QsQ0FmSSxDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgdHJhbnNmb3JtSmF2YXNjcmlwdCB9IGZyb20gJy4uLy4uLy4uL2Z1bmN0aW9uYWxpdHkvYmFiZWxUcmFuc2Zvcm1Kc1N0cmVhbS5qcydcbmltcG9ydCAqIGFzIHN5bWJvbCBmcm9tICcuLi9zeW1ib2wucmVmZXJlbmNlLmpzJ1xuXG4vLyB0cmFuc3BpbGUgb25seSBvbiBkZXZlbG9wbWVudCBhbmQgbm9uLWRpc3RyaWJ1dGlvbiBmb2xkZXJzLCBpLmUuIG9uLXRoZS1mbHkgdHJhbnNwaWxhdGlvbiBtaWRkbGV3YXJlIGlzIGV4ZWN1dGVkIG9ubHkgaW4gZGV2ZWxvcG1lbnQsIHdoaWxlIGluIHByb2R1Y3Rpb3MgdGhlIGRpc3RyaWJ1dGlvbiBmb2xkZXIgc2hvdWxkIGJlIGFscmVhZHkgdHJhbnNwaWxlZC5cbmV4cG9ydCBjb25zdCB0cmFuc2Zvcm1KYXZhc2NyaXB0TWlkZGxld2FyZSA9ICh7fSA9IHt9KSA9PlxuICBhc3luYyBmdW5jdGlvbiB0cmFuc2Zvcm1KYXZhc2NyaXB0TWlkZGxld2FyZShjb250ZXh0LCBuZXh0KSB7XG4gICAgLy8gaWYgKGNvbnRleHQucmVzcG9uc2UudHlwZS5pbmNsdWRlcygnYXBwbGljYXRpb24vamF2YXNjcmlwdCcpKVxuXG4gICAgLy8gb25seSBpZiBmaWxlIHNlcnZlIGZ1bmN0aW9uIHdhcyBzdWNjZXNzZnVsXG4gICAgaWYgKGNvbnRleHQucmVzcG9uc2Uuc3RhdHVzID09IDIwMCkge1xuICAgICAgdHJ5IHtcbiAgICAgICAgY29udGV4dC5ib2R5ID0gYXdhaXQgdHJhbnNmb3JtSmF2YXNjcmlwdCh7IHNjcmlwdENvZGU6IGNvbnRleHQuYm9keSwgZmlsZVBhdGg6IGNvbnRleHRbc3ltYm9sLmNvbnRleHQucGFyc2VkLmZpbGVQYXRoXSB9KVxuICAgICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgICAgZXJyb3Iuc3RhdHVzID0gNTAwXG4gICAgICAgIGNvbnRleHQucmVzcG9uc2Uuc3RhdHVzID0gZXJyb3Iuc3RhdHVzXG4gICAgICAgIHRocm93IGVycm9yXG4gICAgICB9XG4gICAgfVxuICAgIGF3YWl0IG5leHQoKVxuICB9XG4iXX0=

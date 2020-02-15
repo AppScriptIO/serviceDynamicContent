@@ -1,51 +1,52 @@
-import * as symbol from '../symbol.reference.js'
-const pathPosition = 0 // path position in interes
-// map for resolving/expanding @ paths.
-const namedImportMap = [
-  {
-    key: 'webcomponent', // @webcomponent
-    path: 'webcomponent', // folder inside clientSide module
-  },
-  {
-    key: 'javascript', // @javascript
-    path: 'javascript', // folder inside clientSide module
-  },
-]
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.extractAtSignKeyword = extractAtSignKeyword;exports.expandAtSignPath = exports.parseAtSignPath = void 0;var symbol = _interopRequireWildcard(require("../symbol.reference.js"));
+const pathPosition = 0;
 
-/** extract shorten path keyword following @ signature.
- * Usage: `@webcomponent/webcomponentsjs/webcomponents-lite.js`
- */
-export function extractAtSignKeyword(string) {
-  if (string.lastIndexOf('@') == -1) return false
-  // Get the keyword after @ sign i.e. `/@<key name>/x/y/z`
-  let signKeyword = string.substring(string.indexOf('@') + 1, string.length) // keyword after at sign
-  return signKeyword
+const namedImportMap = [
+{
+  key: 'webcomponent',
+  path: 'webcomponent' },
+
+{
+  key: 'javascript',
+  path: 'javascript' }];
+
+
+
+
+
+
+function extractAtSignKeyword(string) {
+  if (string.lastIndexOf('@') == -1) return false;
+
+  let signKeyword = string.substring(string.indexOf('@') + 1, string.length);
+  return signKeyword;
 }
 
-// Parses the path without changing it.
-export const parseAtSignPath = () =>
-  async function parseAtSignPath(context, next) {
-    let pathArray = context[symbol.context.parsed.path].split('/').filter(item => item) // split path and remove empty values
-    context[symbol.context.parsed.atSign] = extractAtSignKeyword(pathArray[pathPosition])
-    await next()
-  }
 
-/** Changes the path according to the previously parsed value. map @ Path To Absolute Path
-Middleware that overrides the path, resolving `@<keyword>` section in the begging of the url path.
- * NOTE: @ = At sign.
-Example: `/@javascript/x/y/z` --> `/asset/javascript/x/y/z`
-*/
-export const expandAtSignPath = () =>
-  async function expandAtSignPath(context, next) {
-    if (context[symbol.context.parsed.atSign]) {
-      // check if @ sign exists in beggining of url path.
-      let resolvedAtSignSection = namedImportMap.find(item => item.key == context[symbol.context.parsed.atSign])?.path
-      // change path if @ path was found and mapped
-      if (resolvedAtSignSection) {
-        let pathArray = context[symbol.context.parsed.path].split('/').filter(item => item) // split path and remove empty values
-        pathArray[pathPosition] = resolvedAtSignSection // change path related to @ sign
-        context[symbol.context.parsed.path] = `/${pathArray.join('/')}`
-      }
+const parseAtSignPath = () =>
+async function parseAtSignPath(context, next) {
+  let pathArray = context[symbol.context.parsed.path].split('/').filter(item => item);
+  context[symbol.context.parsed.atSign] = extractAtSignKeyword(pathArray[pathPosition]);
+  await next();
+};exports.parseAtSignPath = parseAtSignPath;
+
+
+
+
+
+
+const expandAtSignPath = () =>
+async function expandAtSignPath(context, next) {
+  if (context[symbol.context.parsed.atSign]) {var _namedImportMap$find;
+
+    let resolvedAtSignSection = (_namedImportMap$find = namedImportMap.find(item => item.key == context[symbol.context.parsed.atSign])) === null || _namedImportMap$find === void 0 ? void 0 : _namedImportMap$find.path;
+
+    if (resolvedAtSignSection) {
+      let pathArray = context[symbol.context.parsed.path].split('/').filter(item => item);
+      pathArray[pathPosition] = resolvedAtSignSection;
+      context[symbol.context.parsed.path] = `/${pathArray.join('/')}`;
     }
-    await next()
   }
+  await next();
+};exports.expandAtSignPath = expandAtSignPath;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2F0U2lnbi5qcyJdLCJuYW1lcyI6WyJwYXRoUG9zaXRpb24iLCJuYW1lZEltcG9ydE1hcCIsImtleSIsInBhdGgiLCJleHRyYWN0QXRTaWduS2V5d29yZCIsInN0cmluZyIsImxhc3RJbmRleE9mIiwic2lnbktleXdvcmQiLCJzdWJzdHJpbmciLCJpbmRleE9mIiwibGVuZ3RoIiwicGFyc2VBdFNpZ25QYXRoIiwiY29udGV4dCIsIm5leHQiLCJwYXRoQXJyYXkiLCJzeW1ib2wiLCJwYXJzZWQiLCJzcGxpdCIsImZpbHRlciIsIml0ZW0iLCJhdFNpZ24iLCJleHBhbmRBdFNpZ25QYXRoIiwicmVzb2x2ZWRBdFNpZ25TZWN0aW9uIiwiZmluZCIsImpvaW4iXSwibWFwcGluZ3MiOiJrUkFBQTtBQUNBLE1BQU1BLFlBQVksR0FBRyxDQUFyQjs7QUFFQSxNQUFNQyxjQUFjLEdBQUc7QUFDckI7QUFDRUMsRUFBQUEsR0FBRyxFQUFFLGNBRFA7QUFFRUMsRUFBQUEsSUFBSSxFQUFFLGNBRlIsRUFEcUI7O0FBS3JCO0FBQ0VELEVBQUFBLEdBQUcsRUFBRSxZQURQO0FBRUVDLEVBQUFBLElBQUksRUFBRSxZQUZSLEVBTHFCLENBQXZCOzs7Ozs7O0FBY08sU0FBU0Msb0JBQVQsQ0FBOEJDLE1BQTlCLEVBQXNDO0FBQzNDLE1BQUlBLE1BQU0sQ0FBQ0MsV0FBUCxDQUFtQixHQUFuQixLQUEyQixDQUFDLENBQWhDLEVBQW1DLE9BQU8sS0FBUDs7QUFFbkMsTUFBSUMsV0FBVyxHQUFHRixNQUFNLENBQUNHLFNBQVAsQ0FBaUJILE1BQU0sQ0FBQ0ksT0FBUCxDQUFlLEdBQWYsSUFBc0IsQ0FBdkMsRUFBMENKLE1BQU0sQ0FBQ0ssTUFBakQsQ0FBbEI7QUFDQSxTQUFPSCxXQUFQO0FBQ0Q7OztBQUdNLE1BQU1JLGVBQWUsR0FBRztBQUM3QixlQUFlQSxlQUFmLENBQStCQyxPQUEvQixFQUF3Q0MsSUFBeEMsRUFBOEM7QUFDNUMsTUFBSUMsU0FBUyxHQUFHRixPQUFPLENBQUNHLE1BQU0sQ0FBQ0gsT0FBUCxDQUFlSSxNQUFmLENBQXNCYixJQUF2QixDQUFQLENBQW9DYyxLQUFwQyxDQUEwQyxHQUExQyxFQUErQ0MsTUFBL0MsQ0FBc0RDLElBQUksSUFBSUEsSUFBOUQsQ0FBaEI7QUFDQVAsRUFBQUEsT0FBTyxDQUFDRyxNQUFNLENBQUNILE9BQVAsQ0FBZUksTUFBZixDQUFzQkksTUFBdkIsQ0FBUCxHQUF3Q2hCLG9CQUFvQixDQUFDVSxTQUFTLENBQUNkLFlBQUQsQ0FBVixDQUE1RDtBQUNBLFFBQU1hLElBQUksRUFBVjtBQUNELENBTEksQzs7Ozs7OztBQVlBLE1BQU1RLGdCQUFnQixHQUFHO0FBQzlCLGVBQWVBLGdCQUFmLENBQWdDVCxPQUFoQyxFQUF5Q0MsSUFBekMsRUFBK0M7QUFDN0MsTUFBSUQsT0FBTyxDQUFDRyxNQUFNLENBQUNILE9BQVAsQ0FBZUksTUFBZixDQUFzQkksTUFBdkIsQ0FBWCxFQUEyQzs7QUFFekMsUUFBSUUscUJBQXFCLDJCQUFHckIsY0FBYyxDQUFDc0IsSUFBZixDQUFvQkosSUFBSSxJQUFJQSxJQUFJLENBQUNqQixHQUFMLElBQVlVLE9BQU8sQ0FBQ0csTUFBTSxDQUFDSCxPQUFQLENBQWVJLE1BQWYsQ0FBc0JJLE1BQXZCLENBQS9DLENBQUgseURBQUcscUJBQWdGakIsSUFBNUc7O0FBRUEsUUFBSW1CLHFCQUFKLEVBQTJCO0FBQ3pCLFVBQUlSLFNBQVMsR0FBR0YsT0FBTyxDQUFDRyxNQUFNLENBQUNILE9BQVAsQ0FBZUksTUFBZixDQUFzQmIsSUFBdkIsQ0FBUCxDQUFvQ2MsS0FBcEMsQ0FBMEMsR0FBMUMsRUFBK0NDLE1BQS9DLENBQXNEQyxJQUFJLElBQUlBLElBQTlELENBQWhCO0FBQ0FMLE1BQUFBLFNBQVMsQ0FBQ2QsWUFBRCxDQUFULEdBQTBCc0IscUJBQTFCO0FBQ0FWLE1BQUFBLE9BQU8sQ0FBQ0csTUFBTSxDQUFDSCxPQUFQLENBQWVJLE1BQWYsQ0FBc0JiLElBQXZCLENBQVAsR0FBdUMsSUFBR1csU0FBUyxDQUFDVSxJQUFWLENBQWUsR0FBZixDQUFvQixFQUE5RDtBQUNEO0FBQ0Y7QUFDRCxRQUFNWCxJQUFJLEVBQVY7QUFDRCxDQWJJLEMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgKiBhcyBzeW1ib2wgZnJvbSAnLi4vc3ltYm9sLnJlZmVyZW5jZS5qcydcbmNvbnN0IHBhdGhQb3NpdGlvbiA9IDAgLy8gcGF0aCBwb3NpdGlvbiBpbiBpbnRlcmVzXG4vLyBtYXAgZm9yIHJlc29sdmluZy9leHBhbmRpbmcgQCBwYXRocy5cbmNvbnN0IG5hbWVkSW1wb3J0TWFwID0gW1xuICB7XG4gICAga2V5OiAnd2ViY29tcG9uZW50JywgLy8gQHdlYmNvbXBvbmVudFxuICAgIHBhdGg6ICd3ZWJjb21wb25lbnQnLCAvLyBmb2xkZXIgaW5zaWRlIGNsaWVudFNpZGUgbW9kdWxlXG4gIH0sXG4gIHtcbiAgICBrZXk6ICdqYXZhc2NyaXB0JywgLy8gQGphdmFzY3JpcHRcbiAgICBwYXRoOiAnamF2YXNjcmlwdCcsIC8vIGZvbGRlciBpbnNpZGUgY2xpZW50U2lkZSBtb2R1bGVcbiAgfSxcbl1cblxuLyoqIGV4dHJhY3Qgc2hvcnRlbiBwYXRoIGtleXdvcmQgZm9sbG93aW5nIEAgc2lnbmF0dXJlLlxuICogVXNhZ2U6IGBAd2ViY29tcG9uZW50L3dlYmNvbXBvbmVudHNqcy93ZWJjb21wb25lbnRzLWxpdGUuanNgXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBleHRyYWN0QXRTaWduS2V5d29yZChzdHJpbmcpIHtcbiAgaWYgKHN0cmluZy5sYXN0SW5kZXhPZignQCcpID09IC0xKSByZXR1cm4gZmFsc2VcbiAgLy8gR2V0IHRoZSBrZXl3b3JkIGFmdGVyIEAgc2lnbiBpLmUuIGAvQDxrZXkgbmFtZT4veC95L3pgXG4gIGxldCBzaWduS2V5d29yZCA9IHN0cmluZy5zdWJzdHJpbmcoc3RyaW5nLmluZGV4T2YoJ0AnKSArIDEsIHN0cmluZy5sZW5ndGgpIC8vIGtleXdvcmQgYWZ0ZXIgYXQgc2lnblxuICByZXR1cm4gc2lnbktleXdvcmRcbn1cblxuLy8gUGFyc2VzIHRoZSBwYXRoIHdpdGhvdXQgY2hhbmdpbmcgaXQuXG5leHBvcnQgY29uc3QgcGFyc2VBdFNpZ25QYXRoID0gKCkgPT5cbiAgYXN5bmMgZnVuY3Rpb24gcGFyc2VBdFNpZ25QYXRoKGNvbnRleHQsIG5leHQpIHtcbiAgICBsZXQgcGF0aEFycmF5ID0gY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQucGF0aF0uc3BsaXQoJy8nKS5maWx0ZXIoaXRlbSA9PiBpdGVtKSAvLyBzcGxpdCBwYXRoIGFuZCByZW1vdmUgZW1wdHkgdmFsdWVzXG4gICAgY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQuYXRTaWduXSA9IGV4dHJhY3RBdFNpZ25LZXl3b3JkKHBhdGhBcnJheVtwYXRoUG9zaXRpb25dKVxuICAgIGF3YWl0IG5leHQoKVxuICB9XG5cbi8qKiBDaGFuZ2VzIHRoZSBwYXRoIGFjY29yZGluZyB0byB0aGUgcHJldmlvdXNseSBwYXJzZWQgdmFsdWUuIG1hcCBAIFBhdGggVG8gQWJzb2x1dGUgUGF0aFxuTWlkZGxld2FyZSB0aGF0IG92ZXJyaWRlcyB0aGUgcGF0aCwgcmVzb2x2aW5nIGBAPGtleXdvcmQ+YCBzZWN0aW9uIGluIHRoZSBiZWdnaW5nIG9mIHRoZSB1cmwgcGF0aC5cbiAqIE5PVEU6IEAgPSBBdCBzaWduLlxuRXhhbXBsZTogYC9AamF2YXNjcmlwdC94L3kvemAgLS0+IGAvYXNzZXQvamF2YXNjcmlwdC94L3kvemBcbiovXG5leHBvcnQgY29uc3QgZXhwYW5kQXRTaWduUGF0aCA9ICgpID0+XG4gIGFzeW5jIGZ1bmN0aW9uIGV4cGFuZEF0U2lnblBhdGgoY29udGV4dCwgbmV4dCkge1xuICAgIGlmIChjb250ZXh0W3N5bWJvbC5jb250ZXh0LnBhcnNlZC5hdFNpZ25dKSB7XG4gICAgICAvLyBjaGVjayBpZiBAIHNpZ24gZXhpc3RzIGluIGJlZ2dpbmluZyBvZiB1cmwgcGF0aC5cbiAgICAgIGxldCByZXNvbHZlZEF0U2lnblNlY3Rpb24gPSBuYW1lZEltcG9ydE1hcC5maW5kKGl0ZW0gPT4gaXRlbS5rZXkgPT0gY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQuYXRTaWduXSk/LnBhdGhcbiAgICAgIC8vIGNoYW5nZSBwYXRoIGlmIEAgcGF0aCB3YXMgZm91bmQgYW5kIG1hcHBlZFxuICAgICAgaWYgKHJlc29sdmVkQXRTaWduU2VjdGlvbikge1xuICAgICAgICBsZXQgcGF0aEFycmF5ID0gY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQucGF0aF0uc3BsaXQoJy8nKS5maWx0ZXIoaXRlbSA9PiBpdGVtKSAvLyBzcGxpdCBwYXRoIGFuZCByZW1vdmUgZW1wdHkgdmFsdWVzXG4gICAgICAgIHBhdGhBcnJheVtwYXRoUG9zaXRpb25dID0gcmVzb2x2ZWRBdFNpZ25TZWN0aW9uIC8vIGNoYW5nZSBwYXRoIHJlbGF0ZWQgdG8gQCBzaWduXG4gICAgICAgIGNvbnRleHRbc3ltYm9sLmNvbnRleHQucGFyc2VkLnBhdGhdID0gYC8ke3BhdGhBcnJheS5qb2luKCcvJyl9YFxuICAgICAgfVxuICAgIH1cbiAgICBhd2FpdCBuZXh0KClcbiAgfVxuIl19
