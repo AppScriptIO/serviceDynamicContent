@@ -1,5 +1,0 @@
-{const a=JSON.parse("{%= JSON.stringify(argument.someConfig1) %}");a.instance=JSON.parse("{%= JSON.stringify(argument.someConfig2) %}");// Global Object that handles the app and other stuff.
-window.App=a||new function(){};const b=window.App;b.module=b.module||{};// polymer behaviors that include functions and properties.
-const c={// Setting behavior for the app.
-properties:{app:{type:Object,value:function(){return b},notify:!0,reflectToAttribute:!0}}};b.behavior=b.behavior||{};// polymer behaviors that include functions and properties.
-b.behavior=c}

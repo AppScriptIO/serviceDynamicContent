@@ -1,36 +1,37 @@
-import stream from 'stream'
-import filesystem from 'fs'
-import { wrapStringStream } from '@dependency/handleJSNativeDataStructure'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.convertSharedStylesToJS = convertSharedStylesToJS;exports.covertTextFileToJSModule = covertTextFileToJSModule;exports.wrapWithJsTag = void 0;var _stream = _interopRequireDefault(require("stream"));
+var _fs = _interopRequireDefault(require("fs"));
+var _handleJSNativeDataStructure = require("@dependency/handleJSNativeDataStructure");
 
-/** Functions involving changing the content type (MIME type) of the file */
 
-/** Wrap css style in a tag (created using javascript) - to support shared styles in Polymer 3 javascript imports
- * Polyfill from https://github.com/Polymer/polymer-modulizer/blob/f1ef5dea3978a9601248d73f4d23dc033382286c/fixtures/packages/polymer/expected/test/unit/styling-import-shared-styles.js
- */
-export async function convertSharedStylesToJS({ content, filePath}) {
-  if(!content){ 
-    if(!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params')
-    
-    content = filesystem.createReadStream(filePath)
-  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([content]) // yield one event for the entire string, rather than without the array emitting event for each character.
 
-  
-  return await wrapStringStream({
+
+
+
+async function convertSharedStylesToJS({ content, filePath }) {
+  if (!content) {
+    if (!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params');
+
+    content = _fs.default.createReadStream(filePath);
+  } else if (!(content instanceof _stream.default.Readable)) content = _stream.default.Readable.from([content]);
+
+
+  return await (0, _handleJSNativeDataStructure.wrapStringStream)({
     stream: content,
     beforeString: "const $_documentContainer = document.createElement('div'); $_documentContainer.setAttribute('style', 'display: none;'); $_documentContainer.innerHTML = `",
-    afterString: '`;document.head.appendChild($_documentContainer);',
-  })
+    afterString: '`;document.head.appendChild($_documentContainer);' });
+
 }
 
-/** Wrap text file with export default - converting it to js module */
-export async function covertTextFileToJSModule({ content, filePath}) {
-  if(!content){ 
-    if(!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params')
-    
-    content = filesystem.createReadStream(filePath)
-  } else if(!(content instanceof stream.Readable)) content = stream.Readable.from([content]) // yield one event for the entire string, rather than without the array emitting event for each character.
 
-  return await wrapStringStream({ stream: content, beforeString: 'export default `', afterString: '`' })
+async function covertTextFileToJSModule({ content, filePath }) {
+  if (!content) {
+    if (!filePath) throw new Error('• One of either parameters must be passed: stream or filePath params');
+
+    content = _fs.default.createReadStream(filePath);
+  } else if (!(content instanceof _stream.default.Readable)) content = _stream.default.Readable.from([content]);
+
+  return await (0, _handleJSNativeDataStructure.wrapStringStream)({ stream: content, beforeString: 'export default `', afterString: '`' });
 }
 
-export const wrapWithJsTag = () => string => `<script>${string}</script>`
+const wrapWithJsTag = () => string => `<script>${string}</script>`;exports.wrapWithJsTag = wrapWithJsTag;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9mdW5jdGlvbmFsaXR5L3Bvc3RQcm9jZXNzRmlsZS5qcyJdLCJuYW1lcyI6WyJjb252ZXJ0U2hhcmVkU3R5bGVzVG9KUyIsImNvbnRlbnQiLCJmaWxlUGF0aCIsIkVycm9yIiwiZmlsZXN5c3RlbSIsImNyZWF0ZVJlYWRTdHJlYW0iLCJzdHJlYW0iLCJSZWFkYWJsZSIsImZyb20iLCJiZWZvcmVTdHJpbmciLCJhZnRlclN0cmluZyIsImNvdmVydFRleHRGaWxlVG9KU01vZHVsZSIsIndyYXBXaXRoSnNUYWciLCJzdHJpbmciXSwibWFwcGluZ3MiOiJxVEFBQTtBQUNBO0FBQ0E7Ozs7Ozs7QUFPTyxlQUFlQSx1QkFBZixDQUF1QyxFQUFFQyxPQUFGLEVBQVdDLFFBQVgsRUFBdkMsRUFBNkQ7QUFDbEUsTUFBRyxDQUFDRCxPQUFKLEVBQVk7QUFDVixRQUFHLENBQUNDLFFBQUosRUFBYyxNQUFNLElBQUlDLEtBQUosQ0FBVSxzRUFBVixDQUFOOztBQUVkRixJQUFBQSxPQUFPLEdBQUdHLFlBQVdDLGdCQUFYLENBQTRCSCxRQUE1QixDQUFWO0FBQ0QsR0FKRCxNQUlPLElBQUcsRUFBRUQsT0FBTyxZQUFZSyxnQkFBT0MsUUFBNUIsQ0FBSCxFQUEwQ04sT0FBTyxHQUFHSyxnQkFBT0MsUUFBUCxDQUFnQkMsSUFBaEIsQ0FBcUIsQ0FBQ1AsT0FBRCxDQUFyQixDQUFWOzs7QUFHakQsU0FBTyxNQUFNLG1EQUFpQjtBQUM1QkssSUFBQUEsTUFBTSxFQUFFTCxPQURvQjtBQUU1QlEsSUFBQUEsWUFBWSxFQUFFLDJKQUZjO0FBRzVCQyxJQUFBQSxXQUFXLEVBQUUsbURBSGUsRUFBakIsQ0FBYjs7QUFLRDs7O0FBR00sZUFBZUMsd0JBQWYsQ0FBd0MsRUFBRVYsT0FBRixFQUFXQyxRQUFYLEVBQXhDLEVBQThEO0FBQ25FLE1BQUcsQ0FBQ0QsT0FBSixFQUFZO0FBQ1YsUUFBRyxDQUFDQyxRQUFKLEVBQWMsTUFBTSxJQUFJQyxLQUFKLENBQVUsc0VBQVYsQ0FBTjs7QUFFZEYsSUFBQUEsT0FBTyxHQUFHRyxZQUFXQyxnQkFBWCxDQUE0QkgsUUFBNUIsQ0FBVjtBQUNELEdBSkQsTUFJTyxJQUFHLEVBQUVELE9BQU8sWUFBWUssZ0JBQU9DLFFBQTVCLENBQUgsRUFBMENOLE9BQU8sR0FBR0ssZ0JBQU9DLFFBQVAsQ0FBZ0JDLElBQWhCLENBQXFCLENBQUNQLE9BQUQsQ0FBckIsQ0FBVjs7QUFFakQsU0FBTyxNQUFNLG1EQUFpQixFQUFFSyxNQUFNLEVBQUVMLE9BQVYsRUFBbUJRLFlBQVksRUFBRSxrQkFBakMsRUFBcURDLFdBQVcsRUFBRSxHQUFsRSxFQUFqQixDQUFiO0FBQ0Q7O0FBRU0sTUFBTUUsYUFBYSxHQUFHLE1BQU1DLE1BQU0sSUFBSyxXQUFVQSxNQUFPLFdBQXhELEMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgc3RyZWFtIGZyb20gJ3N0cmVhbSdcbmltcG9ydCBmaWxlc3lzdGVtIGZyb20gJ2ZzJ1xuaW1wb3J0IHsgd3JhcFN0cmluZ1N0cmVhbSB9IGZyb20gJ0BkZXBlbmRlbmN5L2hhbmRsZUpTTmF0aXZlRGF0YVN0cnVjdHVyZSdcblxuLyoqIEZ1bmN0aW9ucyBpbnZvbHZpbmcgY2hhbmdpbmcgdGhlIGNvbnRlbnQgdHlwZSAoTUlNRSB0eXBlKSBvZiB0aGUgZmlsZSAqL1xuXG4vKiogV3JhcCBjc3Mgc3R5bGUgaW4gYSB0YWcgKGNyZWF0ZWQgdXNpbmcgamF2YXNjcmlwdCkgLSB0byBzdXBwb3J0IHNoYXJlZCBzdHlsZXMgaW4gUG9seW1lciAzIGphdmFzY3JpcHQgaW1wb3J0c1xuICogUG9seWZpbGwgZnJvbSBodHRwczovL2dpdGh1Yi5jb20vUG9seW1lci9wb2x5bWVyLW1vZHVsaXplci9ibG9iL2YxZWY1ZGVhMzk3OGE5NjAxMjQ4ZDczZjRkMjNkYzAzMzM4MjI4NmMvZml4dHVyZXMvcGFja2FnZXMvcG9seW1lci9leHBlY3RlZC90ZXN0L3VuaXQvc3R5bGluZy1pbXBvcnQtc2hhcmVkLXN0eWxlcy5qc1xuICovXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gY29udmVydFNoYXJlZFN0eWxlc1RvSlMoeyBjb250ZW50LCBmaWxlUGF0aH0pIHtcbiAgaWYoIWNvbnRlbnQpeyBcbiAgICBpZighZmlsZVBhdGgpIHRocm93IG5ldyBFcnJvcign4oCiIE9uZSBvZiBlaXRoZXIgcGFyYW1ldGVycyBtdXN0IGJlIHBhc3NlZDogc3RyZWFtIG9yIGZpbGVQYXRoIHBhcmFtcycpXG4gICAgXG4gICAgY29udGVudCA9IGZpbGVzeXN0ZW0uY3JlYXRlUmVhZFN0cmVhbShmaWxlUGF0aClcbiAgfSBlbHNlIGlmKCEoY29udGVudCBpbnN0YW5jZW9mIHN0cmVhbS5SZWFkYWJsZSkpIGNvbnRlbnQgPSBzdHJlYW0uUmVhZGFibGUuZnJvbShbY29udGVudF0pIC8vIHlpZWxkIG9uZSBldmVudCBmb3IgdGhlIGVudGlyZSBzdHJpbmcsIHJhdGhlciB0aGFuIHdpdGhvdXQgdGhlIGFycmF5IGVtaXR0aW5nIGV2ZW50IGZvciBlYWNoIGNoYXJhY3Rlci5cblxuICBcbiAgcmV0dXJuIGF3YWl0IHdyYXBTdHJpbmdTdHJlYW0oe1xuICAgIHN0cmVhbTogY29udGVudCxcbiAgICBiZWZvcmVTdHJpbmc6IFwiY29uc3QgJF9kb2N1bWVudENvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpOyAkX2RvY3VtZW50Q29udGFpbmVyLnNldEF0dHJpYnV0ZSgnc3R5bGUnLCAnZGlzcGxheTogbm9uZTsnKTsgJF9kb2N1bWVudENvbnRhaW5lci5pbm5lckhUTUwgPSBgXCIsXG4gICAgYWZ0ZXJTdHJpbmc6ICdgO2RvY3VtZW50LmhlYWQuYXBwZW5kQ2hpbGQoJF9kb2N1bWVudENvbnRhaW5lcik7JyxcbiAgfSlcbn1cblxuLyoqIFdyYXAgdGV4dCBmaWxlIHdpdGggZXhwb3J0IGRlZmF1bHQgLSBjb252ZXJ0aW5nIGl0IHRvIGpzIG1vZHVsZSAqL1xuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGNvdmVydFRleHRGaWxlVG9KU01vZHVsZSh7IGNvbnRlbnQsIGZpbGVQYXRofSkge1xuICBpZighY29udGVudCl7IFxuICAgIGlmKCFmaWxlUGF0aCkgdGhyb3cgbmV3IEVycm9yKCfigKIgT25lIG9mIGVpdGhlciBwYXJhbWV0ZXJzIG11c3QgYmUgcGFzc2VkOiBzdHJlYW0gb3IgZmlsZVBhdGggcGFyYW1zJylcbiAgICBcbiAgICBjb250ZW50ID0gZmlsZXN5c3RlbS5jcmVhdGVSZWFkU3RyZWFtKGZpbGVQYXRoKVxuICB9IGVsc2UgaWYoIShjb250ZW50IGluc3RhbmNlb2Ygc3RyZWFtLlJlYWRhYmxlKSkgY29udGVudCA9IHN0cmVhbS5SZWFkYWJsZS5mcm9tKFtjb250ZW50XSkgLy8geWllbGQgb25lIGV2ZW50IGZvciB0aGUgZW50aXJlIHN0cmluZywgcmF0aGVyIHRoYW4gd2l0aG91dCB0aGUgYXJyYXkgZW1pdHRpbmcgZXZlbnQgZm9yIGVhY2ggY2hhcmFjdGVyLlxuXG4gIHJldHVybiBhd2FpdCB3cmFwU3RyaW5nU3RyZWFtKHsgc3RyZWFtOiBjb250ZW50LCBiZWZvcmVTdHJpbmc6ICdleHBvcnQgZGVmYXVsdCBgJywgYWZ0ZXJTdHJpbmc6ICdgJyB9KVxufVxuXG5leHBvcnQgY29uc3Qgd3JhcFdpdGhKc1RhZyA9ICgpID0+IHN0cmluZyA9PiBgPHNjcmlwdD4ke3N0cmluZ308L3NjcmlwdD5gXG4iXX0=

@@ -1,5 +1,0 @@
-{
-    "name": "@root/configuration",
-    "version": "1.0.0",
-    "main": "./project.config.js"
-}
