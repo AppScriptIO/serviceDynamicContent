@@ -14,6 +14,22 @@ import * as renderReferenceContext from '../../../functionality/renderFile.js'
 import * as processReferenceContext from '../../../functionality/postProcessFile.js'
 var notfound = { ENOENT: true, ENAMETOOLONG: true, ENOTDIR: true }
 
+/* resolve module without extension, defaulting to .js file (e.g. `/x/y/z` => `/x/y/z.js`)
+  deal with requested resources that do not have an extension, intended to be resolved automatically.
+*/
+async function resolvePathExtension(requestedPath) {
+  let fileStats = await filesystem.promises.stat(requestedPath).catch(error => {
+    if (notfound[error.code]) return
+    error.status = 500
+    context.response.status = error.status
+    throw error
+  })
+
+  if (fileStats) return requestedPath // in case a directory or the actual file is without an extension.
+
+  return `${requestedPath}.js` // presume the path is ommitted as in Nodejs practice.
+}
+
 /**
  * serve static file.
  * @dependency useragentDetection middleware, userAgent modules
@@ -35,6 +51,8 @@ export const serveStaticFile = ({ filePath, basePath } = {}) =>
       filePath || context.path, // a predefined path or an extracted url path
     )
 
+    if (!path.extname(context[symbol.context.parsed.filePath])) context[symbol.context.parsed.filePath] = await resolvePathExtension(context[symbol.context.parsed.filePath])
+
     let fileStats = await send(context, context[symbol.context.parsed.filePath])
 
     await next()
@@ -54,6 +72,8 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, pr
 
   filePath ||= context[symbol.context.parsed.path] // a predefined path or an extracted url path
   context[symbol.context.parsed.filePath] = path.join(context[symbol.context.clientSideProjectConfig].path, basePath || '', filePath)
+
+  if (!path.extname(context[symbol.context.parsed.filePath])) context[symbol.context.parsed.filePath] = await resolvePathExtension(context[symbol.context.parsed.filePath])
 
   let renderFunction, processFunction
   try {
