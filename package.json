@@ -1,7 +1,7 @@
 {
 	"name": "@service/serviceDynamicContent",
 	"main": "./entrypoint/programmaticAPI",
-	"version": "2.1.8",
+	"version": "2.1.9",
 	"scripts": {
 		"test": "yarn run scriptManager @deployment/deploymentScript \".test.default({ testPath: ['./test'] })\"",
 		"test-inspect": "export NODE_OPTIONS='--inspect-brk' && yarn run scriptManager @deployment/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
@@ -19,6 +19,7 @@
 		"@dependency/graphTraversal-implementation": "https://github.com/AppScriptIO/graphTraversal-implementation#semver:^4.x.x",
 		"@dependency/handleJSNativeDataStructure": "https://github.com/AppScriptIO/handleJSNativeDataStructure#semver:^2.x.x",
 		"@dependency/namedCurry": "https://github.com/AppScriptIO/namedCurry#semver:^1.x.x",
+		"@deployment/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^2.x.x",
 		"co-body": "*",
 		"etag": "^1.8.1",
 		"koa": "*",

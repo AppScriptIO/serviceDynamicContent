@@ -8,6 +8,7 @@ try {
   babel = require('@babel/core')
   getBabelConfig = require('@deployment/javascriptTranspilation').getBabelConfig
 } catch (error) {
+  // TODO: Do not use transpilation for production and build instead the files. & remove dependency @deployment/javascriptTranspilation from production dependnecy of this service
   // TODO: pass environmentVariables from config.
   // if (DEVELOPMENT) throw error
 }
