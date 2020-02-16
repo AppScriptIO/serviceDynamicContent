@@ -1,59 +1,60 @@
-import composeMiddleware from 'koa-compose'
-import { Context, Entity } from '@dependency/graphTraversal'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.graphMiddlewareAggregateThenExecuteasync = exports.graphMiddlewareImmediatelyExecute = void 0;var _koaCompose = _interopRequireDefault(require("koa-compose"));
+var _graphTraversal = require("@dependency/graphTraversal");
 
-export const graphMiddlewareImmediatelyExecute = async ({ configuredGraph, entrypointKey, referenceList }) =>
-  // Immediately executing middlewares in graph traversal.
-  async function graphMiddlewareImmediatelyExecute(middlewareContext, next) {
-    let contextInstance = new Context.clientInterface({
-      data: Object.assign(
-        {
-          middlewareParameter: {}, // create unique context for traversal - add middleware context object to graph through the graph context instance.
-        },
-        referenceList(middlewareContext), // returns an object with `functionReferenceContext` property
-      ),
-    })
+const graphMiddlewareImmediatelyExecute = async ({ configuredGraph, entrypointKey, referenceList }) =>
 
-    let graph = new configuredGraph.clientInterface({})
-    graph.configuredTraverser = graph.configuredTraverser.clientInterface({
-      parameter: [{ concreteBehaviorList: [contextInstance] }],
-    })
+async function graphMiddlewareImmediatelyExecute(middlewareContext, next) {
+  let contextInstance = new _graphTraversal.Context.clientInterface({
+    data: Object.assign(
+    {
+      middlewareParameter: {} },
 
-    /** @return middlewareArray - returned middleware array is for debugging purposes. The middlewares should be executed during the graph travrsal. */
-    let { result: middlewareArray } = await graph.traverse({
-      nodeKey: entrypointKey,
-      implementationKey: {
-        processNode: 'immediatelyExecuteMiddleware',
-        traversalInterception: 'handleMiddlewareNextCall_branchedGraph',
-      },
-    }) // implementation key is derived from the graph nodes - usally 'immediatelyExecuteMiddleware'
+    referenceList(middlewareContext)) });
 
-    // debug viewing the traversals used in the graph
-    // console.log(graph.statistics.traverserArray[0].statistics.traversedNodeList)
 
-    await next()
-  }
 
-// TODO: Check if it works - as the processNode implementation no longer returns middleware functions conforming to (context, next)=>{}, rather the current implementation uses currying and returns (next)=>{} functions
-export const graphMiddlewareAggregateThenExecuteasync = ({ configuredGraphInterface, entrypointKey, referenceList }) =>
-  // Aggregating middleware approach - return a middleware array, then use koa-compose to merge the middlewares and execute it.
-  async function graphMiddlewareAggregateThenExecute(context, next) {
-    let contextInstance = new Context.clientInterface({
-      // Note: 'middlewareParameter' is not used in the graph that returns a middleware array, only in the executing graph. Some nodes may override the execution processNode implementation.
-      /* data: { middlewareParameter: { context } } */
-      data: referenceList(), // TODO: passing with no argument should not use currying and return in stead the full middleware complient function (context, next)=>{}
-    })
+  let graph = new configuredGraph.clientInterface({});
+  graph.configuredTraverser = graph.configuredTraverser.clientInterface({
+    parameter: [{ concreteBehaviorList: [contextInstance] }] });
 
-    let graph = new configuredGraphInterface({})
-    graph.configuredTraverser = graph.configuredTraverser.clientInterface({
-      parameter: [{ concreteBehaviorList: [contextInstance] }],
-    })
 
-    let { result: middlewareArray } = await graph.traverse({
-      nodeKey: entrypointKey,
-      implementationKey: {
-        processNode: 'executeFunctionReference',
-        traversalInterception: 'handleMiddlewareNextCall',
-      },
-    })
-    await composeMiddleware(middlewareArray)(context, next)
-  }
+
+  let { result: middlewareArray } = await graph.traverse({
+    nodeKey: entrypointKey,
+    implementationKey: {
+      processNode: 'immediatelyExecuteMiddleware',
+      traversalInterception: 'handleMiddlewareNextCall_branchedGraph' } });
+
+
+
+
+
+
+  await next();
+};exports.graphMiddlewareImmediatelyExecute = graphMiddlewareImmediatelyExecute;
+
+
+const graphMiddlewareAggregateThenExecuteasync = ({ configuredGraphInterface, entrypointKey, referenceList }) =>
+
+async function graphMiddlewareAggregateThenExecute(context, next) {
+  let contextInstance = new _graphTraversal.Context.clientInterface({
+
+
+    data: referenceList() });
+
+
+  let graph = new configuredGraphInterface({});
+  graph.configuredTraverser = graph.configuredTraverser.clientInterface({
+    parameter: [{ concreteBehaviorList: [contextInstance] }] });
+
+
+  let { result: middlewareArray } = await graph.traverse({
+    nodeKey: entrypointKey,
+    implementationKey: {
+      processNode: 'executeFunctionReference',
+      traversalInterception: 'handleMiddlewareNextCall' } });
+
+
+  await (0, _koaCompose.default)(middlewareArray)(context, next);
+};exports.graphMiddlewareAggregateThenExecuteasync = graphMiddlewareAggregateThenExecuteasync;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL3RyYXZlcnNlTWlkZGxld2FyZUdyYXBoLmpzIl0sIm5hbWVzIjpbImdyYXBoTWlkZGxld2FyZUltbWVkaWF0ZWx5RXhlY3V0ZSIsImNvbmZpZ3VyZWRHcmFwaCIsImVudHJ5cG9pbnRLZXkiLCJyZWZlcmVuY2VMaXN0IiwibWlkZGxld2FyZUNvbnRleHQiLCJuZXh0IiwiY29udGV4dEluc3RhbmNlIiwiQ29udGV4dCIsImNsaWVudEludGVyZmFjZSIsImRhdGEiLCJPYmplY3QiLCJhc3NpZ24iLCJtaWRkbGV3YXJlUGFyYW1ldGVyIiwiZ3JhcGgiLCJjb25maWd1cmVkVHJhdmVyc2VyIiwicGFyYW1ldGVyIiwiY29uY3JldGVCZWhhdmlvckxpc3QiLCJyZXN1bHQiLCJtaWRkbGV3YXJlQXJyYXkiLCJ0cmF2ZXJzZSIsIm5vZGVLZXkiLCJpbXBsZW1lbnRhdGlvbktleSIsInByb2Nlc3NOb2RlIiwidHJhdmVyc2FsSW50ZXJjZXB0aW9uIiwiZ3JhcGhNaWRkbGV3YXJlQWdncmVnYXRlVGhlbkV4ZWN1dGVhc3luYyIsImNvbmZpZ3VyZWRHcmFwaEludGVyZmFjZSIsImdyYXBoTWlkZGxld2FyZUFnZ3JlZ2F0ZVRoZW5FeGVjdXRlIiwiY29udGV4dCJdLCJtYXBwaW5ncyI6InNRQUFBO0FBQ0E7O0FBRU8sTUFBTUEsaUNBQWlDLEdBQUcsT0FBTyxFQUFFQyxlQUFGLEVBQW1CQyxhQUFuQixFQUFrQ0MsYUFBbEMsRUFBUDs7QUFFL0MsZUFBZUgsaUNBQWYsQ0FBaURJLGlCQUFqRCxFQUFvRUMsSUFBcEUsRUFBMEU7QUFDeEUsTUFBSUMsZUFBZSxHQUFHLElBQUlDLHdCQUFRQyxlQUFaLENBQTRCO0FBQ2hEQyxJQUFBQSxJQUFJLEVBQUVDLE1BQU0sQ0FBQ0MsTUFBUDtBQUNKO0FBQ0VDLE1BQUFBLG1CQUFtQixFQUFFLEVBRHZCLEVBREk7O0FBSUpULElBQUFBLGFBQWEsQ0FBQ0MsaUJBQUQsQ0FKVCxDQUQwQyxFQUE1QixDQUF0Qjs7OztBQVNBLE1BQUlTLEtBQUssR0FBRyxJQUFJWixlQUFlLENBQUNPLGVBQXBCLENBQW9DLEVBQXBDLENBQVo7QUFDQUssRUFBQUEsS0FBSyxDQUFDQyxtQkFBTixHQUE0QkQsS0FBSyxDQUFDQyxtQkFBTixDQUEwQk4sZUFBMUIsQ0FBMEM7QUFDcEVPLElBQUFBLFNBQVMsRUFBRSxDQUFDLEVBQUVDLG9CQUFvQixFQUFFLENBQUNWLGVBQUQsQ0FBeEIsRUFBRCxDQUR5RCxFQUExQyxDQUE1Qjs7OztBQUtBLE1BQUksRUFBRVcsTUFBTSxFQUFFQyxlQUFWLEtBQThCLE1BQU1MLEtBQUssQ0FBQ00sUUFBTixDQUFlO0FBQ3JEQyxJQUFBQSxPQUFPLEVBQUVsQixhQUQ0QztBQUVyRG1CLElBQUFBLGlCQUFpQixFQUFFO0FBQ2pCQyxNQUFBQSxXQUFXLEVBQUUsOEJBREk7QUFFakJDLE1BQUFBLHFCQUFxQixFQUFFLHdDQUZOLEVBRmtDLEVBQWYsQ0FBeEM7Ozs7Ozs7QUFXQSxRQUFNbEIsSUFBSSxFQUFWO0FBQ0QsQ0E5QkksQzs7O0FBaUNBLE1BQU1tQix3Q0FBd0MsR0FBRyxDQUFDLEVBQUVDLHdCQUFGLEVBQTRCdkIsYUFBNUIsRUFBMkNDLGFBQTNDLEVBQUQ7O0FBRXRELGVBQWV1QixtQ0FBZixDQUFtREMsT0FBbkQsRUFBNER0QixJQUE1RCxFQUFrRTtBQUNoRSxNQUFJQyxlQUFlLEdBQUcsSUFBSUMsd0JBQVFDLGVBQVosQ0FBNEI7OztBQUdoREMsSUFBQUEsSUFBSSxFQUFFTixhQUFhLEVBSDZCLEVBQTVCLENBQXRCOzs7QUFNQSxNQUFJVSxLQUFLLEdBQUcsSUFBSVksd0JBQUosQ0FBNkIsRUFBN0IsQ0FBWjtBQUNBWixFQUFBQSxLQUFLLENBQUNDLG1CQUFOLEdBQTRCRCxLQUFLLENBQUNDLG1CQUFOLENBQTBCTixlQUExQixDQUEwQztBQUNwRU8sSUFBQUEsU0FBUyxFQUFFLENBQUMsRUFBRUMsb0JBQW9CLEVBQUUsQ0FBQ1YsZUFBRCxDQUF4QixFQUFELENBRHlELEVBQTFDLENBQTVCOzs7QUFJQSxNQUFJLEVBQUVXLE1BQU0sRUFBRUMsZUFBVixLQUE4QixNQUFNTCxLQUFLLENBQUNNLFFBQU4sQ0FBZTtBQUNyREMsSUFBQUEsT0FBTyxFQUFFbEIsYUFENEM7QUFFckRtQixJQUFBQSxpQkFBaUIsRUFBRTtBQUNqQkMsTUFBQUEsV0FBVyxFQUFFLDBCQURJO0FBRWpCQyxNQUFBQSxxQkFBcUIsRUFBRSwwQkFGTixFQUZrQyxFQUFmLENBQXhDOzs7QUFPQSxRQUFNLHlCQUFrQkwsZUFBbEIsRUFBbUNTLE9BQW5DLEVBQTRDdEIsSUFBNUMsQ0FBTjtBQUNELENBdEJJLEMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgY29tcG9zZU1pZGRsZXdhcmUgZnJvbSAna29hLWNvbXBvc2UnXG5pbXBvcnQgeyBDb250ZXh0LCBFbnRpdHkgfSBmcm9tICdAZGVwZW5kZW5jeS9ncmFwaFRyYXZlcnNhbCdcblxuZXhwb3J0IGNvbnN0IGdyYXBoTWlkZGxld2FyZUltbWVkaWF0ZWx5RXhlY3V0ZSA9IGFzeW5jICh7IGNvbmZpZ3VyZWRHcmFwaCwgZW50cnlwb2ludEtleSwgcmVmZXJlbmNlTGlzdCB9KSA9PlxuICAvLyBJbW1lZGlhdGVseSBleGVjdXRpbmcgbWlkZGxld2FyZXMgaW4gZ3JhcGggdHJhdmVyc2FsLlxuICBhc3luYyBmdW5jdGlvbiBncmFwaE1pZGRsZXdhcmVJbW1lZGlhdGVseUV4ZWN1dGUobWlkZGxld2FyZUNvbnRleHQsIG5leHQpIHtcbiAgICBsZXQgY29udGV4dEluc3RhbmNlID0gbmV3IENvbnRleHQuY2xpZW50SW50ZXJmYWNlKHtcbiAgICAgIGRhdGE6IE9iamVjdC5hc3NpZ24oXG4gICAgICAgIHtcbiAgICAgICAgICBtaWRkbGV3YXJlUGFyYW1ldGVyOiB7fSwgLy8gY3JlYXRlIHVuaXF1ZSBjb250ZXh0IGZvciB0cmF2ZXJzYWwgLSBhZGQgbWlkZGxld2FyZSBjb250ZXh0IG9iamVjdCB0byBncmFwaCB0aHJvdWdoIHRoZSBncmFwaCBjb250ZXh0IGluc3RhbmNlLlxuICAgICAgICB9LFxuICAgICAgICByZWZlcmVuY2VMaXN0KG1pZGRsZXdhcmVDb250ZXh0KSwgLy8gcmV0dXJucyBhbiBvYmplY3Qgd2l0aCBgZnVuY3Rpb25SZWZlcmVuY2VDb250ZXh0YCBwcm9wZXJ0eVxuICAgICAgKSxcbiAgICB9KVxuXG4gICAgbGV0IGdyYXBoID0gbmV3IGNvbmZpZ3VyZWRHcmFwaC5jbGllbnRJbnRlcmZhY2Uoe30pXG4gICAgZ3JhcGguY29uZmlndXJlZFRyYXZlcnNlciA9IGdyYXBoLmNvbmZpZ3VyZWRUcmF2ZXJzZXIuY2xpZW50SW50ZXJmYWNlKHtcbiAgICAgIHBhcmFtZXRlcjogW3sgY29uY3JldGVCZWhhdmlvckxpc3Q6IFtjb250ZXh0SW5zdGFuY2VdIH1dLFxuICAgIH0pXG5cbiAgICAvKiogQHJldHVybiBtaWRkbGV3YXJlQXJyYXkgLSByZXR1cm5lZCBtaWRkbGV3YXJlIGFycmF5IGlzIGZvciBkZWJ1Z2dpbmcgcHVycG9zZXMuIFRoZSBtaWRkbGV3YXJlcyBzaG91bGQgYmUgZXhlY3V0ZWQgZHVyaW5nIHRoZSBncmFwaCB0cmF2cnNhbC4gKi9cbiAgICBsZXQgeyByZXN1bHQ6IG1pZGRsZXdhcmVBcnJheSB9ID0gYXdhaXQgZ3JhcGgudHJhdmVyc2Uoe1xuICAgICAgbm9kZUtleTogZW50cnlwb2ludEtleSxcbiAgICAgIGltcGxlbWVudGF0aW9uS2V5OiB7XG4gICAgICAgIHByb2Nlc3NOb2RlOiAnaW1tZWRpYXRlbHlFeGVjdXRlTWlkZGxld2FyZScsXG4gICAgICAgIHRyYXZlcnNhbEludGVyY2VwdGlvbjogJ2hhbmRsZU1pZGRsZXdhcmVOZXh0Q2FsbF9icmFuY2hlZEdyYXBoJyxcbiAgICAgIH0sXG4gICAgfSkgLy8gaW1wbGVtZW50YXRpb24ga2V5IGlzIGRlcml2ZWQgZnJvbSB0aGUgZ3JhcGggbm9kZXMgLSB1c2FsbHkgJ2ltbWVkaWF0ZWx5RXhlY3V0ZU1pZGRsZXdhcmUnXG5cbiAgICAvLyBkZWJ1ZyB2aWV3aW5nIHRoZSB0cmF2ZXJzYWxzIHVzZWQgaW4gdGhlIGdyYXBoXG4gICAgLy8gY29uc29sZS5sb2coZ3JhcGguc3RhdGlzdGljcy50cmF2ZXJzZXJBcnJheVswXS5zdGF0aXN0aWNzLnRyYXZlcnNlZE5vZGVMaXN0KVxuXG4gICAgYXdhaXQgbmV4dCgpXG4gIH1cblxuLy8gVE9ETzogQ2hlY2sgaWYgaXQgd29ya3MgLSBhcyB0aGUgcHJvY2Vzc05vZGUgaW1wbGVtZW50YXRpb24gbm8gbG9uZ2VyIHJldHVybnMgbWlkZGxld2FyZSBmdW5jdGlvbnMgY29uZm9ybWluZyB0byAoY29udGV4dCwgbmV4dCk9Pnt9LCByYXRoZXIgdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gdXNlcyBjdXJyeWluZyBhbmQgcmV0dXJucyAobmV4dCk9Pnt9IGZ1bmN0aW9uc1xuZXhwb3J0IGNvbnN0IGdyYXBoTWlkZGxld2FyZUFnZ3JlZ2F0ZVRoZW5FeGVjdXRlYXN5bmMgPSAoeyBjb25maWd1cmVkR3JhcGhJbnRlcmZhY2UsIGVudHJ5cG9pbnRLZXksIHJlZmVyZW5jZUxpc3QgfSkgPT5cbiAgLy8gQWdncmVnYXRpbmcgbWlkZGxld2FyZSBhcHByb2FjaCAtIHJldHVybiBhIG1pZGRsZXdhcmUgYXJyYXksIHRoZW4gdXNlIGtvYS1jb21wb3NlIHRvIG1lcmdlIHRoZSBtaWRkbGV3YXJlcyBhbmQgZXhlY3V0ZSBpdC5cbiAgYXN5bmMgZnVuY3Rpb24gZ3JhcGhNaWRkbGV3YXJlQWdncmVnYXRlVGhlbkV4ZWN1dGUoY29udGV4dCwgbmV4dCkge1xuICAgIGxldCBjb250ZXh0SW5zdGFuY2UgPSBuZXcgQ29udGV4dC5jbGllbnRJbnRlcmZhY2Uoe1xuICAgICAgLy8gTm90ZTogJ21pZGRsZXdhcmVQYXJhbWV0ZXInIGlzIG5vdCB1c2VkIGluIHRoZSBncmFwaCB0aGF0IHJldHVybnMgYSBtaWRkbGV3YXJlIGFycmF5LCBvbmx5IGluIHRoZSBleGVjdXRpbmcgZ3JhcGguIFNvbWUgbm9kZXMgbWF5IG92ZXJyaWRlIHRoZSBleGVjdXRpb24gcHJvY2Vzc05vZGUgaW1wbGVtZW50YXRpb24uXG4gICAgICAvKiBkYXRhOiB7IG1pZGRsZXdhcmVQYXJhbWV0ZXI6IHsgY29udGV4dCB9IH0gKi9cbiAgICAgIGRhdGE6IHJlZmVyZW5jZUxpc3QoKSwgLy8gVE9ETzogcGFzc2luZyB3aXRoIG5vIGFyZ3VtZW50IHNob3VsZCBub3QgdXNlIGN1cnJ5aW5nIGFuZCByZXR1cm4gaW4gc3RlYWQgdGhlIGZ1bGwgbWlkZGxld2FyZSBjb21wbGllbnQgZnVuY3Rpb24gKGNvbnRleHQsIG5leHQpPT57fVxuICAgIH0pXG5cbiAgICBsZXQgZ3JhcGggPSBuZXcgY29uZmlndXJlZEdyYXBoSW50ZXJmYWNlKHt9KVxuICAgIGdyYXBoLmNvbmZpZ3VyZWRUcmF2ZXJzZXIgPSBncmFwaC5jb25maWd1cmVkVHJhdmVyc2VyLmNsaWVudEludGVyZmFjZSh7XG4gICAgICBwYXJhbWV0ZXI6IFt7IGNvbmNyZXRlQmVoYXZpb3JMaXN0OiBbY29udGV4dEluc3RhbmNlXSB9XSxcbiAgICB9KVxuXG4gICAgbGV0IHsgcmVzdWx0OiBtaWRkbGV3YXJlQXJyYXkgfSA9IGF3YWl0IGdyYXBoLnRyYXZlcnNlKHtcbiAgICAgIG5vZGVLZXk6IGVudHJ5cG9pbnRLZXksXG4gICAgICBpbXBsZW1lbnRhdGlvbktleToge1xuICAgICAgICBwcm9jZXNzTm9kZTogJ2V4ZWN1dGVGdW5jdGlvblJlZmVyZW5jZScsXG4gICAgICAgIHRyYXZlcnNhbEludGVyY2VwdGlvbjogJ2hhbmRsZU1pZGRsZXdhcmVOZXh0Q2FsbCcsXG4gICAgICB9LFxuICAgIH0pXG4gICAgYXdhaXQgY29tcG9zZU1pZGRsZXdhcmUobWlkZGxld2FyZUFycmF5KShjb250ZXh0LCBuZXh0KVxuICB9XG4iXX0=

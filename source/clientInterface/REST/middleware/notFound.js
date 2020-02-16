@@ -1,17 +1,18 @@
-import path from 'path'
-import send from 'koa-sendfile'
-import * as symbol from '../symbol.reference.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.notFound = void 0;var _path = _interopRequireDefault(require("path"));
+var _koaSendfile = _interopRequireDefault(require("koa-sendfile"));
+var symbol = _interopRequireWildcard(require("../symbol.reference.js"));
 
-export const notFound = () =>
-  async function notFound(context, next) {
-    // fallback to sending the app index. If not found.
-    await next()
-    if (404 != context.status) return
+const notFound = () =>
+async function notFound(context, next) {
 
-    await send(context, path.normalize(`${context[symbol.context.clientSideProjectConfig].path}/asset/template/entrypoint.html`))
+  await next();
+  if (404 != context.status) return;
 
-    // if still not found (if the html template was not found)
-    if (!context.body) context.body = 'Ops.. Not Found 404'
+  await (0, _koaSendfile.default)(context, _path.default.normalize(`${context[symbol.context.clientSideProjectConfig].path}/asset/template/entrypoint.html`));
 
-    context.status = 404 // set explicively, preserving status value.
-  }
+
+  if (!context.body) context.body = 'Ops.. Not Found 404';
+
+  context.status = 404;
+};exports.notFound = notFound;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL25vdEZvdW5kLmpzIl0sIm5hbWVzIjpbIm5vdEZvdW5kIiwiY29udGV4dCIsIm5leHQiLCJzdGF0dXMiLCJwYXRoIiwibm9ybWFsaXplIiwic3ltYm9sIiwiY2xpZW50U2lkZVByb2plY3RDb25maWciLCJib2R5Il0sIm1hcHBpbmdzIjoiaVJBQUE7QUFDQTtBQUNBOztBQUVPLE1BQU1BLFFBQVEsR0FBRztBQUN0QixlQUFlQSxRQUFmLENBQXdCQyxPQUF4QixFQUFpQ0MsSUFBakMsRUFBdUM7O0FBRXJDLFFBQU1BLElBQUksRUFBVjtBQUNBLE1BQUksT0FBT0QsT0FBTyxDQUFDRSxNQUFuQixFQUEyQjs7QUFFM0IsUUFBTSwwQkFBS0YsT0FBTCxFQUFjRyxjQUFLQyxTQUFMLENBQWdCLEdBQUVKLE9BQU8sQ0FBQ0ssTUFBTSxDQUFDTCxPQUFQLENBQWVNLHVCQUFoQixDQUFQLENBQWdESCxJQUFLLGlDQUF2RSxDQUFkLENBQU47OztBQUdBLE1BQUksQ0FBQ0gsT0FBTyxDQUFDTyxJQUFiLEVBQW1CUCxPQUFPLENBQUNPLElBQVIsR0FBZSxxQkFBZjs7QUFFbkJQLEVBQUFBLE9BQU8sQ0FBQ0UsTUFBUixHQUFpQixHQUFqQjtBQUNELENBWkksQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwYXRoIGZyb20gJ3BhdGgnXG5pbXBvcnQgc2VuZCBmcm9tICdrb2Etc2VuZGZpbGUnXG5pbXBvcnQgKiBhcyBzeW1ib2wgZnJvbSAnLi4vc3ltYm9sLnJlZmVyZW5jZS5qcydcblxuZXhwb3J0IGNvbnN0IG5vdEZvdW5kID0gKCkgPT5cbiAgYXN5bmMgZnVuY3Rpb24gbm90Rm91bmQoY29udGV4dCwgbmV4dCkge1xuICAgIC8vIGZhbGxiYWNrIHRvIHNlbmRpbmcgdGhlIGFwcCBpbmRleC4gSWYgbm90IGZvdW5kLlxuICAgIGF3YWl0IG5leHQoKVxuICAgIGlmICg0MDQgIT0gY29udGV4dC5zdGF0dXMpIHJldHVyblxuXG4gICAgYXdhaXQgc2VuZChjb250ZXh0LCBwYXRoLm5vcm1hbGl6ZShgJHtjb250ZXh0W3N5bWJvbC5jb250ZXh0LmNsaWVudFNpZGVQcm9qZWN0Q29uZmlnXS5wYXRofS9hc3NldC90ZW1wbGF0ZS9lbnRyeXBvaW50Lmh0bWxgKSlcblxuICAgIC8vIGlmIHN0aWxsIG5vdCBmb3VuZCAoaWYgdGhlIGh0bWwgdGVtcGxhdGUgd2FzIG5vdCBmb3VuZClcbiAgICBpZiAoIWNvbnRleHQuYm9keSkgY29udGV4dC5ib2R5ID0gJ09wcy4uIE5vdCBGb3VuZCA0MDQnXG5cbiAgICBjb250ZXh0LnN0YXR1cyA9IDQwNCAvLyBzZXQgZXhwbGljaXZlbHksIHByZXNlcnZpbmcgc3RhdHVzIHZhbHVlLlxuICB9XG4iXX0=

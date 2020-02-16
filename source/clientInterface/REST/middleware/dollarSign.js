@@ -1,28 +1,29 @@
-import * as symbol from '../symbol.reference.js'
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.removeDollarSignPath = exports.parseDollarSignPath = void 0;var symbol = _interopRequireWildcard(require("../symbol.reference.js"));
 
-/** extract function name from keyword following $ signature.
- * Usage: `import html from './.html$convertTextToJSModule'`
- */
+
+
+
 function extractDollarSignKeyword(string) {
-  if (string.lastIndexOf('$') == -1) return false
-  let keyword = string.substr(string.lastIndexOf('$') + 1, string.length) // $function extracted from url after '$' signature
-  string = string.substr(0, string.lastIndexOf('$')) // remove function name
-  return { signKeyword: keyword, stringWithRemovedSign: string }
+  if (string.lastIndexOf('$') == -1) return false;
+  let keyword = string.substr(string.lastIndexOf('$') + 1, string.length);
+  string = string.substr(0, string.lastIndexOf('$'));
+  return { signKeyword: keyword, stringWithRemovedSign: string };
 }
 
-// Parses the path without changing it.
-export const parseDollarSignPath = () =>
-  async function parseDollarSignPath(context, next) {
-    let signString = extractDollarSignKeyword(context[symbol.context.parsed.path]).signKeyword
-    let keywordArray =  signString.split('.')
-    if(keywordArray.length == 2) context[symbol.context.parsed.dollarSign] =  { referenceContextName: keywordArray[0], functionName: keywordArray[1] } 
-    else context[symbol.context.parsed.dollarSign] = signString
-    await next()
-  }
 
-export const removeDollarSignPath = () =>
-  async function removeDollarSignPath(context, next) {
-    // manipulate path
-    context[symbol.context.parsed.path] = extractDollarSignKeyword(context[symbol.context.parsed.path]).stringWithRemovedSign // if sign exist the actual file path woule be what comes before `./.html$convertTextToJSModule`
-    await next()
-  }
+const parseDollarSignPath = () =>
+async function parseDollarSignPath(context, next) {
+  let signString = extractDollarSignKeyword(context[symbol.context.parsed.path]).signKeyword;
+  let keywordArray = signString.split('.');
+  if (keywordArray.length == 2) context[symbol.context.parsed.dollarSign] = { referenceContextName: keywordArray[0], functionName: keywordArray[1] };else
+  context[symbol.context.parsed.dollarSign] = signString;
+  await next();
+};exports.parseDollarSignPath = parseDollarSignPath;
+
+const removeDollarSignPath = () =>
+async function removeDollarSignPath(context, next) {
+
+  context[symbol.context.parsed.path] = extractDollarSignKeyword(context[symbol.context.parsed.path]).stringWithRemovedSign;
+  await next();
+};exports.removeDollarSignPath = removeDollarSignPath;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvUkVTVC9taWRkbGV3YXJlL2RvbGxhclNpZ24uanMiXSwibmFtZXMiOlsiZXh0cmFjdERvbGxhclNpZ25LZXl3b3JkIiwic3RyaW5nIiwibGFzdEluZGV4T2YiLCJrZXl3b3JkIiwic3Vic3RyIiwibGVuZ3RoIiwic2lnbktleXdvcmQiLCJzdHJpbmdXaXRoUmVtb3ZlZFNpZ24iLCJwYXJzZURvbGxhclNpZ25QYXRoIiwiY29udGV4dCIsIm5leHQiLCJzaWduU3RyaW5nIiwic3ltYm9sIiwicGFyc2VkIiwicGF0aCIsImtleXdvcmRBcnJheSIsInNwbGl0IiwiZG9sbGFyU2lnbiIsInJlZmVyZW5jZUNvbnRleHROYW1lIiwiZnVuY3Rpb25OYW1lIiwicmVtb3ZlRG9sbGFyU2lnblBhdGgiXSwibWFwcGluZ3MiOiJzT0FBQTs7Ozs7QUFLQSxTQUFTQSx3QkFBVCxDQUFrQ0MsTUFBbEMsRUFBMEM7QUFDeEMsTUFBSUEsTUFBTSxDQUFDQyxXQUFQLENBQW1CLEdBQW5CLEtBQTJCLENBQUMsQ0FBaEMsRUFBbUMsT0FBTyxLQUFQO0FBQ25DLE1BQUlDLE9BQU8sR0FBR0YsTUFBTSxDQUFDRyxNQUFQLENBQWNILE1BQU0sQ0FBQ0MsV0FBUCxDQUFtQixHQUFuQixJQUEwQixDQUF4QyxFQUEyQ0QsTUFBTSxDQUFDSSxNQUFsRCxDQUFkO0FBQ0FKLEVBQUFBLE1BQU0sR0FBR0EsTUFBTSxDQUFDRyxNQUFQLENBQWMsQ0FBZCxFQUFpQkgsTUFBTSxDQUFDQyxXQUFQLENBQW1CLEdBQW5CLENBQWpCLENBQVQ7QUFDQSxTQUFPLEVBQUVJLFdBQVcsRUFBRUgsT0FBZixFQUF3QkkscUJBQXFCLEVBQUVOLE1BQS9DLEVBQVA7QUFDRDs7O0FBR00sTUFBTU8sbUJBQW1CLEdBQUc7QUFDakMsZUFBZUEsbUJBQWYsQ0FBbUNDLE9BQW5DLEVBQTRDQyxJQUE1QyxFQUFrRDtBQUNoRCxNQUFJQyxVQUFVLEdBQUdYLHdCQUF3QixDQUFDUyxPQUFPLENBQUNHLE1BQU0sQ0FBQ0gsT0FBUCxDQUFlSSxNQUFmLENBQXNCQyxJQUF2QixDQUFSLENBQXhCLENBQThEUixXQUEvRTtBQUNBLE1BQUlTLFlBQVksR0FBSUosVUFBVSxDQUFDSyxLQUFYLENBQWlCLEdBQWpCLENBQXBCO0FBQ0EsTUFBR0QsWUFBWSxDQUFDVixNQUFiLElBQXVCLENBQTFCLEVBQTZCSSxPQUFPLENBQUNHLE1BQU0sQ0FBQ0gsT0FBUCxDQUFlSSxNQUFmLENBQXNCSSxVQUF2QixDQUFQLEdBQTZDLEVBQUVDLG9CQUFvQixFQUFFSCxZQUFZLENBQUMsQ0FBRCxDQUFwQyxFQUF5Q0ksWUFBWSxFQUFFSixZQUFZLENBQUMsQ0FBRCxDQUFuRSxFQUE3QyxDQUE3QjtBQUNLTixFQUFBQSxPQUFPLENBQUNHLE1BQU0sQ0FBQ0gsT0FBUCxDQUFlSSxNQUFmLENBQXNCSSxVQUF2QixDQUFQLEdBQTRDTixVQUE1QztBQUNMLFFBQU1ELElBQUksRUFBVjtBQUNELENBUEksQzs7QUFTQSxNQUFNVSxvQkFBb0IsR0FBRztBQUNsQyxlQUFlQSxvQkFBZixDQUFvQ1gsT0FBcEMsRUFBNkNDLElBQTdDLEVBQW1EOztBQUVqREQsRUFBQUEsT0FBTyxDQUFDRyxNQUFNLENBQUNILE9BQVAsQ0FBZUksTUFBZixDQUFzQkMsSUFBdkIsQ0FBUCxHQUFzQ2Qsd0JBQXdCLENBQUNTLE9BQU8sQ0FBQ0csTUFBTSxDQUFDSCxPQUFQLENBQWVJLE1BQWYsQ0FBc0JDLElBQXZCLENBQVIsQ0FBeEIsQ0FBOERQLHFCQUFwRztBQUNBLFFBQU1HLElBQUksRUFBVjtBQUNELENBTEksQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCAqIGFzIHN5bWJvbCBmcm9tICcuLi9zeW1ib2wucmVmZXJlbmNlLmpzJ1xuXG4vKiogZXh0cmFjdCBmdW5jdGlvbiBuYW1lIGZyb20ga2V5d29yZCBmb2xsb3dpbmcgJCBzaWduYXR1cmUuXG4gKiBVc2FnZTogYGltcG9ydCBodG1sIGZyb20gJy4vLmh0bWwkY29udmVydFRleHRUb0pTTW9kdWxlJ2BcbiAqL1xuZnVuY3Rpb24gZXh0cmFjdERvbGxhclNpZ25LZXl3b3JkKHN0cmluZykge1xuICBpZiAoc3RyaW5nLmxhc3RJbmRleE9mKCckJykgPT0gLTEpIHJldHVybiBmYWxzZVxuICBsZXQga2V5d29yZCA9IHN0cmluZy5zdWJzdHIoc3RyaW5nLmxhc3RJbmRleE9mKCckJykgKyAxLCBzdHJpbmcubGVuZ3RoKSAvLyAkZnVuY3Rpb24gZXh0cmFjdGVkIGZyb20gdXJsIGFmdGVyICckJyBzaWduYXR1cmVcbiAgc3RyaW5nID0gc3RyaW5nLnN1YnN0cigwLCBzdHJpbmcubGFzdEluZGV4T2YoJyQnKSkgLy8gcmVtb3ZlIGZ1bmN0aW9uIG5hbWVcbiAgcmV0dXJuIHsgc2lnbktleXdvcmQ6IGtleXdvcmQsIHN0cmluZ1dpdGhSZW1vdmVkU2lnbjogc3RyaW5nIH1cbn1cblxuLy8gUGFyc2VzIHRoZSBwYXRoIHdpdGhvdXQgY2hhbmdpbmcgaXQuXG5leHBvcnQgY29uc3QgcGFyc2VEb2xsYXJTaWduUGF0aCA9ICgpID0+XG4gIGFzeW5jIGZ1bmN0aW9uIHBhcnNlRG9sbGFyU2lnblBhdGgoY29udGV4dCwgbmV4dCkge1xuICAgIGxldCBzaWduU3RyaW5nID0gZXh0cmFjdERvbGxhclNpZ25LZXl3b3JkKGNvbnRleHRbc3ltYm9sLmNvbnRleHQucGFyc2VkLnBhdGhdKS5zaWduS2V5d29yZFxuICAgIGxldCBrZXl3b3JkQXJyYXkgPSAgc2lnblN0cmluZy5zcGxpdCgnLicpXG4gICAgaWYoa2V5d29yZEFycmF5Lmxlbmd0aCA9PSAyKSBjb250ZXh0W3N5bWJvbC5jb250ZXh0LnBhcnNlZC5kb2xsYXJTaWduXSA9ICB7IHJlZmVyZW5jZUNvbnRleHROYW1lOiBrZXl3b3JkQXJyYXlbMF0sIGZ1bmN0aW9uTmFtZToga2V5d29yZEFycmF5WzFdIH0gXG4gICAgZWxzZSBjb250ZXh0W3N5bWJvbC5jb250ZXh0LnBhcnNlZC5kb2xsYXJTaWduXSA9IHNpZ25TdHJpbmdcbiAgICBhd2FpdCBuZXh0KClcbiAgfVxuXG5leHBvcnQgY29uc3QgcmVtb3ZlRG9sbGFyU2lnblBhdGggPSAoKSA9PlxuICBhc3luYyBmdW5jdGlvbiByZW1vdmVEb2xsYXJTaWduUGF0aChjb250ZXh0LCBuZXh0KSB7XG4gICAgLy8gbWFuaXB1bGF0ZSBwYXRoXG4gICAgY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQucGF0aF0gPSBleHRyYWN0RG9sbGFyU2lnbktleXdvcmQoY29udGV4dFtzeW1ib2wuY29udGV4dC5wYXJzZWQucGF0aF0pLnN0cmluZ1dpdGhSZW1vdmVkU2lnbiAvLyBpZiBzaWduIGV4aXN0IHRoZSBhY3R1YWwgZmlsZSBwYXRoIHdvdWxlIGJlIHdoYXQgY29tZXMgYmVmb3JlIGAuLy5odG1sJGNvbnZlcnRUZXh0VG9KU01vZHVsZWBcbiAgICBhd2FpdCBuZXh0KClcbiAgfVxuIl19

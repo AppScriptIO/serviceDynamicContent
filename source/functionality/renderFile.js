@@ -1,46 +1,47 @@
-import filesystem from 'fs'
-// Note: Every function dependent on underscore will be affected by the configuration of the template string of the underscore imported instance.
-import underscore from 'underscore'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.renderTemplateEvaluatingJs = renderTemplateEvaluatingJs;exports.renderTemplateInsertionPosition = renderTemplateInsertionPosition;exports.combineJSImportWebcomponent = combineJSImportWebcomponent;exports.combineHTMLImportWebcomponent = combineHTMLImportWebcomponent;var _fs = _interopRequireDefault(require("fs"));
 
-/** Template rendering related functionality, which doesn't change the type of content (MIME type) */
+var _underscore = _interopRequireDefault(require("underscore"));
 
-// render template using underscore - evaluating js code. Implementation using filesystem read and underscore template, with a mime type e.g. `application/javascript`
-export function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
-  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ argument }) // Koa handles the stream and send it to the client.
+
+
+
+function renderTemplateEvaluatingJs({ filePath, argument = {} }) {
+  return _underscore.default.template(_fs.default.readFileSync(filePath, 'utf8'))({ argument });
 }
 
-// render template using underscore with insertion positions concept
-export function renderTemplateInsertionPosition({ filePath, insert = {}, argument = {} }) {
-  return underscore.template(filesystem.readFileSync(filePath, 'utf8'))({ insert, argument }) // Koa handles the stream and send it to the client.
+
+function renderTemplateInsertionPosition({ filePath, insert = {}, argument = {} }) {
+  return _underscore.default.template(_fs.default.readFileSync(filePath, 'utf8'))({ insert, argument });
 }
 
-/**
- * Webcomponent using JS imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
- */
-export function combineJSImportWebcomponent({ filePath, argument = {} }) {
-  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/')) // directory base path of file
+
+
+
+function combineJSImportWebcomponent({ filePath, argument = {} }) {
+  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'));
   return renderTemplateInsertionPosition({
     filePath,
     insert: {
-      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
-    },
-    argument,
-  })
+      css: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      html: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }) },
+
+    argument });
+
 }
 
-/**
- * Webcomponent using HTML Imports - Combine webcomponent files according to predefined component parts locations relative to the file path received.
- */
-export function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
-  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'))
+
+
+
+function combineHTMLImportWebcomponent({ filePath, argument = {} }) {
+  let fileDirectoryPath = filePath.substr(0, filePath.lastIndexOf('/'));
   return renderTemplateInsertionPosition({
     filePath,
     insert: {
-      css: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
-      js: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
-      html: () => underscore.template(filesystem.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }),
-    },
-    argument,
-  })
+      css: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.css`, 'utf8'))({ argument }),
+      js: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.js`, 'utf8'))({ argument }),
+      html: () => _underscore.default.template(_fs.default.readFileSync(`${fileDirectoryPath}/component.html`, 'utf8'))({ argument }) },
+
+    argument });
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9mdW5jdGlvbmFsaXR5L3JlbmRlckZpbGUuanMiXSwibmFtZXMiOlsicmVuZGVyVGVtcGxhdGVFdmFsdWF0aW5nSnMiLCJmaWxlUGF0aCIsImFyZ3VtZW50IiwidW5kZXJzY29yZSIsInRlbXBsYXRlIiwiZmlsZXN5c3RlbSIsInJlYWRGaWxlU3luYyIsInJlbmRlclRlbXBsYXRlSW5zZXJ0aW9uUG9zaXRpb24iLCJpbnNlcnQiLCJjb21iaW5lSlNJbXBvcnRXZWJjb21wb25lbnQiLCJmaWxlRGlyZWN0b3J5UGF0aCIsInN1YnN0ciIsImxhc3RJbmRleE9mIiwiY3NzIiwiaHRtbCIsImNvbWJpbmVIVE1MSW1wb3J0V2ViY29tcG9uZW50IiwianMiXSwibWFwcGluZ3MiOiJrYkFBQTs7QUFFQTs7Ozs7QUFLTyxTQUFTQSwwQkFBVCxDQUFvQyxFQUFFQyxRQUFGLEVBQVlDLFFBQVEsR0FBRyxFQUF2QixFQUFwQyxFQUFpRTtBQUN0RSxTQUFPQyxvQkFBV0MsUUFBWCxDQUFvQkMsWUFBV0MsWUFBWCxDQUF3QkwsUUFBeEIsRUFBa0MsTUFBbEMsQ0FBcEIsRUFBK0QsRUFBRUMsUUFBRixFQUEvRCxDQUFQO0FBQ0Q7OztBQUdNLFNBQVNLLCtCQUFULENBQXlDLEVBQUVOLFFBQUYsRUFBWU8sTUFBTSxHQUFHLEVBQXJCLEVBQXlCTixRQUFRLEdBQUcsRUFBcEMsRUFBekMsRUFBbUY7QUFDeEYsU0FBT0Msb0JBQVdDLFFBQVgsQ0FBb0JDLFlBQVdDLFlBQVgsQ0FBd0JMLFFBQXhCLEVBQWtDLE1BQWxDLENBQXBCLEVBQStELEVBQUVPLE1BQUYsRUFBVU4sUUFBVixFQUEvRCxDQUFQO0FBQ0Q7Ozs7O0FBS00sU0FBU08sMkJBQVQsQ0FBcUMsRUFBRVIsUUFBRixFQUFZQyxRQUFRLEdBQUcsRUFBdkIsRUFBckMsRUFBa0U7QUFDdkUsTUFBSVEsaUJBQWlCLEdBQUdULFFBQVEsQ0FBQ1UsTUFBVCxDQUFnQixDQUFoQixFQUFtQlYsUUFBUSxDQUFDVyxXQUFULENBQXFCLEdBQXJCLENBQW5CLENBQXhCO0FBQ0EsU0FBT0wsK0JBQStCLENBQUM7QUFDckNOLElBQUFBLFFBRHFDO0FBRXJDTyxJQUFBQSxNQUFNLEVBQUU7QUFDTkssTUFBQUEsR0FBRyxFQUFFLE1BQU1WLG9CQUFXQyxRQUFYLENBQW9CQyxZQUFXQyxZQUFYLENBQXlCLEdBQUVJLGlCQUFrQixnQkFBN0MsRUFBOEQsTUFBOUQsQ0FBcEIsRUFBMkYsRUFBRVIsUUFBRixFQUEzRixDQURMO0FBRU5ZLE1BQUFBLElBQUksRUFBRSxNQUFNWCxvQkFBV0MsUUFBWCxDQUFvQkMsWUFBV0MsWUFBWCxDQUF5QixHQUFFSSxpQkFBa0IsaUJBQTdDLEVBQStELE1BQS9ELENBQXBCLEVBQTRGLEVBQUVSLFFBQUYsRUFBNUYsQ0FGTixFQUY2Qjs7QUFNckNBLElBQUFBLFFBTnFDLEVBQUQsQ0FBdEM7O0FBUUQ7Ozs7O0FBS00sU0FBU2EsNkJBQVQsQ0FBdUMsRUFBRWQsUUFBRixFQUFZQyxRQUFRLEdBQUcsRUFBdkIsRUFBdkMsRUFBb0U7QUFDekUsTUFBSVEsaUJBQWlCLEdBQUdULFFBQVEsQ0FBQ1UsTUFBVCxDQUFnQixDQUFoQixFQUFtQlYsUUFBUSxDQUFDVyxXQUFULENBQXFCLEdBQXJCLENBQW5CLENBQXhCO0FBQ0EsU0FBT0wsK0JBQStCLENBQUM7QUFDckNOLElBQUFBLFFBRHFDO0FBRXJDTyxJQUFBQSxNQUFNLEVBQUU7QUFDTkssTUFBQUEsR0FBRyxFQUFFLE1BQU1WLG9CQUFXQyxRQUFYLENBQW9CQyxZQUFXQyxZQUFYLENBQXlCLEdBQUVJLGlCQUFrQixnQkFBN0MsRUFBOEQsTUFBOUQsQ0FBcEIsRUFBMkYsRUFBRVIsUUFBRixFQUEzRixDQURMO0FBRU5jLE1BQUFBLEVBQUUsRUFBRSxNQUFNYixvQkFBV0MsUUFBWCxDQUFvQkMsWUFBV0MsWUFBWCxDQUF5QixHQUFFSSxpQkFBa0IsZUFBN0MsRUFBNkQsTUFBN0QsQ0FBcEIsRUFBMEYsRUFBRVIsUUFBRixFQUExRixDQUZKO0FBR05ZLE1BQUFBLElBQUksRUFBRSxNQUFNWCxvQkFBV0MsUUFBWCxDQUFvQkMsWUFBV0MsWUFBWCxDQUF5QixHQUFFSSxpQkFBa0IsaUJBQTdDLEVBQStELE1BQS9ELENBQXBCLEVBQTRGLEVBQUVSLFFBQUYsRUFBNUYsQ0FITixFQUY2Qjs7QUFPckNBLElBQUFBLFFBUHFDLEVBQUQsQ0FBdEM7O0FBU0QiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgZmlsZXN5c3RlbSBmcm9tICdmcydcbi8vIE5vdGU6IEV2ZXJ5IGZ1bmN0aW9uIGRlcGVuZGVudCBvbiB1bmRlcnNjb3JlIHdpbGwgYmUgYWZmZWN0ZWQgYnkgdGhlIGNvbmZpZ3VyYXRpb24gb2YgdGhlIHRlbXBsYXRlIHN0cmluZyBvZiB0aGUgdW5kZXJzY29yZSBpbXBvcnRlZCBpbnN0YW5jZS5cbmltcG9ydCB1bmRlcnNjb3JlIGZyb20gJ3VuZGVyc2NvcmUnXG5cbi8qKiBUZW1wbGF0ZSByZW5kZXJpbmcgcmVsYXRlZCBmdW5jdGlvbmFsaXR5LCB3aGljaCBkb2Vzbid0IGNoYW5nZSB0aGUgdHlwZSBvZiBjb250ZW50IChNSU1FIHR5cGUpICovXG5cbi8vIHJlbmRlciB0ZW1wbGF0ZSB1c2luZyB1bmRlcnNjb3JlIC0gZXZhbHVhdGluZyBqcyBjb2RlLiBJbXBsZW1lbnRhdGlvbiB1c2luZyBmaWxlc3lzdGVtIHJlYWQgYW5kIHVuZGVyc2NvcmUgdGVtcGxhdGUsIHdpdGggYSBtaW1lIHR5cGUgZS5nLiBgYXBwbGljYXRpb24vamF2YXNjcmlwdGBcbmV4cG9ydCBmdW5jdGlvbiByZW5kZXJUZW1wbGF0ZUV2YWx1YXRpbmdKcyh7IGZpbGVQYXRoLCBhcmd1bWVudCA9IHt9IH0pIHtcbiAgcmV0dXJuIHVuZGVyc2NvcmUudGVtcGxhdGUoZmlsZXN5c3RlbS5yZWFkRmlsZVN5bmMoZmlsZVBhdGgsICd1dGY4JykpKHsgYXJndW1lbnQgfSkgLy8gS29hIGhhbmRsZXMgdGhlIHN0cmVhbSBhbmQgc2VuZCBpdCB0byB0aGUgY2xpZW50LlxufVxuXG4vLyByZW5kZXIgdGVtcGxhdGUgdXNpbmcgdW5kZXJzY29yZSB3aXRoIGluc2VydGlvbiBwb3NpdGlvbnMgY29uY2VwdFxuZXhwb3J0IGZ1bmN0aW9uIHJlbmRlclRlbXBsYXRlSW5zZXJ0aW9uUG9zaXRpb24oeyBmaWxlUGF0aCwgaW5zZXJ0ID0ge30sIGFyZ3VtZW50ID0ge30gfSkge1xuICByZXR1cm4gdW5kZXJzY29yZS50ZW1wbGF0ZShmaWxlc3lzdGVtLnJlYWRGaWxlU3luYyhmaWxlUGF0aCwgJ3V0ZjgnKSkoeyBpbnNlcnQsIGFyZ3VtZW50IH0pIC8vIEtvYSBoYW5kbGVzIHRoZSBzdHJlYW0gYW5kIHNlbmQgaXQgdG8gdGhlIGNsaWVudC5cbn1cblxuLyoqXG4gKiBXZWJjb21wb25lbnQgdXNpbmcgSlMgaW1wb3J0cyAtIENvbWJpbmUgd2ViY29tcG9uZW50IGZpbGVzIGFjY29yZGluZyB0byBwcmVkZWZpbmVkIGNvbXBvbmVudCBwYXJ0cyBsb2NhdGlvbnMgcmVsYXRpdmUgdG8gdGhlIGZpbGUgcGF0aCByZWNlaXZlZC5cbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGNvbWJpbmVKU0ltcG9ydFdlYmNvbXBvbmVudCh7IGZpbGVQYXRoLCBhcmd1bWVudCA9IHt9IH0pIHtcbiAgbGV0IGZpbGVEaXJlY3RvcnlQYXRoID0gZmlsZVBhdGguc3Vic3RyKDAsIGZpbGVQYXRoLmxhc3RJbmRleE9mKCcvJykpIC8vIGRpcmVjdG9yeSBiYXNlIHBhdGggb2YgZmlsZVxuICByZXR1cm4gcmVuZGVyVGVtcGxhdGVJbnNlcnRpb25Qb3NpdGlvbih7XG4gICAgZmlsZVBhdGgsXG4gICAgaW5zZXJ0OiB7XG4gICAgICBjc3M6ICgpID0+IHVuZGVyc2NvcmUudGVtcGxhdGUoZmlsZXN5c3RlbS5yZWFkRmlsZVN5bmMoYCR7ZmlsZURpcmVjdG9yeVBhdGh9L2NvbXBvbmVudC5jc3NgLCAndXRmOCcpKSh7IGFyZ3VtZW50IH0pLFxuICAgICAgaHRtbDogKCkgPT4gdW5kZXJzY29yZS50ZW1wbGF0ZShmaWxlc3lzdGVtLnJlYWRGaWxlU3luYyhgJHtmaWxlRGlyZWN0b3J5UGF0aH0vY29tcG9uZW50Lmh0bWxgLCAndXRmOCcpKSh7IGFyZ3VtZW50IH0pLFxuICAgIH0sXG4gICAgYXJndW1lbnQsXG4gIH0pXG59XG5cbi8qKlxuICogV2ViY29tcG9uZW50IHVzaW5nIEhUTUwgSW1wb3J0cyAtIENvbWJpbmUgd2ViY29tcG9uZW50IGZpbGVzIGFjY29yZGluZyB0byBwcmVkZWZpbmVkIGNvbXBvbmVudCBwYXJ0cyBsb2NhdGlvbnMgcmVsYXRpdmUgdG8gdGhlIGZpbGUgcGF0aCByZWNlaXZlZC5cbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGNvbWJpbmVIVE1MSW1wb3J0V2ViY29tcG9uZW50KHsgZmlsZVBhdGgsIGFyZ3VtZW50ID0ge30gfSkge1xuICBsZXQgZmlsZURpcmVjdG9yeVBhdGggPSBmaWxlUGF0aC5zdWJzdHIoMCwgZmlsZVBhdGgubGFzdEluZGV4T2YoJy8nKSlcbiAgcmV0dXJuIHJlbmRlclRlbXBsYXRlSW5zZXJ0aW9uUG9zaXRpb24oe1xuICAgIGZpbGVQYXRoLFxuICAgIGluc2VydDoge1xuICAgICAgY3NzOiAoKSA9PiB1bmRlcnNjb3JlLnRlbXBsYXRlKGZpbGVzeXN0ZW0ucmVhZEZpbGVTeW5jKGAke2ZpbGVEaXJlY3RvcnlQYXRofS9jb21wb25lbnQuY3NzYCwgJ3V0ZjgnKSkoeyBhcmd1bWVudCB9KSxcbiAgICAgIGpzOiAoKSA9PiB1bmRlcnNjb3JlLnRlbXBsYXRlKGZpbGVzeXN0ZW0ucmVhZEZpbGVTeW5jKGAke2ZpbGVEaXJlY3RvcnlQYXRofS9jb21wb25lbnQuanNgLCAndXRmOCcpKSh7IGFyZ3VtZW50IH0pLFxuICAgICAgaHRtbDogKCkgPT4gdW5kZXJzY29yZS50ZW1wbGF0ZShmaWxlc3lzdGVtLnJlYWRGaWxlU3luYyhgJHtmaWxlRGlyZWN0b3J5UGF0aH0vY29tcG9uZW50Lmh0bWxgLCAndXRmOCcpKSh7IGFyZ3VtZW50IH0pLFxuICAgIH0sXG4gICAgYXJndW1lbnQsXG4gIH0pXG59XG4iXX0=
