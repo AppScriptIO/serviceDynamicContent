@@ -121,7 +121,6 @@ export const serveServerSideRenderedFile = ({ basePath, filePath, renderType, pr
 }
 
 // serve evaluated file. Implementation using render using underlying `underscore` through `consolidate` module(framework like).
-// Takes into account
 export const renderTemplateUsingKoaViews = ({ filePath, basePath }) =>
   async function renderTemplateUsingKoaViews(context, next) {
     assert(context[symbol.context.clientSideProjectConfig], `• clientSideProjectConfig must be set by a previous middleware.`)
